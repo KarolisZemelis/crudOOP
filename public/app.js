@@ -28,12 +28,12 @@ function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new T
 function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
 
 var Create = /*#__PURE__*/function (_Request) {
-  function Create(RequestObject) {
+  function Create(MainObject) {
     var _this;
     _classCallCheck(this, Create);
-    _this = _callSuper(this, Create, [RequestObject.page]);
-    _this.page = RequestObject.page; //it is not stored in parent object thus we store it here
-
+    _this = _callSuper(this, Create, [MainObject.page]);
+    _this.page = MainObject.page; //it is not stored in parent object thus we store it here
+    _this.MainObject = MainObject;
     _this.form = document.querySelector('[data-form=create]');
     _this.form.querySelector('[data-type=submit]').addEventListener('click', _this.submitCreate.bind(_this));
     return _this;
@@ -120,8 +120,10 @@ var Request = /*#__PURE__*/function () {
   return _createClass(Request, [{
     key: "saveToDb",
     value: function saveToDb(dataFromCreateObject) {
+      var _this = this;
       axios__WEBPACK_IMPORTED_MODULE_0__["default"].post(this.url, dataFromCreateObject).then(function (res) {
         console.log('response in request', res);
+        _this.renderData();
       })["catch"](function (err) {
         console.log(err);
       });
@@ -129,17 +131,23 @@ var Request = /*#__PURE__*/function () {
   }, {
     key: "getFromDb",
     value: function getFromDb() {
-      var _this = this;
+      var _this2 = this;
       axios__WEBPACK_IMPORTED_MODULE_0__["default"].get(this.url).then(function (res) {
-        _this.renderData(res);
+        _this2.renderData(res);
       })["catch"](function (err) {
         console.log(err);
       });
     }
 
-    // renderData(){
-
-    // }
+    //this -> create object because this is being called from create
+    //MainObject -> recipe because we pass <this which is recipe when creating a class object >
+    //ShowData -> ShowData object
+    //getFromDb -> method getFromDb which ShowData has taken from Request
+  }, {
+    key: "renderData",
+    value: function renderData(res) {
+      this.MainObject.ShowData.getFromDb();
+    }
   }]);
 }();
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Request);
@@ -173,11 +181,11 @@ function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new T
 function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
 
 var ShowData = /*#__PURE__*/function (_Request) {
-  function ShowData(RequestObject) {
+  function ShowData(MainObject) {
     var _this;
     _classCallCheck(this, ShowData);
-    _this = _callSuper(this, ShowData, [RequestObject.page]);
-    _this.page = RequestObject.page;
+    _this = _callSuper(this, ShowData, [MainObject.page]);
+    _this.page = MainObject.page;
     _this.list = document.querySelector('[data-list-bin]');
     _this.getFromDb();
     return _this;
@@ -190,8 +198,9 @@ var ShowData = /*#__PURE__*/function (_Request) {
       this.list.innerHTML = '';
       var responseData = response.data.result;
       responseData.forEach(function (element) {
+        console.log(element);
         var listItem = document.createElement('li');
-        listItem.innerHTML = "Name: ".concat(element.recipe_name, " Calories: ").concat(element.calories);
+        listItem.innerHTML = "Name: ".concat(element.recipe_name, " Type: ").concat(element.type_name, "  Calories: ").concat(element.calories);
         _this2.list.appendChild(listItem);
       });
     }

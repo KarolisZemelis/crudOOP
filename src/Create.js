@@ -1,10 +1,10 @@
 import Request from './Request.js'
 
 class Create extends Request {
-    constructor(RequestObject) {
-        super(RequestObject.page)
-        this.page = RequestObject.page//it is not stored in parent object thus we store it here
-
+    constructor(MainObject) {
+        super(MainObject.page)
+        this.page = MainObject.page//it is not stored in parent object thus we store it here
+        this.MainObject = MainObject
         this.form = document.querySelector('[data-form=create]');
 
         this.form.querySelector('[data-type=submit]')

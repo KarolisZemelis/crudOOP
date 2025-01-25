@@ -25,6 +25,14 @@
                 <input type="text" class="form-control" name="recipe_name" />
                 <label class="form-label">Calories</label>
                 <input type="number" class="form-control" name="calories" />
+                <label class="form-label">Recipe type:</label>
+                <select name="type_id">
+                  <option value="">--Please choose an option--</option>
+                  <option value="1">Pusryčiai</option>
+                  <option value="2">Pietūs</option>
+                  <option value="3">Užkandis</option>
+                  <option value="4">Vakarienė</option>
+                </select>
               </div>
             </div>
             <div class="card-footer text-body-secondary">
@@ -36,7 +44,7 @@
         <div class="col-8" data-list>
           <div class="card mt-5">
             <div class="card-header">
-              <h2>Recipes list</h2>
+              <h2>Recipe list</h2>
             </div>
             <div class="card-body">
               <ul class="list-group list-group-flush" data-list-bin></ul>
@@ -83,10 +91,10 @@
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" data-form="delete">
           <div class="modal-header">
-            <h5 class="modal-title">Delete genre</h5>
+            <h5 class="modal-title">Delete recipe</h5>
           </div>
           <div class="modal-body">
-            <p>Are you sure you want to delete this genre?</p>
+            <p>Are you sure you want to delete this recipe?</p>
             <p class="text-danger">This action cannot be undone.</p>
             <strong data-key="title"></strong>
           </div>

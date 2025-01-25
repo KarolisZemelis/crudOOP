@@ -35,14 +35,16 @@ app.get('/', (req, res) => {
 
 app.get('/api/recipe', (req, res) => {
     const sql = `
-    SELECT * FROM recipe
+    SELECT recipe.recipe_name, type.type_name, recipe.calories
+    FROM recipe
+    INNER JOIN type ON recipe.type_id=type.id
     `
     con.query(sql, (err, result) => {
         if (err) {
             res.status(500).send(err);
             return;
         }
-        res.status(201).send({
+        res.status(200).send({
             result
         });
     });
@@ -51,10 +53,10 @@ app.get('/api/recipe', (req, res) => {
 app.post('/api/recipe', (req, res) => {
     const sql = `
     INSERT INTO recipe
-    (recipe_name, calories)
-    VALUES(?, ?)
+    (recipe_name, calories, type_id)
+    VALUES(?, ?, ?)
     `
-    con.query(sql, [req.body.recipe_name, req.body.calories], (err, result) => {
+    con.query(sql, [req.body.recipe_name, req.body.calories, req.body.type_id], (err, result) => {
         if (err) {
             res.status(500).send(err);
             return;

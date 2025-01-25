@@ -9,6 +9,7 @@ class Request {
         axios.post(this.url, dataFromCreateObject)
             .then(res => {
                 console.log('response in request', res)
+                this.renderData()
             })
             .catch(err => {
                 console.log(err)
@@ -25,8 +26,13 @@ class Request {
             })
     }
 
-    renderData(res) {
 
+    //this -> create object because this is being called from create
+    //MainObject -> recipe because we pass <this which is recipe when creating a class object >
+    //ShowData -> ShowData object
+    //getFromDb -> method getFromDb which ShowData has taken from Request
+    renderData(res) {
+        this.MainObject.ShowData.getFromDb()
     }
 
 }
