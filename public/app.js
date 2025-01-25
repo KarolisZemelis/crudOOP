@@ -200,7 +200,7 @@ var ShowData = /*#__PURE__*/function (_Request) {
       responseData.forEach(function (element) {
         console.log(element);
         var listItem = document.createElement('li');
-        listItem.innerHTML = "Name: ".concat(element.recipe_name, " Type: ").concat(element.type_name, "  Calories: ").concat(element.calories);
+        listItem.innerHTML = "Name: ".concat(element.recipe_name, "\n            Type: ").concat(element.type_name, "  \n            Calories: ").concat(element.calories, "\n            <button class=\"btn btn-primary\" data-type=\"submit\">Edit</button>\n            <button class=\"btn btn-primary\" data-type=\"submit\">Delete</button>\n            ");
         _this2.list.appendChild(listItem);
       });
     }

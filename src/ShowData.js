@@ -17,7 +17,12 @@ class ShowData extends Request {
         responseData.forEach(element => {
             console.log(element)
             const listItem = document.createElement('li');
-            listItem.innerHTML = `Name: ${element.recipe_name} Type: ${element.type_name}  Calories: ${element.calories}`;
+            listItem.innerHTML = `Name: ${element.recipe_name}
+            Type: ${element.type_name}  
+            Calories: ${element.calories}
+            <button class="btn btn-primary" data-type="submit">Edit</button>
+            <button class="btn btn-primary" data-type="submit">Delete</button>
+            `;
             this.list.appendChild(listItem);
         });
     }
