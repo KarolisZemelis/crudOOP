@@ -33,6 +33,21 @@ app.get('/', (req, res) => {
     res.send(loadHtml('recipes'));
 });
 
+app.get('/api/recipe', (req, res) => {
+    const sql = `
+    SELECT * FROM recipe
+    `
+    con.query(sql, (err, result) => {
+        if (err) {
+            res.status(500).send(err);
+            return;
+        }
+        res.status(201).send({
+            result
+        });
+    });
+})
+
 app.post('/api/recipe', (req, res) => {
     const sql = `
     INSERT INTO recipe

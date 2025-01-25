@@ -8,13 +8,30 @@ class Request {
     saveToDb(dataFromCreateObject) {
         axios.post(this.url, dataFromCreateObject)
             .then(res => {
-                console.log('response is request', res)
+                console.log('response in request', res)
             })
             .catch(err => {
                 console.log(err)
             })
     }
+
+    getFromDb() {
+        axios.get(this.url)
+            .then(res => {
+                this.renderData(res)
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }
+
+    renderData(res) {
+
+    }
+
 }
+
+
 
 
 
