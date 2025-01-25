@@ -30,8 +30,27 @@ const loadHtml = page => {
 
 
 app.get('/', (req, res) => {
-    res.send(loadHtml('receptai'));
+    res.send(loadHtml('recipes'));
 });
+
+app.post('/api/recipe', (req, res) => {
+    const sql = `
+    INSERT INTO recipe
+    (recipe_name, calories)
+    VALUES(?, ?)
+    `
+    con.query(sql, [req.body.recipe_name, req.body.calories], (err, result) => {
+        if (err) {
+            res.status(500).send(err);
+            return;
+        }
+        res.status(201).send({
+            success: true,
+            id: result.insertId
+        });
+    })
+
+})
 
 con.connect(err => {
     if (err) {
@@ -40,8 +59,6 @@ con.connect(err => {
     }
     console.log('Prisijungimas prie DB buvo sėkmingas');
 });
-
-
 
 // Start server
 
