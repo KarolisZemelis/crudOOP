@@ -8,7 +8,7 @@ class Request {
     saveToDb(dataFromCreateObject) {
         axios.post(this.url, dataFromCreateObject)
             .then(res => {
-                console.log('response in request', res)
+
                 this.renderData()
             })
             .catch(err => {
@@ -19,12 +19,26 @@ class Request {
     getFromDb() {
         axios.get(this.url)
             .then(res => {
+
                 this.renderData(res)
             })
             .catch(err => {
                 console.log(err)
             })
     }
+
+    getElementFromDb(id) {
+        axios.get(this.url + '/' + id)
+            .then(res => {
+
+                this.renderData(res)
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }
+
+
 
 
     //this -> create object because this is being called from create

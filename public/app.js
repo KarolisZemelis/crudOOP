@@ -54,11 +54,80 @@ var Create = /*#__PURE__*/function (_Request) {
       this.form.querySelectorAll('[name]').forEach(function (input) {
         data[input.name] = input.value;
       });
+      console.log(data);
       return data;
     }
   }]);
 }(_Request_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Create);
+
+/***/ }),
+
+/***/ "./src/Edit.js":
+/*!*********************!*\
+  !*** ./src/Edit.js ***!
+  \*********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _Request_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Request.js */ "./src/Request.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
+function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
+function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
+function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
+function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
+function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
+function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
+
+var Edit = /*#__PURE__*/function (_Request) {
+  function Edit(MainObject) {
+    var _this;
+    _classCallCheck(this, Edit);
+    _this = _callSuper(this, Edit, [MainObject.page]);
+    _this.editModal = document.querySelector('[data-modal="edit"]');
+    _this.list = document.querySelector('[data-list-bin]');
+    _this.list.addEventListener('click', function (event) {
+      if (event.target.matches('[data-type="edit"]')) {
+        var parent = event.target.parentElement; // Get the parent <li>
+        var recipeId = parent.id;
+        _this.getElementFromDb(recipeId);
+        _this.editModal.style.display = 'block';
+        _this.editModal.querySelector('[data-type="cancel"]').addEventListener('click', function (_) {
+          _this.editModal.style.display = 'none';
+        });
+        _this.editModal.querySelector('[data-type="close"]').addEventListener('click', function (_) {
+          _this.editModal.style.display = 'none';
+        });
+        var recipeNameDom = _this.editModal.querySelector('[name="recipe_name"]');
+      }
+    });
+    return _this;
+  }
+  _inherits(Edit, _Request);
+  return _createClass(Edit, [{
+    key: "renderData",
+    value: function renderData(response) {
+      var modalBody = this.editModal.querySelector('[data-form-body]');
+      var responseData = response.data.result;
+      responseData.forEach(function (element) {
+        var item = document.createElement('div');
+        item.innerHTML = "\n          <div class=\"modal-body\">\n            <label class=\"form-label\">Title</label>\n            <input type=\"text\" class=\"form-control\" name=\"recipe_name\" value='".concat(element.recipe_name, "'/>\n            <label class=\"form-label\">Calories</label>\n            <input type=\"number\" class=\"form-control\" name=\"calories\" value='").concat(element.calories, "'/>\n            <label class=\"form-label\">Recipe type:</label>\n            <select name=\"type_id\">\n            <option value=\"\" ").concat(!element.type_id ? 'selected' : '', ">--Please choose an option--</option>\n            <option value=\"1\" ").concat(element.type_id === 1 ? 'selected' : '', ">Pusry\u010Diai</option>\n            <option value=\"2\" ").concat(element.type_id === 2 ? 'selected' : '', ">Piet\u016Bs</option>\n            <option value=\"3\" ").concat(element.type_id === 3 ? 'selected' : '', ">U\u017Ekandis</option>\n            <option value=\"4\" ").concat(element.type_id === 4 ? 'selected' : '', ">Vakarien\u0117</option>\n            </select>\n          </div>\n            ");
+        modalBody.appendChild(item);
+      });
+    }
+  }]);
+}(_Request_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Edit);
 
 /***/ }),
 
@@ -75,6 +144,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _Create_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Create.js */ "./src/Create.js");
 /* harmony import */ var _ShowData_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ShowData.js */ "./src/ShowData.js");
+/* harmony import */ var _Edit_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Edit.js */ "./src/Edit.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
 function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
@@ -83,11 +153,13 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
 function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
 
 
+
 var Recipe = /*#__PURE__*/_createClass(function Recipe() {
   _classCallCheck(this, Recipe);
   this.page = 'recipe';
   this.Create = new _Create_js__WEBPACK_IMPORTED_MODULE_0__["default"](this);
   this.ShowData = new _ShowData_js__WEBPACK_IMPORTED_MODULE_1__["default"](this);
+  this.Edit = new _Edit_js__WEBPACK_IMPORTED_MODULE_2__["default"](this);
 });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Recipe);
 
@@ -122,7 +194,6 @@ var Request = /*#__PURE__*/function () {
     value: function saveToDb(dataFromCreateObject) {
       var _this = this;
       axios__WEBPACK_IMPORTED_MODULE_0__["default"].post(this.url, dataFromCreateObject).then(function (res) {
-        console.log('response in request', res);
         _this.renderData();
       })["catch"](function (err) {
         console.log(err);
@@ -134,6 +205,16 @@ var Request = /*#__PURE__*/function () {
       var _this2 = this;
       axios__WEBPACK_IMPORTED_MODULE_0__["default"].get(this.url).then(function (res) {
         _this2.renderData(res);
+      })["catch"](function (err) {
+        console.log(err);
+      });
+    }
+  }, {
+    key: "getElementFromDb",
+    value: function getElementFromDb(id) {
+      var _this3 = this;
+      axios__WEBPACK_IMPORTED_MODULE_0__["default"].get(this.url + '/' + id).then(function (res) {
+        _this3.renderData(res);
       })["catch"](function (err) {
         console.log(err);
       });
@@ -185,7 +266,6 @@ var ShowData = /*#__PURE__*/function (_Request) {
     var _this;
     _classCallCheck(this, ShowData);
     _this = _callSuper(this, ShowData, [MainObject.page]);
-    _this.page = MainObject.page;
     _this.list = document.querySelector('[data-list-bin]');
     _this.getFromDb();
     return _this;
@@ -198,9 +278,9 @@ var ShowData = /*#__PURE__*/function (_Request) {
       this.list.innerHTML = '';
       var responseData = response.data.result;
       responseData.forEach(function (element) {
-        console.log(element);
         var listItem = document.createElement('li');
-        listItem.innerHTML = "Name: ".concat(element.recipe_name, "\n            Type: ").concat(element.type_name, "  \n            Calories: ").concat(element.calories, "\n            <button class=\"btn btn-primary\" data-type=\"submit\">Edit</button>\n            <button class=\"btn btn-primary\" data-type=\"submit\">Delete</button>\n            ");
+        listItem.setAttribute('id', "".concat(element.id));
+        listItem.innerHTML = "\n            <div data-list-name>Name: ".concat(element.recipe_name, "</div>\n            <div data-list-type>Type: ").concat(element.type_name, "</div>\n            <div data-list-calories>Calories: ").concat(element.calories, "</div>\n            <button class=\"btn btn-primary\" data-type=\"edit\">Edit</button>\n            <button class=\"btn btn-primary\" data-type=\"delete\">Delete</button>\n            ");
         _this2.list.appendChild(listItem);
       });
     }

@@ -33,9 +33,9 @@ app.get('/', (req, res) => {
     res.send(loadHtml('recipes'));
 });
 
-app.get('/api/recipe', (req, res) => {
+app.get('/api/recipe/', (req, res) => {
     const sql = `
-    SELECT recipe.recipe_name, type.type_name, recipe.calories
+    SELECT recipe.id, recipe.recipe_name, type.type_name,  recipe.type_id, recipe.calories
     FROM recipe
     INNER JOIN type ON recipe.type_id=type.id
     `
@@ -49,6 +49,26 @@ app.get('/api/recipe', (req, res) => {
         });
     });
 })
+
+app.get('/api/recipe/:id', (req, res) => {
+    const sql = `
+    SELECT recipe.id, recipe.recipe_name, type.type_name,  recipe.type_id, recipe.calories
+    FROM recipe
+    INNER JOIN type ON recipe.type_id=type.id
+    WHERE recipe.id = ?
+    `
+    con.query(sql, [req.params.id], (err, result) => {
+        if (err) {
+            res.status(500).send(err);
+            return;
+        }
+        res.status(200).send({
+            result
+        });
+    });
+})
+
+
 
 app.post('/api/recipe', (req, res) => {
     const sql = `
