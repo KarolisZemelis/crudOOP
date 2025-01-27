@@ -3,39 +3,11 @@ import Request from './Request.js'
 class Edit extends Request {
     constructor(MainObject) {
         super(MainObject.page)
-        this.editModal = document.querySelector('[data-modal="edit"]')
         this.list = document.querySelector('[data-list-bin]')
 
-
-
-
-        this.list.addEventListener('click', (event) => {
-            if (event.target.matches('[data-type="edit"]')) {
-                const parent = event.target.parentElement; // Get the parent <li>
-                const recipeId = parent.id;
-                this.getElementFromDb(recipeId)
-                this.editModal.style.display = 'block'
-
-                this.editModal.querySelector('[data-type="cancel"]')
-                    .addEventListener('click', _ => {
-                        this.editModal.style.display = 'none'
-                    })
-                this.editModal.querySelector('[data-type="close"]')
-                    .addEventListener('click', _ => {
-                        this.editModal.style.display = 'none'
-                    })
-
-                const recipeNameDom = this.editModal.querySelector('[name="recipe_name"]');
-
-
-
-            }
-        });
-
-
     }
-    renderData(response) {
-        const modalBody = this.editModal.querySelector('[data-form-body]')
+    renderData(response, editModal) {
+        const modalBody = editModal.querySelector('[data-form-body]')
         const responseData = response.data.result
         responseData.forEach(element => {
             const item = document.createElement('div');

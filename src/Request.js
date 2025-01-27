@@ -27,11 +27,11 @@ class Request {
             })
     }
 
-    getElementFromDb(id) {
+    getElementFromDb(id, MainObject, editModal) {
         axios.get(this.url + '/' + id)
             .then(res => {
+                MainObject.Edit.renderData(res, editModal)
 
-                this.renderData(res)
             })
             .catch(err => {
                 console.log(err)

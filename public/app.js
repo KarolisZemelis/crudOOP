@@ -94,30 +94,14 @@ var Edit = /*#__PURE__*/function (_Request) {
     var _this;
     _classCallCheck(this, Edit);
     _this = _callSuper(this, Edit, [MainObject.page]);
-    _this.editModal = document.querySelector('[data-modal="edit"]');
     _this.list = document.querySelector('[data-list-bin]');
-    _this.list.addEventListener('click', function (event) {
-      if (event.target.matches('[data-type="edit"]')) {
-        var parent = event.target.parentElement; // Get the parent <li>
-        var recipeId = parent.id;
-        _this.getElementFromDb(recipeId);
-        _this.editModal.style.display = 'block';
-        _this.editModal.querySelector('[data-type="cancel"]').addEventListener('click', function (_) {
-          _this.editModal.style.display = 'none';
-        });
-        _this.editModal.querySelector('[data-type="close"]').addEventListener('click', function (_) {
-          _this.editModal.style.display = 'none';
-        });
-        var recipeNameDom = _this.editModal.querySelector('[name="recipe_name"]');
-      }
-    });
     return _this;
   }
   _inherits(Edit, _Request);
   return _createClass(Edit, [{
     key: "renderData",
-    value: function renderData(response) {
-      var modalBody = this.editModal.querySelector('[data-form-body]');
+    value: function renderData(response, editModal) {
+      var modalBody = editModal.querySelector('[data-form-body]');
       var responseData = response.data.result;
       responseData.forEach(function (element) {
         var item = document.createElement('div');
@@ -211,10 +195,9 @@ var Request = /*#__PURE__*/function () {
     }
   }, {
     key: "getElementFromDb",
-    value: function getElementFromDb(id) {
-      var _this3 = this;
+    value: function getElementFromDb(id, MainObject, editModal) {
       axios__WEBPACK_IMPORTED_MODULE_0__["default"].get(this.url + '/' + id).then(function (res) {
-        _this3.renderData(res);
+        MainObject.Edit.renderData(res, editModal);
       })["catch"](function (err) {
         console.log(err);
       });
@@ -267,6 +250,22 @@ var ShowData = /*#__PURE__*/function (_Request) {
     _classCallCheck(this, ShowData);
     _this = _callSuper(this, ShowData, [MainObject.page]);
     _this.list = document.querySelector('[data-list-bin]');
+    _this.MainObject = MainObject;
+    _this.list.addEventListener('click', function (event) {
+      _this.editModal = document.querySelector('[data-modal="edit"]');
+      if (event.target.matches('[data-type="edit"]')) {
+        _this.editModal.style.display = 'block';
+        var parent = event.target.parentElement; // Get the parent <li>
+        var recipeId = parent.id;
+        _this.getElementFromDb(recipeId, _this.MainObject, _this.editModal);
+        _this.editModal.querySelector('[data-type="cancel"]').addEventListener('click', function (_) {
+          _this.editModal.style.display = 'none';
+        });
+        _this.editModal.querySelector('[data-type="close"]').addEventListener('click', function (_) {
+          _this.editModal.style.display = 'none';
+        });
+      }
+    });
     _this.getFromDb();
     return _this;
   }
