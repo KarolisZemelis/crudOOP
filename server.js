@@ -28,7 +28,7 @@ const loadHtml = page => {
     return pageHtml;
 }
 
-
+//ROUTES
 app.get('/', (req, res) => {
     res.send(loadHtml('recipes'));
 });
@@ -68,8 +68,6 @@ app.get('/api/recipe/:id', (req, res) => {
     });
 })
 
-
-
 app.post('/api/recipe', (req, res) => {
     const sql = `
     INSERT INTO recipe
@@ -88,6 +86,38 @@ app.post('/api/recipe', (req, res) => {
     })
 
 })
+
+app.put('/api/recipe/edit/:id', (req, res) => {
+    const itemToSave = req.body; // Assuming req.body is an array and you need the first item
+
+    const sql = `
+    UPDATE recipe
+    SET recipe_name = ?, calories = ?, type_id = ?
+    WHERE id = ?
+    `;
+
+    con.query(sql, [itemToSave.recipe_name, itemToSave.calories, itemToSave.type_id, req.params.id], (err, result) => {
+        if (err) {
+            res.status(500).send(err);
+            return;
+        }
+
+        if (result.affectedRows === 0) {
+            res.status(404).send({
+                success: false,
+                message: 'Game not found'
+            });
+            return;
+        }
+
+        res.send({
+
+            success: true,
+        });
+    });
+
+});
+
 
 con.connect(err => {
     if (err) {

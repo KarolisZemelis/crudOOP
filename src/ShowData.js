@@ -28,6 +28,7 @@ class ShowData extends Request {
             }
         });
         this.getFromDb()
+
     }
 
     renderData(response) {
@@ -46,9 +47,6 @@ class ShowData extends Request {
             this.list.appendChild(listItem);
         });
     }
-
-
-
 
 }
 

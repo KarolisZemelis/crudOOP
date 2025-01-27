@@ -8,7 +8,6 @@ class Request {
     saveToDb(dataFromCreateObject) {
         axios.post(this.url, dataFromCreateObject)
             .then(res => {
-
                 this.renderData()
             })
             .catch(err => {
@@ -19,7 +18,6 @@ class Request {
     getFromDb() {
         axios.get(this.url)
             .then(res => {
-
                 this.renderData(res)
             })
             .catch(err => {
@@ -30,7 +28,19 @@ class Request {
     getElementFromDb(id, MainObject, editModal) {
         axios.get(this.url + '/' + id)
             .then(res => {
-                MainObject.Edit.renderData(res, editModal)
+                MainObject.Edit.renderEditData(res, editModal)
+
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }
+
+
+    editToDb(data) {
+        axios.put(this.url + '/' + 'edit' + '/' + data.id, data)
+            .then((res) => {
+                this.renderData(res)
 
             })
             .catch(err => {

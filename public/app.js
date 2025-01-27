@@ -94,19 +94,30 @@ var Edit = /*#__PURE__*/function (_Request) {
     var _this;
     _classCallCheck(this, Edit);
     _this = _callSuper(this, Edit, [MainObject.page]);
+    _this.MainObject = MainObject;
     _this.list = document.querySelector('[data-list-bin]');
     return _this;
   }
   _inherits(Edit, _Request);
   return _createClass(Edit, [{
-    key: "renderData",
-    value: function renderData(response, editModal) {
+    key: "renderEditData",
+    value: function renderEditData(response, editModal) {
+      var _this2 = this;
       var modalBody = editModal.querySelector('[data-form-body]');
       var responseData = response.data.result;
-      responseData.forEach(function (element) {
-        var item = document.createElement('div');
-        item.innerHTML = "\n          <div class=\"modal-body\">\n            <label class=\"form-label\">Title</label>\n            <input type=\"text\" class=\"form-control\" name=\"recipe_name\" value='".concat(element.recipe_name, "'/>\n            <label class=\"form-label\">Calories</label>\n            <input type=\"number\" class=\"form-control\" name=\"calories\" value='").concat(element.calories, "'/>\n            <label class=\"form-label\">Recipe type:</label>\n            <select name=\"type_id\">\n            <option value=\"\" ").concat(!element.type_id ? 'selected' : '', ">--Please choose an option--</option>\n            <option value=\"1\" ").concat(element.type_id === 1 ? 'selected' : '', ">Pusry\u010Diai</option>\n            <option value=\"2\" ").concat(element.type_id === 2 ? 'selected' : '', ">Piet\u016Bs</option>\n            <option value=\"3\" ").concat(element.type_id === 3 ? 'selected' : '', ">U\u017Ekandis</option>\n            <option value=\"4\" ").concat(element.type_id === 4 ? 'selected' : '', ">Vakarien\u0117</option>\n            </select>\n          </div>\n            ");
-        modalBody.appendChild(item);
+      var item = document.createElement('div');
+      modalBody.innerHTML = '';
+      item.innerHTML = "\n          \n            <label class=\"form-label\">Title</label>\n            <input type=\"text\" class=\"form-control\" name=\"recipe_name\" value='".concat(responseData[0].recipe_name, "'/>\n            <label class=\"form-label\">Calories</label>\n            <input type=\"number\" class=\"form-control\" name=\"calories\" value='").concat(responseData[0].calories, "'/>\n            <label class=\"form-label\">Recipe type:</label>\n            <select name=\"type_id\">\n            <option value=\"\" ").concat(!responseData[0].type_id ? 'selected' : '', ">--Please choose an option--</option>\n            <option value=\"1\" ").concat(responseData[0].type_id === 1 ? 'selected' : '', ">Pusry\u010Diai</option>\n            <option value=\"2\" ").concat(responseData[0].type_id === 2 ? 'selected' : '', ">Piet\u016Bs</option>\n            <option value=\"3\" ").concat(responseData[0].type_id === 3 ? 'selected' : '', ">U\u017Ekandis</option>\n            <option value=\"4\" ").concat(responseData[0].type_id === 4 ? 'selected' : '', ">Vakarien\u0117</option>\n            </select>\n      \n            ");
+      modalBody.append(item);
+      editModal.querySelector('[data-type="submit"]').addEventListener('click', function (_) {
+        var editObject = {};
+        editObject.id = responseData[0].id;
+        editObject.recipe_name = editModal.querySelector("[name=\"recipe_name\"]").value;
+        editObject.calories = Number(editModal.querySelector("[name=\"calories\"]").value);
+        editObject.type_id = Number(editModal.querySelector('select[name="type_id"]').value);
+        console.log(editObject);
+        _this2.editToDb(editObject);
+        editModal.style.display = 'none';
       });
     }
   }]);
@@ -197,7 +208,17 @@ var Request = /*#__PURE__*/function () {
     key: "getElementFromDb",
     value: function getElementFromDb(id, MainObject, editModal) {
       axios__WEBPACK_IMPORTED_MODULE_0__["default"].get(this.url + '/' + id).then(function (res) {
-        MainObject.Edit.renderData(res, editModal);
+        MainObject.Edit.renderEditData(res, editModal);
+      })["catch"](function (err) {
+        console.log(err);
+      });
+    }
+  }, {
+    key: "editToDb",
+    value: function editToDb(data) {
+      var _this3 = this;
+      axios__WEBPACK_IMPORTED_MODULE_0__["default"].put(this.url + '/' + 'edit' + '/' + data.id, data).then(function (res) {
+        _this3.renderData(res);
       })["catch"](function (err) {
         console.log(err);
       });
@@ -7494,7 +7515,7 @@ const asap = typeof queueMicrotask !== 'undefined' ?
 /******/ 			return __webpack_require__.O(result);
 /******/ 		}
 /******/ 		
-/******/ 		var chunkLoadingGlobal = self["webpackChunkcrud_object"] = self["webpackChunkcrud_object"] || [];
+/******/ 		var chunkLoadingGlobal = self["webpackChunkcrudOOP"] = self["webpackChunkcrudOOP"] || [];
 /******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
