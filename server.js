@@ -39,19 +39,26 @@ app.get('/api/recipe/', (req, res) => {
     FROM recipe
     INNER JOIN type ON recipe.type_id=type.id
     `
-
     const sql2 = `
     SELECT * FROM ingredient
     `;
-    con.query(sql1, sql2, (err, result) => {
+
+    con.query(sql1, (err, result1) => {
         if (err) {
             res.status(500).send(err);
             return;
         }
-        res.status(200).send({
-            result
+        con.query(sql2, (err2, result2) => {
+            if (err2) {
+                res.status(500).send({ error: err2 });
+                return;
+            }
+            res.status(200).send({
+                recipes: result1,
+                ingredients: result2
+            });
         });
-    });
+    })
 })
 
 app.get('/api/recipe/:id', (req, res) => {

@@ -3,6 +3,8 @@ import axios from 'axios';
 class Request {
     constructor(page) {
         this.url = URL_API + page //URL_API is a global variable because its outside any box
+        this.recipeList = document.querySelector('[data-list-recipes]');
+        this.ingredientList = document.querySelector('[data-list-ingredients]');
     }
 
     saveToDb(dataFromCreateObject) {
@@ -21,6 +23,7 @@ class Request {
     getFromDb() {
         axios.get(this.url)
             .then(res => {
+                console.log(res)
                 this.renderData(res)
             })
             .catch(err => {

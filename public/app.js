@@ -102,8 +102,27 @@ var Delete = /*#__PURE__*/function (_Request) {
     _classCallCheck(this, Delete);
     _this = _callSuper(this, Delete, [MainObject.page]);
     _this.MainObject = MainObject;
-    _this.list = document.querySelector('[data-list-bin]');
-    _this.list.addEventListener('click', function (event) {
+    // this.list = document.querySelector('[data-list-bin]')
+    _this.recipeList.addEventListener('click', function (event) {
+      if (event.target.matches('[data-type="delete"]')) {
+        _this.deleteModal = document.querySelector('[data-modal="delete"]');
+        _this.deleteModal.style.display = 'block';
+        var parent = event.target.parentElement;
+        var elementName = parent.querySelector(':first-child').textContent;
+        var elementNameDom = _this.deleteModal.querySelector('[data-recipe-name]');
+        elementNameDom.innerHTML = "<i><b>".concat(elementName, "</b></i>");
+        _this.deleteModal.querySelector('[data-type="cancel"]').addEventListener('click', function (_) {
+          _this.deleteModal.style.display = 'none';
+        });
+        _this.deleteModal.querySelector('[data-type="delete"]').onclick = function () {
+          _this.deleteModal.style.display = 'none';
+          var elementId = parent.id; // Get the current id
+          console.log('Deleting elementId:', elementId);
+          _this.deleteFromDb(elementId);
+        };
+      }
+    });
+    _this.ingredientList.addEventListener('click', function (event) {
       if (event.target.matches('[data-type="delete"]')) {
         _this.deleteModal = document.querySelector('[data-modal="delete"]');
         _this.deleteModal.style.display = 'block';
@@ -163,8 +182,22 @@ var Edit = /*#__PURE__*/function (_Request) {
     _classCallCheck(this, Edit);
     _this = _callSuper(this, Edit, [MainObject.page]);
     _this.MainObject = MainObject;
-    _this.list = document.querySelector('[data-list-bin]');
-    _this.list.addEventListener('click', function (event) {
+    _this.recipeList.addEventListener('click', function (event) {
+      if (event.target.matches('[data-type="edit"]')) {
+        _this.editModal = document.querySelector('[data-modal="edit"]');
+        _this.editModal.style.display = 'block';
+        var parent = event.target.parentElement; // Get the parent element
+        var recipeId = parent.id;
+        _this.getElementFromDb(recipeId, _this.MainObject, _this.editModal);
+        _this.editModal.querySelector('[data-type="cancel"]').addEventListener('click', function (_) {
+          _this.editModal.style.display = 'none';
+        });
+        _this.editModal.querySelector('[data-type="close"]').addEventListener('click', function (_) {
+          _this.editModal.style.display = 'none';
+        });
+      }
+    });
+    _this.ingredientList.addEventListener('click', function (event) {
       if (event.target.matches('[data-type="edit"]')) {
         _this.editModal = document.querySelector('[data-modal="edit"]');
         _this.editModal.style.display = 'block';
@@ -268,6 +301,8 @@ var Request = /*#__PURE__*/function () {
   function Request(page) {
     _classCallCheck(this, Request);
     this.url = URL_API + page; //URL_API is a global variable because its outside any box
+    this.recipeList = document.querySelector('[data-list-recipes]');
+    this.ingredientList = document.querySelector('[data-list-ingredients]');
   }
   return _createClass(Request, [{
     key: "saveToDb",
@@ -286,6 +321,7 @@ var Request = /*#__PURE__*/function () {
     value: function getFromDb() {
       var _this2 = this;
       axios__WEBPACK_IMPORTED_MODULE_0__["default"].get(this.url).then(function (res) {
+        console.log(res);
         _this2.renderData(res);
       })["catch"](function (err) {
         console.log(err);
@@ -349,6 +385,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _Request_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Request.js */ "./src/Request.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
 function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
 function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
@@ -367,7 +409,6 @@ var ShowData = /*#__PURE__*/function (_Request) {
     var _this;
     _classCallCheck(this, ShowData);
     _this = _callSuper(this, ShowData, [MainObject.page]);
-    _this.list = document.querySelector('[data-list-bin]');
     _this.MainObject = MainObject;
     _this.getFromDb();
     return _this;
@@ -376,33 +417,89 @@ var ShowData = /*#__PURE__*/function (_Request) {
   return _createClass(ShowData, [{
     key: "renderData",
     value: function renderData(response) {
-      var _this2 = this;
-      this.list.innerHTML = '';
-      var responseData = response.data.result;
-      responseData.forEach(function (element) {
-        var listItem = document.createElement('li');
-        listItem.setAttribute('id', "".concat(element.id));
-        for (var key in element) {
-          if (key !== 'id') {
-            var container = document.createElement('div');
-            container.dataset.list = key;
-            container.textContent = "".concat(key, ": ").concat(element[key]);
-            listItem.appendChild(container);
+      var responseData = response.data;
+      for (var _i = 0, _Object$entries = Object.entries(responseData); _i < _Object$entries.length; _i++) {
+        var _Object$entries$_i = _slicedToArray(_Object$entries[_i], 2),
+          key = _Object$entries$_i[0],
+          value = _Object$entries$_i[1];
+        if (key === 'recipes') {
+          this.recipeList.innerHTML = '';
+          var element = value[0];
+          var listItem = document.createElement('li');
+          listItem.setAttribute('id', "".concat(element.id));
+          for (var _key in element) {
+            if (_key !== 'id') {
+              var container = document.createElement('div');
+              container.dataset.list = _key;
+              container.textContent = "".concat(_key, ": ").concat(element[_key]);
+              listItem.appendChild(container);
+            }
           }
+          var editButton = document.createElement('button');
+          editButton.textContent = 'Edit';
+          editButton.classList.add('btn', 'btn-primary');
+          editButton.dataset.type = 'edit';
+          listItem.appendChild(editButton);
+          var deleteButton = document.createElement('button');
+          deleteButton.textContent = 'Delete';
+          deleteButton.classList.add('btn', 'btn-primary');
+          deleteButton.dataset.type = 'delete';
+          listItem.appendChild(deleteButton);
+          this.recipeList.appendChild(listItem);
+        } else {
+          this.ingredientList.innerHTML = '';
+          var _element = value[0];
+          var _listItem = document.createElement('li');
+          _listItem.setAttribute('id', "".concat(_element.id));
+          for (var _key2 in _element) {
+            if (_key2 !== 'id') {
+              var _container = document.createElement('div');
+              _container.dataset.list = _key2;
+              _container.textContent = "".concat(_key2, ": ").concat(_element[_key2]);
+              _listItem.appendChild(_container);
+            }
+          }
+          var _editButton = document.createElement('button');
+          _editButton.textContent = 'Edit';
+          _editButton.classList.add('btn', 'btn-primary');
+          _editButton.dataset.type = 'edit';
+          _listItem.appendChild(_editButton);
+          var _deleteButton = document.createElement('button');
+          _deleteButton.textContent = 'Delete';
+          _deleteButton.classList.add('btn', 'btn-primary');
+          _deleteButton.dataset.type = 'delete';
+          _listItem.appendChild(_deleteButton);
+          this.ingredientList.appendChild(_listItem);
         }
-        var editButton = document.createElement('button');
-        editButton.textContent = 'Edit';
-        editButton.classList.add('btn', 'btn-primary');
-        editButton.dataset.type = 'edit';
-        listItem.appendChild(editButton);
-        var deleteButton = document.createElement('button');
-        deleteButton.textContent = 'Delete';
-        deleteButton.classList.add('btn', 'btn-primary');
-        deleteButton.dataset.type = 'delete';
-        listItem.appendChild(deleteButton);
-        _this2.list.appendChild(listItem);
-      });
+      }
     }
+
+    // responseData.forEach(element => {
+    //     console.log(element)
+    //     const listItem = document.createElement('li');
+    //     listItem.setAttribute('id', `${element.id}`)
+
+    //     for (let key in element) {
+    //         if (key !== 'id') {
+    //             const container = document.createElement('div');
+    //             container.dataset.list = key
+    //             container.textContent = `${key}: ${element[key]}`
+
+    //             listItem.appendChild(container)
+    //         }
+    //     }
+    //     const editButton = document.createElement('button');
+    //     editButton.textContent = 'Edit'
+    //     editButton.classList.add('btn', 'btn-primary')
+    //     editButton.dataset.type = 'edit'
+    //     listItem.appendChild(editButton)
+    //     const deleteButton = document.createElement('button');
+    //     deleteButton.textContent = 'Delete'
+    //     deleteButton.classList.add('btn', 'btn-primary')
+    //     deleteButton.dataset.type = 'delete'
+    //     listItem.appendChild(deleteButton)
+    //     this.list.appendChild(listItem);
+    // });
   }]);
 }(_Request_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ShowData);
