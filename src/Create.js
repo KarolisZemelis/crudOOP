@@ -5,14 +5,18 @@ class Create extends Request {
         super(MainObject.page)
         this.page = MainObject.page//it is not stored in parent object thus we store it here
         this.MainObject = MainObject
-        this.form = document.querySelector('[data-form=create]');
+        this.form = document.querySelector('[data-page="recipes"]');
 
-        this.form.querySelector('[data-type=submit]')
-            .addEventListener('click', this.submitCreate.bind(this));
+        const addBtns = this.form.querySelectorAll('[data-type=submit]')
+
+        addBtns.forEach((btn) => {
+            btn.addEventListener('click', this.submitCreate.bind(this));
+        })
+
     }
 
     submitCreate() {
-
+        console.log(this.collectData())
         this.saveToDb(this.collectData())
         this.form.querySelectorAll('[name]')
             .forEach(input => {
@@ -24,9 +28,14 @@ class Create extends Request {
         const data = {};
         this.form.querySelectorAll('[name]')
             .forEach(input => {
-                data[input.name] = input.value;
-            });
+                if (input.value !== "" && (input.name.includes('id') || input.name.includes('calories'))) {
+                    data[input.name] = Number(input.value)
 
+                } else if (input.value !== "") {
+                    data[input.name] = input.value
+
+                }
+            });
         return data;
     }
 }

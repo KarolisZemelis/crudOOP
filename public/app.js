@@ -34,14 +34,18 @@ var Create = /*#__PURE__*/function (_Request) {
     _this = _callSuper(this, Create, [MainObject.page]);
     _this.page = MainObject.page; //it is not stored in parent object thus we store it here
     _this.MainObject = MainObject;
-    _this.form = document.querySelector('[data-form=create]');
-    _this.form.querySelector('[data-type=submit]').addEventListener('click', _this.submitCreate.bind(_this));
+    _this.form = document.querySelector('[data-page="recipes"]');
+    var addBtns = _this.form.querySelectorAll('[data-type=submit]');
+    addBtns.forEach(function (btn) {
+      btn.addEventListener('click', _this.submitCreate.bind(_this));
+    });
     return _this;
   }
   _inherits(Create, _Request);
   return _createClass(Create, [{
     key: "submitCreate",
     value: function submitCreate() {
+      console.log(this.collectData());
       this.saveToDb(this.collectData());
       this.form.querySelectorAll('[name]').forEach(function (input) {
         input.value = '';
@@ -52,7 +56,11 @@ var Create = /*#__PURE__*/function (_Request) {
     value: function collectData() {
       var data = {};
       this.form.querySelectorAll('[name]').forEach(function (input) {
-        data[input.name] = input.value;
+        if (input.value !== "" && (input.name.includes('id') || input.name.includes('calories'))) {
+          data[input.name] = Number(input.value);
+        } else if (input.value !== "") {
+          data[input.name] = input.value;
+        }
       });
       return data;
     }
@@ -266,8 +274,10 @@ var Request = /*#__PURE__*/function () {
     value: function saveToDb(dataFromCreateObject) {
       var _this = this;
       axios__WEBPACK_IMPORTED_MODULE_0__["default"].post(this.url, dataFromCreateObject).then(function (res) {
+        console.log('esu request', dataFromCreateObject);
         _this.renderData();
       })["catch"](function (err) {
+        console.log('esu error');
         console.log(err);
       });
     }
@@ -305,7 +315,6 @@ var Request = /*#__PURE__*/function () {
     value: function deleteFromDb(id) {
       var _this4 = this;
       axios__WEBPACK_IMPORTED_MODULE_0__["default"]["delete"](this.url + '/' + 'delete' + '/' + id).then(function (res) {
-        console.log('esu request', id);
         _this4.renderData(res);
       })["catch"](function (err) {
         console.log(err);

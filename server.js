@@ -34,12 +34,16 @@ app.get('/', (req, res) => {
 });
 
 app.get('/api/recipe/', (req, res) => {
-    const sql = `
+    const sql1 = `
     SELECT recipe.id, recipe.recipe_name, type.type_name,  recipe.type_id, recipe.calories
     FROM recipe
     INNER JOIN type ON recipe.type_id=type.id
     `
-    con.query(sql, (err, result) => {
+
+    const sql2 = `
+    SELECT * FROM ingredient
+    `;
+    con.query(sql1, sql2, (err, result) => {
         if (err) {
             res.status(500).send(err);
             return;
@@ -69,22 +73,44 @@ app.get('/api/recipe/:id', (req, res) => {
 })
 
 app.post('/api/recipe', (req, res) => {
-
-    const sql = `
+    console.log(req.body)
+    if (req.body.hasOwnProperty('recipe_name')) {
+        const sql = `
     INSERT INTO recipe
     (recipe_name, calories, type_id)
     VALUES(?, ?, ?)
     `
-    con.query(sql, [req.body.recipe_name, req.body.calories, req.body.type_id], (err, result) => {
-        if (err) {
-            res.status(500).send(err);
-            return;
-        }
-        res.status(201).send({
-            success: true,
-            id: result.insertId
-        });
-    })
+        con.query(sql, [req.body.recipe_name, req.body.calories, req.body.type_id], (err, result) => {
+            if (err) {
+                res.status(500).send(err);
+                return;
+            }
+            res.status(201).send({
+                success: true,
+                id: result.insertId
+            });
+        })
+    } else {
+
+        const sql = `
+    INSERT INTO ingredient
+    (ingredient_name, type_id)
+    VALUES(?, ?)
+    `
+        console.log(sql)
+        con.query(sql, [req.body.ingredient_name, req.body.type_id], (err, result) => {
+            if (err) {
+                res.status(500).send(err);
+                return;
+            }
+            res.status(201).send({
+                success: true,
+                id: result.insertId
+            });
+        })
+    }
+
+
 
 })
 
