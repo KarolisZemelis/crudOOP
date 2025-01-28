@@ -54,12 +54,72 @@ var Create = /*#__PURE__*/function (_Request) {
       this.form.querySelectorAll('[name]').forEach(function (input) {
         data[input.name] = input.value;
       });
-      console.log(data);
       return data;
     }
   }]);
 }(_Request_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Create);
+
+/***/ }),
+
+/***/ "./src/Delete.js":
+/*!***********************!*\
+  !*** ./src/Delete.js ***!
+  \***********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _Request_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Request.js */ "./src/Request.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
+function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
+function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
+function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
+function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
+function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
+function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
+
+var Delete = /*#__PURE__*/function (_Request) {
+  function Delete(MainObject) {
+    var _this;
+    _classCallCheck(this, Delete);
+    console.log('delete objekc');
+    _this = _callSuper(this, Delete, [MainObject.page]);
+    _this.MainObject = MainObject;
+    _this.list = document.querySelector('[data-list-bin]');
+    _this.list.addEventListener('click', function (event) {
+      if (event.target.matches('[data-type="delete"]')) {
+        _this.deleteModal = document.querySelector('[data-modal="delete"]');
+        _this.deleteModal.style.display = 'block';
+        var parent = event.target.parentElement; // Get the parent element
+        var recipeId = parent.id;
+        var recipeName = parent.querySelector('[data-list-name]').textContent.split(' ')[1];
+        var recipeNameDom = _this.deleteModal.querySelector('[data-recipe-name]');
+        recipeNameDom.innerHTML = recipeName;
+        _this.deleteModal.querySelector('[data-type="cancel"]').addEventListener('click', function (_) {
+          _this.deleteModal.style.display = 'none';
+        });
+        _this.deleteModal.querySelector('[data-type="delete"]').addEventListener('click', function (_) {
+          _this.deleteModal.style.display = 'none';
+          _this.deleteFromDb(recipeId);
+        });
+      }
+    });
+    return _this;
+  }
+  _inherits(Delete, _Request);
+  return _createClass(Delete);
+}(_Request_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Delete);
 
 /***/ }),
 
@@ -96,12 +156,47 @@ var Edit = /*#__PURE__*/function (_Request) {
     _this = _callSuper(this, Edit, [MainObject.page]);
     _this.MainObject = MainObject;
     _this.list = document.querySelector('[data-list-bin]');
+    _this.list.addEventListener('click', function (event) {
+      if (event.target.matches('[data-type="edit"]')) {
+        _this.editModal = document.querySelector('[data-modal="edit"]');
+        _this.editModal.style.display = 'block';
+        var parent = event.target.parentElement; // Get the parent element
+        var recipeId = parent.id;
+        _this.getElementFromDb(recipeId, _this.MainObject, _this.editModal);
+        _this.editModal.querySelector('[data-type="cancel"]').addEventListener('click', function (_) {
+          _this.editModal.style.display = 'none';
+        });
+        _this.editModal.querySelector('[data-type="close"]').addEventListener('click', function (_) {
+          _this.editModal.style.display = 'none';
+        });
+      }
+      // if (event.target.matches('[data-type="delete"]')) {
+      //   this.deleteModal = document.querySelector('[data-modal="delete"]')
+      //   this.deleteModal.style.display = 'block'
+
+      //   const parent = event.target.parentElement; // Get the parent element
+      //   const recipeName = parent.querySelector('[data-list-name]').textContent.split(' ')[1]
+
+      //   const recipeNameDom = this.deleteModal.querySelector('[data-recipe-name]')
+
+      //   recipeNameDom.innerHTML = recipeName
+      //   this.deleteModal.querySelector('[data-type="cancel"]')
+      //     .addEventListener('click', _ => {
+      //       this.deleteModal.style.display = 'none'
+      //     })
+      //   this.deleteModal.querySelector('[data-type="delete"]')
+      //     .addEventListener('click', _ => {
+      //       this.deleteModal.style.display = 'none'
+
+      //     })
+      // }
+    });
     return _this;
   }
   _inherits(Edit, _Request);
   return _createClass(Edit, [{
-    key: "renderEditData",
-    value: function renderEditData(response, editModal) {
+    key: "renderModalData",
+    value: function renderModalData(response, editModal) {
       var _this2 = this;
       var modalBody = editModal.querySelector('[data-form-body]');
       var responseData = response.data.result;
@@ -115,7 +210,6 @@ var Edit = /*#__PURE__*/function (_Request) {
         editObject.recipe_name = editModal.querySelector("[name=\"recipe_name\"]").value;
         editObject.calories = Number(editModal.querySelector("[name=\"calories\"]").value);
         editObject.type_id = Number(editModal.querySelector('select[name="type_id"]').value);
-        console.log(editObject);
         _this2.editToDb(editObject);
         editModal.style.display = 'none';
       });
@@ -140,6 +234,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Create_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Create.js */ "./src/Create.js");
 /* harmony import */ var _ShowData_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ShowData.js */ "./src/ShowData.js");
 /* harmony import */ var _Edit_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Edit.js */ "./src/Edit.js");
+/* harmony import */ var _Delete_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Delete.js */ "./src/Delete.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
 function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
@@ -149,12 +244,14 @@ function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Can
 
 
 
+
 var Recipe = /*#__PURE__*/_createClass(function Recipe() {
   _classCallCheck(this, Recipe);
   this.page = 'recipe';
   this.Create = new _Create_js__WEBPACK_IMPORTED_MODULE_0__["default"](this);
   this.ShowData = new _ShowData_js__WEBPACK_IMPORTED_MODULE_1__["default"](this);
   this.Edit = new _Edit_js__WEBPACK_IMPORTED_MODULE_2__["default"](this);
+  this.Delete = new _Delete_js__WEBPACK_IMPORTED_MODULE_3__["default"](this);
 });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Recipe);
 
@@ -208,7 +305,7 @@ var Request = /*#__PURE__*/function () {
     key: "getElementFromDb",
     value: function getElementFromDb(id, MainObject, editModal) {
       axios__WEBPACK_IMPORTED_MODULE_0__["default"].get(this.url + '/' + id).then(function (res) {
-        MainObject.Edit.renderEditData(res, editModal);
+        MainObject.Edit.renderModalData(res, editModal);
       })["catch"](function (err) {
         console.log(err);
       });
@@ -219,6 +316,16 @@ var Request = /*#__PURE__*/function () {
       var _this3 = this;
       axios__WEBPACK_IMPORTED_MODULE_0__["default"].put(this.url + '/' + 'edit' + '/' + data.id, data).then(function (res) {
         _this3.renderData(res);
+      })["catch"](function (err) {
+        console.log(err);
+      });
+    }
+  }, {
+    key: "deleteFromDb",
+    value: function deleteFromDb(id) {
+      var _this4 = this;
+      axios__WEBPACK_IMPORTED_MODULE_0__["default"]["delete"](this.url + '/' + 'delete' + '/' + id).then(function (res) {
+        _this4.renderData(res);
       })["catch"](function (err) {
         console.log(err);
       });
@@ -272,21 +379,6 @@ var ShowData = /*#__PURE__*/function (_Request) {
     _this = _callSuper(this, ShowData, [MainObject.page]);
     _this.list = document.querySelector('[data-list-bin]');
     _this.MainObject = MainObject;
-    _this.list.addEventListener('click', function (event) {
-      _this.editModal = document.querySelector('[data-modal="edit"]');
-      if (event.target.matches('[data-type="edit"]')) {
-        _this.editModal.style.display = 'block';
-        var parent = event.target.parentElement; // Get the parent <li>
-        var recipeId = parent.id;
-        _this.getElementFromDb(recipeId, _this.MainObject, _this.editModal);
-        _this.editModal.querySelector('[data-type="cancel"]').addEventListener('click', function (_) {
-          _this.editModal.style.display = 'none';
-        });
-        _this.editModal.querySelector('[data-type="close"]').addEventListener('click', function (_) {
-          _this.editModal.style.display = 'none';
-        });
-      }
-    });
     _this.getFromDb();
     return _this;
   }

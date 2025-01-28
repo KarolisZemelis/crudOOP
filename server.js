@@ -88,7 +88,7 @@ app.post('/api/recipe', (req, res) => {
 })
 
 app.put('/api/recipe/edit/:id', (req, res) => {
-    const itemToSave = req.body; // Assuming req.body is an array and you need the first item
+    const itemToSave = req.body;
 
     const sql = `
     UPDATE recipe
@@ -97,6 +97,35 @@ app.put('/api/recipe/edit/:id', (req, res) => {
     `;
 
     con.query(sql, [itemToSave.recipe_name, itemToSave.calories, itemToSave.type_id, req.params.id], (err, result) => {
+        if (err) {
+            res.status(500).send(err);
+            return;
+        }
+
+        if (result.affectedRows === 0) {
+            res.status(404).send({
+                success: false,
+                message: 'Game not found'
+            });
+            return;
+        }
+
+        res.send({
+
+            success: true,
+        });
+    });
+
+});
+
+app.delete('/api/recipe/delete/:id', (req, res) => {
+
+    const sql = `
+        DELETE FROM recipe
+        WHERE id = ?
+    `;
+
+    con.query(sql, [req.params.id], (err, result) => {
         if (err) {
             res.status(500).send(err);
             return;

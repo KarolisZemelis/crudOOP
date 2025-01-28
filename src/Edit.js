@@ -5,10 +5,50 @@ class Edit extends Request {
     super(MainObject.page)
     this.MainObject = MainObject
     this.list = document.querySelector('[data-list-bin]')
+    this.list.addEventListener('click', (event) => {
 
+      if (event.target.matches('[data-type="edit"]')) {
+        this.editModal = document.querySelector('[data-modal="edit"]')
+        this.editModal.style.display = 'block'
+
+        const parent = event.target.parentElement; // Get the parent element
+        const recipeId = parent.id;
+
+        this.getElementFromDb(recipeId, this.MainObject, this.editModal)
+
+        this.editModal.querySelector('[data-type="cancel"]')
+          .addEventListener('click', _ => {
+            this.editModal.style.display = 'none'
+          })
+        this.editModal.querySelector('[data-type="close"]')
+          .addEventListener('click', _ => {
+            this.editModal.style.display = 'none'
+          })
+      }
+      // if (event.target.matches('[data-type="delete"]')) {
+      //   this.deleteModal = document.querySelector('[data-modal="delete"]')
+      //   this.deleteModal.style.display = 'block'
+
+      //   const parent = event.target.parentElement; // Get the parent element
+      //   const recipeName = parent.querySelector('[data-list-name]').textContent.split(' ')[1]
+
+      //   const recipeNameDom = this.deleteModal.querySelector('[data-recipe-name]')
+
+      //   recipeNameDom.innerHTML = recipeName
+      //   this.deleteModal.querySelector('[data-type="cancel"]')
+      //     .addEventListener('click', _ => {
+      //       this.deleteModal.style.display = 'none'
+      //     })
+      //   this.deleteModal.querySelector('[data-type="delete"]')
+      //     .addEventListener('click', _ => {
+      //       this.deleteModal.style.display = 'none'
+
+      //     })
+      // }
+    });
   }
 
-  renderEditData(response, editModal) {
+  renderModalData(response, editModal) {
 
     const modalBody = editModal.querySelector('[data-form-body]')
     const responseData = response.data.result
@@ -41,7 +81,7 @@ class Edit extends Request {
       editObject.recipe_name = editModal.querySelector(`[name="recipe_name"]`).value
       editObject.calories = Number(editModal.querySelector(`[name="calories"]`).value)
       editObject.type_id = Number(editModal.querySelector('select[name="type_id"]').value)
-      console.log(editObject)
+
       this.editToDb(editObject)
 
       editModal.style.display = 'none'

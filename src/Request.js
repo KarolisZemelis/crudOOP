@@ -28,14 +28,13 @@ class Request {
     getElementFromDb(id, MainObject, editModal) {
         axios.get(this.url + '/' + id)
             .then(res => {
-                MainObject.Edit.renderEditData(res, editModal)
+                MainObject.Edit.renderModalData(res, editModal)
 
             })
             .catch(err => {
                 console.log(err)
             })
     }
-
 
     editToDb(data) {
         axios.put(this.url + '/' + 'edit' + '/' + data.id, data)
@@ -48,8 +47,14 @@ class Request {
             })
     }
 
-
-
+    deleteFromDb(id) {
+        axios.delete(this.url + '/' + 'delete' + '/' + id)
+            .then((res) => {
+                this.renderData(res)
+            }).catch(err => {
+                console.log(err)
+            })
+    }
 
     //this -> create object because this is being called from create
     //MainObject -> recipe because we pass <this which is recipe when creating a class object >
@@ -60,8 +65,6 @@ class Request {
     }
 
 }
-
-
 
 
 

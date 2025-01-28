@@ -25,7 +25,7 @@ class Create extends Request {
             .forEach(input => {
                 data[input.name] = input.value;
             });
-        console.log(data)
+
         return data;
     }
 }
