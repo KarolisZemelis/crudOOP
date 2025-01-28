@@ -417,6 +417,7 @@ var ShowData = /*#__PURE__*/function (_Request) {
   return _createClass(ShowData, [{
     key: "renderData",
     value: function renderData(response) {
+      var _this2 = this;
       var responseData = response.data;
       for (var _i = 0, _Object$entries = Object.entries(responseData); _i < _Object$entries.length; _i++) {
         var _Object$entries$_i = _slicedToArray(_Object$entries[_i], 2),
@@ -424,82 +425,59 @@ var ShowData = /*#__PURE__*/function (_Request) {
           value = _Object$entries$_i[1];
         if (key === 'recipes') {
           this.recipeList.innerHTML = '';
-          var element = value[0];
-          var listItem = document.createElement('li');
-          listItem.setAttribute('id', "".concat(element.id));
-          for (var _key in element) {
-            if (_key !== 'id') {
-              var container = document.createElement('div');
-              container.dataset.list = _key;
-              container.textContent = "".concat(_key, ": ").concat(element[_key]);
-              listItem.appendChild(container);
+          value.forEach(function (element) {
+            var listItem = document.createElement('li');
+            listItem.setAttribute('id', "".concat(element.id));
+            for (var _key in element) {
+              if (_key !== 'id') {
+                var container = document.createElement('div');
+                container.dataset.list = _key;
+                container.textContent = "".concat(_key, ": ").concat(element[_key]);
+                listItem.appendChild(container);
+              }
             }
-          }
-          var editButton = document.createElement('button');
-          editButton.textContent = 'Edit';
-          editButton.classList.add('btn', 'btn-primary');
-          editButton.dataset.type = 'edit';
-          listItem.appendChild(editButton);
-          var deleteButton = document.createElement('button');
-          deleteButton.textContent = 'Delete';
-          deleteButton.classList.add('btn', 'btn-primary');
-          deleteButton.dataset.type = 'delete';
-          listItem.appendChild(deleteButton);
-          this.recipeList.appendChild(listItem);
+            _this2.renderEditButton(listItem);
+            _this2.renderDeleteButton(listItem);
+            _this2.recipeList.appendChild(listItem);
+          });
         } else {
           this.ingredientList.innerHTML = '';
-          var _element = value[0];
-          var _listItem = document.createElement('li');
-          _listItem.setAttribute('id', "".concat(_element.id));
-          for (var _key2 in _element) {
-            if (_key2 !== 'id') {
-              var _container = document.createElement('div');
-              _container.dataset.list = _key2;
-              _container.textContent = "".concat(_key2, ": ").concat(_element[_key2]);
-              _listItem.appendChild(_container);
+          value.forEach(function (element) {
+            var listItem = document.createElement('li');
+            listItem.setAttribute('id', "".concat(element.id));
+            for (var _key2 in element) {
+              if (_key2 !== 'id') {
+                var container = document.createElement('div');
+                container.dataset.list = _key2;
+                container.textContent = "".concat(_key2, ": ").concat(element[_key2]);
+                listItem.appendChild(container);
+              }
             }
-          }
-          var _editButton = document.createElement('button');
-          _editButton.textContent = 'Edit';
-          _editButton.classList.add('btn', 'btn-primary');
-          _editButton.dataset.type = 'edit';
-          _listItem.appendChild(_editButton);
-          var _deleteButton = document.createElement('button');
-          _deleteButton.textContent = 'Delete';
-          _deleteButton.classList.add('btn', 'btn-primary');
-          _deleteButton.dataset.type = 'delete';
-          _listItem.appendChild(_deleteButton);
-          this.ingredientList.appendChild(_listItem);
+            _this2.renderEditButton(listItem);
+            _this2.renderDeleteButton(listItem);
+            _this2.ingredientList.appendChild(listItem);
+          });
         }
       }
     }
-
-    // responseData.forEach(element => {
-    //     console.log(element)
-    //     const listItem = document.createElement('li');
-    //     listItem.setAttribute('id', `${element.id}`)
-
-    //     for (let key in element) {
-    //         if (key !== 'id') {
-    //             const container = document.createElement('div');
-    //             container.dataset.list = key
-    //             container.textContent = `${key}: ${element[key]}`
-
-    //             listItem.appendChild(container)
-    //         }
-    //     }
-    //     const editButton = document.createElement('button');
-    //     editButton.textContent = 'Edit'
-    //     editButton.classList.add('btn', 'btn-primary')
-    //     editButton.dataset.type = 'edit'
-    //     listItem.appendChild(editButton)
-    //     const deleteButton = document.createElement('button');
-    //     deleteButton.textContent = 'Delete'
-    //     deleteButton.classList.add('btn', 'btn-primary')
-    //     deleteButton.dataset.type = 'delete'
-    //     listItem.appendChild(deleteButton)
-    //     this.list.appendChild(listItem);
-    // });
+  }, {
+    key: "renderEditButton",
+    value: function renderEditButton(listItem) {
+      var editButton = document.createElement('button');
+      editButton.textContent = 'Edit';
+      editButton.classList.add('btn', 'btn-primary');
+      editButton.dataset.type = 'edit';
+      listItem.appendChild(editButton);
+    }
+  }, {
+    key: "renderDeleteButton",
+    value: function renderDeleteButton(listItem) {
+      var deleteButton = document.createElement('button');
+      deleteButton.textContent = 'Delete';
+      deleteButton.classList.add('btn', 'btn-primary');
+      deleteButton.dataset.type = 'delete';
+      listItem.appendChild(deleteButton);
+    }
   }]);
 }(_Request_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ShowData);

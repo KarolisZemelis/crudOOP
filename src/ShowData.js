@@ -16,87 +16,65 @@ class ShowData extends Request {
         for (const [key, value] of Object.entries(responseData)) {
             if (key === 'recipes') {
                 this.recipeList.innerHTML = ''
-                let element = value[0]
-                const listItem = document.createElement('li');
-                listItem.setAttribute('id', `${element.id}`)
-
-                for (let key in element) {
-                    if (key !== 'id') {
-                        const container = document.createElement('div');
-                        container.dataset.list = key
-                        container.textContent = `${key}: ${element[key]}`
-
-                        listItem.appendChild(container)
+                value.forEach(element => {
+                    const listItem = document.createElement('li');
+                    listItem.setAttribute('id', `${element.id}`)
+                    for (let key in element) {
+                        if (key !== 'id') {
+                            const container = document.createElement('div');
+                            container.dataset.list = key
+                            container.textContent = `${key}: ${element[key]}`
+                            listItem.appendChild(container)
+                        }
                     }
-                }
-                const editButton = document.createElement('button');
-                editButton.textContent = 'Edit'
-                editButton.classList.add('btn', 'btn-primary')
-                editButton.dataset.type = 'edit'
-                listItem.appendChild(editButton)
-                const deleteButton = document.createElement('button');
-                deleteButton.textContent = 'Delete'
-                deleteButton.classList.add('btn', 'btn-primary')
-                deleteButton.dataset.type = 'delete'
-                listItem.appendChild(deleteButton)
-                this.recipeList.appendChild(listItem);
+                    this.renderEditButton(listItem)
+                    this.renderDeleteButton(listItem)
+                    this.recipeList.appendChild(listItem);
+                });
+
+
             } else {
                 this.ingredientList.innerHTML = ''
-                let element = value[0]
-                const listItem = document.createElement('li');
-                listItem.setAttribute('id', `${element.id}`)
+                value.forEach(element => {
+                    const listItem = document.createElement('li');
+                    listItem.setAttribute('id', `${element.id}`)
+                    for (let key in element) {
+                        if (key !== 'id') {
+                            const container = document.createElement('div');
+                            container.dataset.list = key
+                            container.textContent = `${key}: ${element[key]}`
 
-                for (let key in element) {
-                    if (key !== 'id') {
-                        const container = document.createElement('div');
-                        container.dataset.list = key
-                        container.textContent = `${key}: ${element[key]}`
-
-                        listItem.appendChild(container)
+                            listItem.appendChild(container)
+                        }
                     }
-                }
-                const editButton = document.createElement('button');
-                editButton.textContent = 'Edit'
-                editButton.classList.add('btn', 'btn-primary')
-                editButton.dataset.type = 'edit'
-                listItem.appendChild(editButton)
-                const deleteButton = document.createElement('button');
-                deleteButton.textContent = 'Delete'
-                deleteButton.classList.add('btn', 'btn-primary')
-                deleteButton.dataset.type = 'delete'
-                listItem.appendChild(deleteButton)
-                this.ingredientList.appendChild(listItem);
+                    this.renderEditButton(listItem)
+                    this.renderDeleteButton(listItem)
+                    this.ingredientList.appendChild(listItem);
+                });
+
+
+
+
             }
         }
 
     }
 
-    // responseData.forEach(element => {
-    //     console.log(element)
-    //     const listItem = document.createElement('li');
-    //     listItem.setAttribute('id', `${element.id}`)
+    renderEditButton(listItem) {
+        const editButton = document.createElement('button');
+        editButton.textContent = 'Edit'
+        editButton.classList.add('btn', 'btn-primary')
+        editButton.dataset.type = 'edit'
+        listItem.appendChild(editButton)
+    }
+    renderDeleteButton(listItem) {
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Delete'
+        deleteButton.classList.add('btn', 'btn-primary')
+        deleteButton.dataset.type = 'delete'
+        listItem.appendChild(deleteButton)
 
-    //     for (let key in element) {
-    //         if (key !== 'id') {
-    //             const container = document.createElement('div');
-    //             container.dataset.list = key
-    //             container.textContent = `${key}: ${element[key]}`
-
-    //             listItem.appendChild(container)
-    //         }
-    //     }
-    //     const editButton = document.createElement('button');
-    //     editButton.textContent = 'Edit'
-    //     editButton.classList.add('btn', 'btn-primary')
-    //     editButton.dataset.type = 'edit'
-    //     listItem.appendChild(editButton)
-    //     const deleteButton = document.createElement('button');
-    //     deleteButton.textContent = 'Delete'
-    //     deleteButton.classList.add('btn', 'btn-primary')
-    //     deleteButton.dataset.type = 'delete'
-    //     listItem.appendChild(deleteButton)
-    //     this.list.appendChild(listItem);
-    // });
+    }
 }
 
 
