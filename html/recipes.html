@@ -28,10 +28,34 @@
                 <label class="form-label">Recipe type:</label>
                 <select name="type_id">
                   <option value="">--Please choose an option--</option>
-                  <option value="1">Pusryčiai</option>
-                  <option value="2">Pietūs</option>
-                  <option value="3">Užkandis</option>
-                  <option value="4">Vakarienė</option>
+                  <option value="1">Breakfast</option>
+                  <option value="2">Lunch</option>
+                  <option value="3">Snack</option>
+                  <option value="4">Supper</option>
+                </select>
+              </div>
+            </div>
+            <div class="card-footer text-body-secondary">
+              <button class="btn btn-primary" data-type="submit">Add</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-4">
+          <div class="card mt-5" data-form="create">
+            <div class="card-header">
+              <h2>New ingredient</h2>
+            </div>
+            <div class="card-body">
+              <div class="mb-3">
+                <label class="form-label">Name</label>
+                <input type="text" class="form-control" name="ingrediet_name" />
+                <label class="form-label">Ingrednt type:</label>
+                <select name="type_id">
+                  <option value="">--Please choose an option--</option>
+                  <option value="1">Pcs.</option>
+                  <option value="2" selected>G.</option>
+                  <option value="3">Ml.</option>
                 </select>
               </div>
             </div>
@@ -45,6 +69,17 @@
           <div class="card mt-5">
             <div class="card-header">
               <h2>Recipe list</h2>
+            </div>
+            <div class="card-body">
+              <ul class="list-group list-group-flush" data-list-bin></ul>
+            </div>
+            <div class="card-footer text-body-secondary"></div>
+          </div>
+        </div>
+        <div class="col-8" ingredient-list>
+          <div class="card mt-5">
+            <div class="card-header">
+              <h2>Ingredient list</h2>
             </div>
             <div class="card-body">
               <ul class="list-group list-group-flush" data-list-bin></ul>

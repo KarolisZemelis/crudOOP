@@ -6,11 +6,14 @@ class Request {
     }
 
     saveToDb(dataFromCreateObject) {
+
         axios.post(this.url, dataFromCreateObject)
             .then(res => {
+
                 this.renderData()
             })
             .catch(err => {
+
                 console.log(err)
             })
     }
@@ -50,6 +53,7 @@ class Request {
     deleteFromDb(id) {
         axios.delete(this.url + '/' + 'delete' + '/' + id)
             .then((res) => {
+                console.log('esu request', id)
                 this.renderData(res)
             }).catch(err => {
                 console.log(err)

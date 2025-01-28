@@ -69,6 +69,7 @@ app.get('/api/recipe/:id', (req, res) => {
 })
 
 app.post('/api/recipe', (req, res) => {
+
     const sql = `
     INSERT INTO recipe
     (recipe_name, calories, type_id)
@@ -119,7 +120,6 @@ app.put('/api/recipe/edit/:id', (req, res) => {
 });
 
 app.delete('/api/recipe/delete/:id', (req, res) => {
-
     const sql = `
         DELETE FROM recipe
         WHERE id = ?

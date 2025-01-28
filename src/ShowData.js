@@ -12,16 +12,30 @@ class ShowData extends Request {
     renderData(response) {
         this.list.innerHTML = ''
         const responseData = response.data.result
+
         responseData.forEach(element => {
             const listItem = document.createElement('li');
             listItem.setAttribute('id', `${element.id}`)
-            listItem.innerHTML = `
-            <div data-list-name>Name: ${element.recipe_name}</div>
-            <div data-list-type>Type: ${element.type_name}</div>
-            <div data-list-calories>Calories: ${element.calories}</div>
-            <button class="btn btn-primary" data-type="edit">Edit</button>
-            <button class="btn btn-primary" data-type="delete">Delete</button>
-            `;
+
+            for (let key in element) {
+                if (key !== 'id') {
+                    const container = document.createElement('div');
+                    container.dataset.list = key
+                    container.textContent = `${key}: ${element[key]}`
+
+                    listItem.appendChild(container)
+                }
+            }
+            const editButton = document.createElement('button');
+            editButton.textContent = 'Edit'
+            editButton.classList.add('btn', 'btn-primary')
+            editButton.dataset.type = 'edit'
+            listItem.appendChild(editButton)
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Delete'
+            deleteButton.classList.add('btn', 'btn-primary')
+            deleteButton.dataset.type = 'delete'
+            listItem.appendChild(deleteButton)
             this.list.appendChild(listItem);
         });
     }

@@ -92,7 +92,6 @@ var Delete = /*#__PURE__*/function (_Request) {
   function Delete(MainObject) {
     var _this;
     _classCallCheck(this, Delete);
-    console.log('delete objekc');
     _this = _callSuper(this, Delete, [MainObject.page]);
     _this.MainObject = MainObject;
     _this.list = document.querySelector('[data-list-bin]');
@@ -100,18 +99,19 @@ var Delete = /*#__PURE__*/function (_Request) {
       if (event.target.matches('[data-type="delete"]')) {
         _this.deleteModal = document.querySelector('[data-modal="delete"]');
         _this.deleteModal.style.display = 'block';
-        var parent = event.target.parentElement; // Get the parent element
-        var recipeId = parent.id;
-        var recipeName = parent.querySelector('[data-list-name]').textContent.split(' ')[1];
-        var recipeNameDom = _this.deleteModal.querySelector('[data-recipe-name]');
-        recipeNameDom.innerHTML = recipeName;
+        var parent = event.target.parentElement;
+        var elementName = parent.querySelector(':first-child').textContent;
+        var elementNameDom = _this.deleteModal.querySelector('[data-recipe-name]');
+        elementNameDom.innerHTML = "<i><b>".concat(elementName, "</b></i>");
         _this.deleteModal.querySelector('[data-type="cancel"]').addEventListener('click', function (_) {
           _this.deleteModal.style.display = 'none';
         });
-        _this.deleteModal.querySelector('[data-type="delete"]').addEventListener('click', function (_) {
+        _this.deleteModal.querySelector('[data-type="delete"]').onclick = function () {
           _this.deleteModal.style.display = 'none';
-          _this.deleteFromDb(recipeId);
-        });
+          var elementId = parent.id; // Get the current id
+          console.log('Deleting elementId:', elementId);
+          _this.deleteFromDb(elementId);
+        };
       }
     });
     return _this;
@@ -170,26 +170,6 @@ var Edit = /*#__PURE__*/function (_Request) {
           _this.editModal.style.display = 'none';
         });
       }
-      // if (event.target.matches('[data-type="delete"]')) {
-      //   this.deleteModal = document.querySelector('[data-modal="delete"]')
-      //   this.deleteModal.style.display = 'block'
-
-      //   const parent = event.target.parentElement; // Get the parent element
-      //   const recipeName = parent.querySelector('[data-list-name]').textContent.split(' ')[1]
-
-      //   const recipeNameDom = this.deleteModal.querySelector('[data-recipe-name]')
-
-      //   recipeNameDom.innerHTML = recipeName
-      //   this.deleteModal.querySelector('[data-type="cancel"]')
-      //     .addEventListener('click', _ => {
-      //       this.deleteModal.style.display = 'none'
-      //     })
-      //   this.deleteModal.querySelector('[data-type="delete"]')
-      //     .addEventListener('click', _ => {
-      //       this.deleteModal.style.display = 'none'
-
-      //     })
-      // }
     });
     return _this;
   }
@@ -325,6 +305,7 @@ var Request = /*#__PURE__*/function () {
     value: function deleteFromDb(id) {
       var _this4 = this;
       axios__WEBPACK_IMPORTED_MODULE_0__["default"]["delete"](this.url + '/' + 'delete' + '/' + id).then(function (res) {
+        console.log('esu request', id);
         _this4.renderData(res);
       })["catch"](function (err) {
         console.log(err);
@@ -392,7 +373,24 @@ var ShowData = /*#__PURE__*/function (_Request) {
       responseData.forEach(function (element) {
         var listItem = document.createElement('li');
         listItem.setAttribute('id', "".concat(element.id));
-        listItem.innerHTML = "\n            <div data-list-name>Name: ".concat(element.recipe_name, "</div>\n            <div data-list-type>Type: ").concat(element.type_name, "</div>\n            <div data-list-calories>Calories: ").concat(element.calories, "</div>\n            <button class=\"btn btn-primary\" data-type=\"edit\">Edit</button>\n            <button class=\"btn btn-primary\" data-type=\"delete\">Delete</button>\n            ");
+        for (var key in element) {
+          if (key !== 'id') {
+            var container = document.createElement('div');
+            container.dataset.list = key;
+            container.textContent = "".concat(key, ": ").concat(element[key]);
+            listItem.appendChild(container);
+          }
+        }
+        var editButton = document.createElement('button');
+        editButton.textContent = 'Edit';
+        editButton.classList.add('btn', 'btn-primary');
+        editButton.dataset.type = 'edit';
+        listItem.appendChild(editButton);
+        var deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Delete';
+        deleteButton.classList.add('btn', 'btn-primary');
+        deleteButton.dataset.type = 'delete';
+        listItem.appendChild(deleteButton);
         _this2.list.appendChild(listItem);
       });
     }

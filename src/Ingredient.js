@@ -3,7 +3,7 @@ import ShowData from './ShowData.js'
 import Edit from './Edit.js'
 import Delete from './Delete.js'
 
-class Recipe {
+class Ingredient {
     constructor() {
         this.page = 'recipe';
         this.Create = new Create(this);
@@ -14,4 +14,4 @@ class Recipe {
     }
 }
 
-export default Recipe;
+export default Ingredient;

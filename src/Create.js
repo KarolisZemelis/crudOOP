@@ -12,6 +12,7 @@ class Create extends Request {
     }
 
     submitCreate() {
+
         this.saveToDb(this.collectData())
         this.form.querySelectorAll('[name]')
             .forEach(input => {
