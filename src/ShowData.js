@@ -43,7 +43,6 @@ class ShowData extends Request {
                             const container = document.createElement('div');
                             container.dataset.list = key
                             container.textContent = `${key}: ${element[key]}`
-
                             listItem.appendChild(container)
                         }
                     }

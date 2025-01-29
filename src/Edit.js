@@ -35,14 +35,20 @@ class Edit extends Request {
     }
 
     this.modalBody.append(container);
-    console.log(editModal)
-    editModal.querySelector('[data-type="submit"]').addEventListener('click', _ => {
-      let editObject = {}
 
+    editModal.querySelector('[data-type="submit"]').onclick = (event) => {
+      let editObject = {};
+      editObject.table = table;
+      editObject.id = responseData.id;
       const inputs = editModal.querySelectorAll("[name]");
-      console.log(inputs)
-      editModal.style.display = 'none'
-    })
+
+      inputs.forEach(input => {
+        editObject[input.name] = input.value;
+      });
+
+      this.editToDb(editObject);
+      editModal.style.display = 'none';
+    };
   }
 
   listenToEdit(list) {
@@ -69,8 +75,6 @@ class Edit extends Request {
 
     });
   }
-
-
 
 }
 

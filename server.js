@@ -167,32 +167,60 @@ app.post('/api/recipe', (req, res) => {
 
 app.put('/api/recipe/edit/:id', (req, res) => {
     const itemToSave = req.body;
+    if (req.body.table === 'recipe') {
+        const sql = `
+        UPDATE recipe
+        SET recipe_name = ?, calories = ?, type_id = ?
+        WHERE id = ?
+        `;
 
-    const sql = `
-    UPDATE recipe
-    SET recipe_name = ?, calories = ?, type_id = ?
-    WHERE id = ?
-    `;
+        con.query(sql, [itemToSave.recipe_name, itemToSave.calories, itemToSave.type_id, req.params.id], (err, result) => {
+            if (err) {
+                res.status(500).send(err);
+                return;
+            }
 
-    con.query(sql, [itemToSave.recipe_name, itemToSave.calories, itemToSave.type_id, req.params.id], (err, result) => {
-        if (err) {
-            res.status(500).send(err);
-            return;
-        }
+            if (result.affectedRows === 0) {
+                res.status(404).send({
+                    success: false,
+                    message: 'Game not found'
+                });
+                return;
+            }
 
-        if (result.affectedRows === 0) {
-            res.status(404).send({
-                success: false,
-                message: 'Game not found'
+            res.send({
+
+                success: true,
             });
-            return;
-        }
-
-        res.send({
-
-            success: true,
         });
-    });
+    } else {
+        const sql = `
+        UPDATE ingredient
+        SET ingredient_name = ?, type_id = ?
+        WHERE id = ?
+        `;
+
+        con.query(sql, [itemToSave.ingredient_name, itemToSave.type_id, req.params.id], (err, result) => {
+            if (err) {
+                res.status(500).send(err);
+                return;
+            }
+
+            if (result.affectedRows === 0) {
+                res.status(404).send({
+                    success: false,
+                    message: 'Game not found'
+                });
+                return;
+            }
+
+            res.send({
+
+                success: true,
+            });
+        });
+    }
+
 
 });
 

@@ -197,6 +197,7 @@ var Edit = /*#__PURE__*/function (_Request) {
   return _createClass(Edit, [{
     key: "renderModalData",
     value: function renderModalData(response, editModal, table) {
+      var _this2 = this;
       this.modalBody.innerHTML = '';
       var responseData = response.data.result[0];
       var container = document.createElement('div');
@@ -219,32 +220,36 @@ var Edit = /*#__PURE__*/function (_Request) {
         }
       }
       this.modalBody.append(container);
-      console.log(editModal);
-      editModal.querySelector('[data-type="submit"]').addEventListener('click', function (_) {
+      editModal.querySelector('[data-type="submit"]').onclick = function (event) {
         var editObject = {};
+        editObject.table = table;
+        editObject.id = responseData.id;
         var inputs = editModal.querySelectorAll("[name]");
-        console.log(inputs);
+        inputs.forEach(function (input) {
+          editObject[input.name] = input.value;
+        });
+        _this2.editToDb(editObject);
         editModal.style.display = 'none';
-      });
+      };
     }
   }, {
     key: "listenToEdit",
     value: function listenToEdit(list) {
-      var _this2 = this;
+      var _this3 = this;
       list.addEventListener('click', function (event) {
         if (list.dataset.hasOwnProperty('listIngredients')) {}
         if (event.target.matches('[data-type="edit"]')) {
-          _this2.editModal = document.querySelector('[data-modal="edit"]');
-          _this2.editModal.style.display = 'block';
+          _this3.editModal = document.querySelector('[data-modal="edit"]');
+          _this3.editModal.style.display = 'block';
           var parent = event.target.parentElement;
           var elementId = parent.id;
           var table = list.dataset.hasOwnProperty('listIngredients') ? 'ingredient' : 'recipe';
-          _this2.getElementFromDb(elementId, _this2.MainObject, _this2.editModal, table);
-          _this2.editModal.querySelector('[data-type="cancel"]').addEventListener('click', function (_) {
-            _this2.editModal.style.display = 'none';
+          _this3.getElementFromDb(elementId, _this3.MainObject, _this3.editModal, table);
+          _this3.editModal.querySelector('[data-type="cancel"]').addEventListener('click', function (_) {
+            _this3.editModal.style.display = 'none';
           });
-          _this2.editModal.querySelector('[data-type="close"]').addEventListener('click', function (_) {
-            _this2.editModal.style.display = 'none';
+          _this3.editModal.querySelector('[data-type="close"]').addEventListener('click', function (_) {
+            _this3.editModal.style.display = 'none';
           });
         }
       });
@@ -366,9 +371,9 @@ var Request = /*#__PURE__*/function () {
     }
   }, {
     key: "editToDb",
-    value: function editToDb(data) {
+    value: function editToDb(data, table) {
       var _this3 = this;
-      axios__WEBPACK_IMPORTED_MODULE_0__["default"].put(this.url + '/' + 'edit' + '/' + data.id, data).then(function (res) {
+      axios__WEBPACK_IMPORTED_MODULE_0__["default"].put(this.url + '/' + 'edit' + '/' + data.id, data, table).then(function (res) {
         _this3.renderData(res);
       })["catch"](function (err) {
         console.log(err);

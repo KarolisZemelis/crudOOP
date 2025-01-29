@@ -52,8 +52,8 @@ class Request {
             })
     }
 
-    editToDb(data) {
-        axios.put(this.url + '/' + 'edit' + '/' + data.id, data)
+    editToDb(data, table) {
+        axios.put(this.url + '/' + 'edit' + '/' + data.id, data, table)
             .then((res) => {
                 this.renderData(res)
             })
