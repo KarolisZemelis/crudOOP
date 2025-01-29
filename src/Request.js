@@ -11,7 +11,6 @@ class Request {
 
         axios.post(this.url, dataFromCreateObject)
             .then(res => {
-                console.log('esu request', dataFromCreateObject)
                 this.renderData()
             })
             .catch(err => {
@@ -23,7 +22,6 @@ class Request {
     getFromDb() {
         axios.get(this.url)
             .then(res => {
-                console.log(res)
                 this.renderData(res)
             })
             .catch(err => {
@@ -31,10 +29,13 @@ class Request {
             })
     }
 
-    getElementFromDb(id, MainObject, editModal) {
-        axios.get(this.url + '/' + id)
+    getElementFromDb(id, MainObject, editModal, database) {
+        axios.get(this.url + '/' + id, {
+            params: { database }
+        })
             .then(res => {
-                MainObject.Edit.renderModalData(res, editModal)
+                console.log(res)
+                // MainObject.Edit.renderModalData(res, editModal)
 
             })
             .catch(err => {
@@ -46,7 +47,6 @@ class Request {
         axios.put(this.url + '/' + 'edit' + '/' + data.id, data)
             .then((res) => {
                 this.renderData(res)
-
             })
             .catch(err => {
                 console.log(err)
@@ -71,8 +71,5 @@ class Request {
     }
 
 }
-
-
-
 
 export default Request;

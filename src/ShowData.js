@@ -51,10 +51,6 @@ class ShowData extends Request {
                     this.renderDeleteButton(listItem)
                     this.ingredientList.appendChild(listItem);
                 });
-
-
-
-
             }
         }
 

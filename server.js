@@ -61,26 +61,47 @@ app.get('/api/recipe/', (req, res) => {
     })
 })
 
-app.get('/api/recipe/:id', (req, res) => {
-    const sql = `
-    SELECT recipe.id, recipe.recipe_name, type.type_name,  recipe.type_id, recipe.calories
+//čia padaryti du SQL
+app.get('/api/recipe/:id', async (req, res) => {
+
+    if (req.query.database === 'recipe') {
+        const sql = `
+    SELECT recipe.id, recipe.recipe_name, type.type_name, recipe.type_id, recipe.calories
     FROM recipe
     INNER JOIN type ON recipe.type_id=type.id
     WHERE recipe.id = ?
     `
-    con.query(sql, [req.params.id], (err, result) => {
-        if (err) {
-            res.status(500).send(err);
-            return;
-        }
-        res.status(200).send({
-            result
+        con.query(sql, [req.params.id], (err, result) => {
+            if (err) {
+                res.status(500).send(err);
+                return;
+            }
+            res.status(200).send({
+                result
+            });
         });
-    });
+    } else {
+        const sql = `
+        SELECT *
+        FROM ingredient
+        WHERE id = ?
+        `
+        con.query(sql, [req.params.id], (err, result) => {
+            if (err) {
+                res.status(500).send(err);
+                return;
+            }
+            res.status(200).send({
+                result
+            });
+        });
+    }
+
+
+
 })
 
 app.post('/api/recipe', (req, res) => {
-    console.log(req.body)
     if (req.body.hasOwnProperty('recipe_name')) {
         const sql = `
     INSERT INTO recipe
@@ -179,7 +200,6 @@ app.delete('/api/recipe/delete/:id', (req, res) => {
     });
 
 });
-
 
 con.connect(err => {
     if (err) {

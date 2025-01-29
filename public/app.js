@@ -182,36 +182,32 @@ var Edit = /*#__PURE__*/function (_Request) {
     _classCallCheck(this, Edit);
     _this = _callSuper(this, Edit, [MainObject.page]);
     _this.MainObject = MainObject;
-    _this.recipeList.addEventListener('click', function (event) {
-      if (event.target.matches('[data-type="edit"]')) {
-        _this.editModal = document.querySelector('[data-modal="edit"]');
-        _this.editModal.style.display = 'block';
-        var parent = event.target.parentElement; // Get the parent element
-        var recipeId = parent.id;
-        _this.getElementFromDb(recipeId, _this.MainObject, _this.editModal);
-        _this.editModal.querySelector('[data-type="cancel"]').addEventListener('click', function (_) {
-          _this.editModal.style.display = 'none';
-        });
-        _this.editModal.querySelector('[data-type="close"]').addEventListener('click', function (_) {
-          _this.editModal.style.display = 'none';
-        });
-      }
-    });
-    _this.ingredientList.addEventListener('click', function (event) {
-      if (event.target.matches('[data-type="edit"]')) {
-        _this.editModal = document.querySelector('[data-modal="edit"]');
-        _this.editModal.style.display = 'block';
-        var parent = event.target.parentElement; // Get the parent element
-        var recipeId = parent.id;
-        _this.getElementFromDb(recipeId, _this.MainObject, _this.editModal);
-        _this.editModal.querySelector('[data-type="cancel"]').addEventListener('click', function (_) {
-          _this.editModal.style.display = 'none';
-        });
-        _this.editModal.querySelector('[data-type="close"]').addEventListener('click', function (_) {
-          _this.editModal.style.display = 'none';
-        });
-      }
-    });
+
+    // this.recipeList.addEventListener('click', (event) => {
+
+    //   if (event.target.matches('[data-type="edit"]')) {
+    //     this.editModal = document.querySelector('[data-modal="edit"]')
+    //     this.editModal.style.display = 'block'
+
+    //     const parent = event.target.parentElement; // Get the parent element
+    //     const recipeId = parent.id;
+
+    //     this.getElementFromDb(recipeId, this.MainObject, this.editModal)
+
+    //     this.editModal.querySelector('[data-type="cancel"]')
+    //       .addEventListener('click', _ => {
+    //         this.editModal.style.display = 'none'
+    //       })
+    //     this.editModal.querySelector('[data-type="close"]')
+    //       .addEventListener('click', _ => {
+    //         this.editModal.style.display = 'none'
+    //       })
+    //   }
+
+    // });
+
+    _this.listenToEdit(_this.recipeList);
+    _this.listenToEdit(_this.ingredientList);
     return _this;
   }
   _inherits(Edit, _Request);
@@ -233,6 +229,42 @@ var Edit = /*#__PURE__*/function (_Request) {
         editObject.type_id = Number(editModal.querySelector('select[name="type_id"]').value);
         _this2.editToDb(editObject);
         editModal.style.display = 'none';
+      });
+    }
+  }, {
+    key: "listenToEdit",
+    value: function listenToEdit(list) {
+      var _this3 = this;
+      list.addEventListener('click', function (event) {
+        if (list.dataset.hasOwnProperty('listIngredients')) {
+          if (event.target.matches('[data-type="edit"]')) {
+            _this3.editModal = document.querySelector('[data-modal="edit"]');
+            _this3.editModal.style.display = 'block';
+            var parent = event.target.parentElement;
+            var elementId = parent.id;
+            _this3.getElementFromDb(elementId, _this3.MainObject, _this3.editModal, 'ingredient');
+            _this3.editModal.querySelector('[data-type="cancel"]').addEventListener('click', function (_) {
+              _this3.editModal.style.display = 'none';
+            });
+            _this3.editModal.querySelector('[data-type="close"]').addEventListener('click', function (_) {
+              _this3.editModal.style.display = 'none';
+            });
+          }
+        } else {
+          if (event.target.matches('[data-type="edit"]')) {
+            _this3.editModal = document.querySelector('[data-modal="edit"]');
+            _this3.editModal.style.display = 'block';
+            var _parent = event.target.parentElement;
+            var _elementId = _parent.id;
+            _this3.getElementFromDb(_elementId, _this3.MainObject, _this3.editModal, 'ingredient');
+            _this3.editModal.querySelector('[data-type="cancel"]').addEventListener('click', function (_) {
+              _this3.editModal.style.display = 'none';
+            });
+            _this3.editModal.querySelector('[data-type="close"]').addEventListener('click', function (_) {
+              _this3.editModal.style.display = 'none';
+            });
+          }
+        }
       });
     }
   }]);
@@ -309,7 +341,6 @@ var Request = /*#__PURE__*/function () {
     value: function saveToDb(dataFromCreateObject) {
       var _this = this;
       axios__WEBPACK_IMPORTED_MODULE_0__["default"].post(this.url, dataFromCreateObject).then(function (res) {
-        console.log('esu request', dataFromCreateObject);
         _this.renderData();
       })["catch"](function (err) {
         console.log('esu error');
@@ -321,7 +352,6 @@ var Request = /*#__PURE__*/function () {
     value: function getFromDb() {
       var _this2 = this;
       axios__WEBPACK_IMPORTED_MODULE_0__["default"].get(this.url).then(function (res) {
-        console.log(res);
         _this2.renderData(res);
       })["catch"](function (err) {
         console.log(err);
@@ -329,9 +359,14 @@ var Request = /*#__PURE__*/function () {
     }
   }, {
     key: "getElementFromDb",
-    value: function getElementFromDb(id, MainObject, editModal) {
-      axios__WEBPACK_IMPORTED_MODULE_0__["default"].get(this.url + '/' + id).then(function (res) {
-        MainObject.Edit.renderModalData(res, editModal);
+    value: function getElementFromDb(id, MainObject, editModal, database) {
+      axios__WEBPACK_IMPORTED_MODULE_0__["default"].get(this.url + '/' + id, {
+        params: {
+          database: database
+        }
+      }).then(function (res) {
+        console.log(res);
+        // MainObject.Edit.renderModalData(res, editModal)
       })["catch"](function (err) {
         console.log(err);
       });

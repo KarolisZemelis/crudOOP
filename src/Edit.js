@@ -5,57 +5,38 @@ class Edit extends Request {
     super(MainObject.page)
     this.MainObject = MainObject
 
-    this.recipeList.addEventListener('click', (event) => {
+    // this.recipeList.addEventListener('click', (event) => {
 
-      if (event.target.matches('[data-type="edit"]')) {
-        this.editModal = document.querySelector('[data-modal="edit"]')
-        this.editModal.style.display = 'block'
+    //   if (event.target.matches('[data-type="edit"]')) {
+    //     this.editModal = document.querySelector('[data-modal="edit"]')
+    //     this.editModal.style.display = 'block'
 
-        const parent = event.target.parentElement; // Get the parent element
-        const recipeId = parent.id;
+    //     const parent = event.target.parentElement; // Get the parent element
+    //     const recipeId = parent.id;
 
-        this.getElementFromDb(recipeId, this.MainObject, this.editModal)
+    //     this.getElementFromDb(recipeId, this.MainObject, this.editModal)
 
-        this.editModal.querySelector('[data-type="cancel"]')
-          .addEventListener('click', _ => {
-            this.editModal.style.display = 'none'
-          })
-        this.editModal.querySelector('[data-type="close"]')
-          .addEventListener('click', _ => {
-            this.editModal.style.display = 'none'
-          })
-      }
+    //     this.editModal.querySelector('[data-type="cancel"]')
+    //       .addEventListener('click', _ => {
+    //         this.editModal.style.display = 'none'
+    //       })
+    //     this.editModal.querySelector('[data-type="close"]')
+    //       .addEventListener('click', _ => {
+    //         this.editModal.style.display = 'none'
+    //       })
+    //   }
 
-    });
-    this.ingredientList.addEventListener('click', (event) => {
+    // });
 
-      if (event.target.matches('[data-type="edit"]')) {
-        this.editModal = document.querySelector('[data-modal="edit"]')
-        this.editModal.style.display = 'block'
+    this.listenToEdit(this.recipeList)
+    this.listenToEdit(this.ingredientList)
 
-        const parent = event.target.parentElement; // Get the parent element
-        const recipeId = parent.id;
-
-        this.getElementFromDb(recipeId, this.MainObject, this.editModal)
-
-        this.editModal.querySelector('[data-type="cancel"]')
-          .addEventListener('click', _ => {
-            this.editModal.style.display = 'none'
-          })
-        this.editModal.querySelector('[data-type="close"]')
-          .addEventListener('click', _ => {
-            this.editModal.style.display = 'none'
-          })
-      }
-
-    });
   }
 
   renderModalData(response, editModal) {
 
     const modalBody = editModal.querySelector('[data-form-body]')
     const responseData = response.data.result
-
     const item = document.createElement('div');
     modalBody.innerHTML = ''
     item.innerHTML = `
@@ -79,7 +60,6 @@ class Edit extends Request {
 
     editModal.querySelector('[data-type="submit"]').addEventListener('click', _ => {
       let editObject = {}
-
       editObject.id = responseData[0].id
       editObject.recipe_name = editModal.querySelector(`[name="recipe_name"]`).value
       editObject.calories = Number(editModal.querySelector(`[name="calories"]`).value)
@@ -89,6 +69,52 @@ class Edit extends Request {
 
       editModal.style.display = 'none'
     })
+  }
+
+  listenToEdit(list) {
+    list.addEventListener('click', (event) => {
+      if (list.dataset.hasOwnProperty('listIngredients')) {
+        if (event.target.matches('[data-type="edit"]')) {
+          this.editModal = document.querySelector('[data-modal="edit"]')
+          this.editModal.style.display = 'block'
+
+          const parent = event.target.parentElement;
+          const elementId = parent.id;
+
+          this.getElementFromDb(elementId, this.MainObject, this.editModal, 'ingredient')
+
+          this.editModal.querySelector('[data-type="cancel"]')
+            .addEventListener('click', _ => {
+              this.editModal.style.display = 'none'
+            })
+          this.editModal.querySelector('[data-type="close"]')
+            .addEventListener('click', _ => {
+              this.editModal.style.display = 'none'
+            })
+        }
+
+      } else {
+        if (event.target.matches('[data-type="edit"]')) {
+          this.editModal = document.querySelector('[data-modal="edit"]')
+          this.editModal.style.display = 'block'
+
+          const parent = event.target.parentElement;
+          const elementId = parent.id;
+
+          this.getElementFromDb(elementId, this.MainObject, this.editModal, 'ingredient')
+
+          this.editModal.querySelector('[data-type="cancel"]')
+            .addEventListener('click', _ => {
+              this.editModal.style.display = 'none'
+            })
+          this.editModal.querySelector('[data-type="close"]')
+            .addEventListener('click', _ => {
+              this.editModal.style.display = 'none'
+            })
+        }
+      }
+
+    });
   }
 
 }
