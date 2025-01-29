@@ -73,8 +73,4 @@ class ShowData extends Request {
     }
 }
 
-
-
-
-
 export default ShowData;

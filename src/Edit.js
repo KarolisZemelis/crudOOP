@@ -4,118 +4,73 @@ class Edit extends Request {
   constructor(MainObject) {
     super(MainObject.page)
     this.MainObject = MainObject
-
-    // this.recipeList.addEventListener('click', (event) => {
-
-    //   if (event.target.matches('[data-type="edit"]')) {
-    //     this.editModal = document.querySelector('[data-modal="edit"]')
-    //     this.editModal.style.display = 'block'
-
-    //     const parent = event.target.parentElement; // Get the parent element
-    //     const recipeId = parent.id;
-
-    //     this.getElementFromDb(recipeId, this.MainObject, this.editModal)
-
-    //     this.editModal.querySelector('[data-type="cancel"]')
-    //       .addEventListener('click', _ => {
-    //         this.editModal.style.display = 'none'
-    //       })
-    //     this.editModal.querySelector('[data-type="close"]')
-    //       .addEventListener('click', _ => {
-    //         this.editModal.style.display = 'none'
-    //       })
-    //   }
-
-    // });
-
+    this.modalBody = document.querySelector('[data-form-body]')
     this.listenToEdit(this.recipeList)
     this.listenToEdit(this.ingredientList)
 
   }
 
-  renderModalData(response, editModal) {
+  renderModalData(response, editModal, table) {
 
-    const modalBody = editModal.querySelector('[data-form-body]')
-    const responseData = response.data.result
-    const item = document.createElement('div');
-    modalBody.innerHTML = ''
-    item.innerHTML = `
-          
-            <label class="form-label">Title</label>
-            <input type="text" class="form-control" name="recipe_name" value='${responseData[0].recipe_name}'/>
-            <label class="form-label">Calories</label>
-            <input type="number" class="form-control" name="calories" value='${responseData[0].calories}'/>
-            <label class="form-label">Recipe type:</label>
-            <select name="type_id">
-            <option value="" ${!responseData[0].type_id ? 'selected' : ''}>--Please choose an option--</option>
-            <option value="1" ${responseData[0].type_id === 1 ? 'selected' : ''}>Pusryčiai</option>
-            <option value="2" ${responseData[0].type_id === 2 ? 'selected' : ''}>Pietūs</option>
-            <option value="3" ${responseData[0].type_id === 3 ? 'selected' : ''}>Užkandis</option>
-            <option value="4" ${responseData[0].type_id === 4 ? 'selected' : ''}>Vakarienė</option>
-            </select>
-      
-            `;
+    this.modalBody.innerHTML = ''
 
-    modalBody.append(item);
+    const responseData = response.data.result[0]
+    const container = document.createElement('div');
 
+    for (const [key, value] of Object.entries(responseData)) {
+
+      if (!key.includes('id') && !key.includes('type_name')) {
+        const inputLabel = document.createElement('label');
+        inputLabel.classList.add('form-label')
+        inputLabel.textContent = key
+        const input = document.createElement('input');
+        input.classList.add('form-label')
+        input.name = key
+        input.value = value
+        container.appendChild(inputLabel)
+        container.appendChild(input)
+      } else if (key === 'type_id') {
+        this.getSelectFromDb(table, this.MainObject, editModal, key, value)
+      }
+    }
+
+    this.modalBody.append(container);
+    console.log(editModal)
     editModal.querySelector('[data-type="submit"]').addEventListener('click', _ => {
       let editObject = {}
-      editObject.id = responseData[0].id
-      editObject.recipe_name = editModal.querySelector(`[name="recipe_name"]`).value
-      editObject.calories = Number(editModal.querySelector(`[name="calories"]`).value)
-      editObject.type_id = Number(editModal.querySelector('select[name="type_id"]').value)
 
-      this.editToDb(editObject)
-
+      const inputs = editModal.querySelectorAll("[name]");
+      console.log(inputs)
       editModal.style.display = 'none'
     })
   }
 
   listenToEdit(list) {
     list.addEventListener('click', (event) => {
-      if (list.dataset.hasOwnProperty('listIngredients')) {
-        if (event.target.matches('[data-type="edit"]')) {
-          this.editModal = document.querySelector('[data-modal="edit"]')
-          this.editModal.style.display = 'block'
+      if (list.dataset.hasOwnProperty('listIngredients')) { }
+      if (event.target.matches('[data-type="edit"]')) {
+        this.editModal = document.querySelector('[data-modal="edit"]')
+        this.editModal.style.display = 'block'
 
-          const parent = event.target.parentElement;
-          const elementId = parent.id;
+        const parent = event.target.parentElement;
+        const elementId = parent.id;
+        let table = list.dataset.hasOwnProperty('listIngredients') ? 'ingredient' : 'recipe'
+        this.getElementFromDb(elementId, this.MainObject, this.editModal, table)
 
-          this.getElementFromDb(elementId, this.MainObject, this.editModal, 'ingredient')
-
-          this.editModal.querySelector('[data-type="cancel"]')
-            .addEventListener('click', _ => {
-              this.editModal.style.display = 'none'
-            })
-          this.editModal.querySelector('[data-type="close"]')
-            .addEventListener('click', _ => {
-              this.editModal.style.display = 'none'
-            })
-        }
-
-      } else {
-        if (event.target.matches('[data-type="edit"]')) {
-          this.editModal = document.querySelector('[data-modal="edit"]')
-          this.editModal.style.display = 'block'
-
-          const parent = event.target.parentElement;
-          const elementId = parent.id;
-
-          this.getElementFromDb(elementId, this.MainObject, this.editModal, 'ingredient')
-
-          this.editModal.querySelector('[data-type="cancel"]')
-            .addEventListener('click', _ => {
-              this.editModal.style.display = 'none'
-            })
-          this.editModal.querySelector('[data-type="close"]')
-            .addEventListener('click', _ => {
-              this.editModal.style.display = 'none'
-            })
-        }
+        this.editModal.querySelector('[data-type="cancel"]')
+          .addEventListener('click', _ => {
+            this.editModal.style.display = 'none'
+          })
+        this.editModal.querySelector('[data-type="close"]')
+          .addEventListener('click', _ => {
+            this.editModal.style.display = 'none'
+          })
       }
 
     });
   }
+
+
 
 }
 

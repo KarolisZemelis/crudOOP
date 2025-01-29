@@ -163,6 +163,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _Request_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Request.js */ "./src/Request.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
 function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
 function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
@@ -182,30 +188,7 @@ var Edit = /*#__PURE__*/function (_Request) {
     _classCallCheck(this, Edit);
     _this = _callSuper(this, Edit, [MainObject.page]);
     _this.MainObject = MainObject;
-
-    // this.recipeList.addEventListener('click', (event) => {
-
-    //   if (event.target.matches('[data-type="edit"]')) {
-    //     this.editModal = document.querySelector('[data-modal="edit"]')
-    //     this.editModal.style.display = 'block'
-
-    //     const parent = event.target.parentElement; // Get the parent element
-    //     const recipeId = parent.id;
-
-    //     this.getElementFromDb(recipeId, this.MainObject, this.editModal)
-
-    //     this.editModal.querySelector('[data-type="cancel"]')
-    //       .addEventListener('click', _ => {
-    //         this.editModal.style.display = 'none'
-    //       })
-    //     this.editModal.querySelector('[data-type="close"]')
-    //       .addEventListener('click', _ => {
-    //         this.editModal.style.display = 'none'
-    //       })
-    //   }
-
-    // });
-
+    _this.modalBody = document.querySelector('[data-form-body]');
     _this.listenToEdit(_this.recipeList);
     _this.listenToEdit(_this.ingredientList);
     return _this;
@@ -213,57 +196,56 @@ var Edit = /*#__PURE__*/function (_Request) {
   _inherits(Edit, _Request);
   return _createClass(Edit, [{
     key: "renderModalData",
-    value: function renderModalData(response, editModal) {
-      var _this2 = this;
-      var modalBody = editModal.querySelector('[data-form-body]');
-      var responseData = response.data.result;
-      var item = document.createElement('div');
-      modalBody.innerHTML = '';
-      item.innerHTML = "\n          \n            <label class=\"form-label\">Title</label>\n            <input type=\"text\" class=\"form-control\" name=\"recipe_name\" value='".concat(responseData[0].recipe_name, "'/>\n            <label class=\"form-label\">Calories</label>\n            <input type=\"number\" class=\"form-control\" name=\"calories\" value='").concat(responseData[0].calories, "'/>\n            <label class=\"form-label\">Recipe type:</label>\n            <select name=\"type_id\">\n            <option value=\"\" ").concat(!responseData[0].type_id ? 'selected' : '', ">--Please choose an option--</option>\n            <option value=\"1\" ").concat(responseData[0].type_id === 1 ? 'selected' : '', ">Pusry\u010Diai</option>\n            <option value=\"2\" ").concat(responseData[0].type_id === 2 ? 'selected' : '', ">Piet\u016Bs</option>\n            <option value=\"3\" ").concat(responseData[0].type_id === 3 ? 'selected' : '', ">U\u017Ekandis</option>\n            <option value=\"4\" ").concat(responseData[0].type_id === 4 ? 'selected' : '', ">Vakarien\u0117</option>\n            </select>\n      \n            ");
-      modalBody.append(item);
+    value: function renderModalData(response, editModal, table) {
+      this.modalBody.innerHTML = '';
+      var responseData = response.data.result[0];
+      var container = document.createElement('div');
+      for (var _i = 0, _Object$entries = Object.entries(responseData); _i < _Object$entries.length; _i++) {
+        var _Object$entries$_i = _slicedToArray(_Object$entries[_i], 2),
+          key = _Object$entries$_i[0],
+          value = _Object$entries$_i[1];
+        if (!key.includes('id') && !key.includes('type_name')) {
+          var inputLabel = document.createElement('label');
+          inputLabel.classList.add('form-label');
+          inputLabel.textContent = key;
+          var input = document.createElement('input');
+          input.classList.add('form-label');
+          input.name = key;
+          input.value = value;
+          container.appendChild(inputLabel);
+          container.appendChild(input);
+        } else if (key === 'type_id') {
+          this.getSelectFromDb(table, this.MainObject, editModal, key, value);
+        }
+      }
+      this.modalBody.append(container);
+      console.log(editModal);
       editModal.querySelector('[data-type="submit"]').addEventListener('click', function (_) {
         var editObject = {};
-        editObject.id = responseData[0].id;
-        editObject.recipe_name = editModal.querySelector("[name=\"recipe_name\"]").value;
-        editObject.calories = Number(editModal.querySelector("[name=\"calories\"]").value);
-        editObject.type_id = Number(editModal.querySelector('select[name="type_id"]').value);
-        _this2.editToDb(editObject);
+        var inputs = editModal.querySelectorAll("[name]");
+        console.log(inputs);
         editModal.style.display = 'none';
       });
     }
   }, {
     key: "listenToEdit",
     value: function listenToEdit(list) {
-      var _this3 = this;
+      var _this2 = this;
       list.addEventListener('click', function (event) {
-        if (list.dataset.hasOwnProperty('listIngredients')) {
-          if (event.target.matches('[data-type="edit"]')) {
-            _this3.editModal = document.querySelector('[data-modal="edit"]');
-            _this3.editModal.style.display = 'block';
-            var parent = event.target.parentElement;
-            var elementId = parent.id;
-            _this3.getElementFromDb(elementId, _this3.MainObject, _this3.editModal, 'ingredient');
-            _this3.editModal.querySelector('[data-type="cancel"]').addEventListener('click', function (_) {
-              _this3.editModal.style.display = 'none';
-            });
-            _this3.editModal.querySelector('[data-type="close"]').addEventListener('click', function (_) {
-              _this3.editModal.style.display = 'none';
-            });
-          }
-        } else {
-          if (event.target.matches('[data-type="edit"]')) {
-            _this3.editModal = document.querySelector('[data-modal="edit"]');
-            _this3.editModal.style.display = 'block';
-            var _parent = event.target.parentElement;
-            var _elementId = _parent.id;
-            _this3.getElementFromDb(_elementId, _this3.MainObject, _this3.editModal, 'ingredient');
-            _this3.editModal.querySelector('[data-type="cancel"]').addEventListener('click', function (_) {
-              _this3.editModal.style.display = 'none';
-            });
-            _this3.editModal.querySelector('[data-type="close"]').addEventListener('click', function (_) {
-              _this3.editModal.style.display = 'none';
-            });
-          }
+        if (list.dataset.hasOwnProperty('listIngredients')) {}
+        if (event.target.matches('[data-type="edit"]')) {
+          _this2.editModal = document.querySelector('[data-modal="edit"]');
+          _this2.editModal.style.display = 'block';
+          var parent = event.target.parentElement;
+          var elementId = parent.id;
+          var table = list.dataset.hasOwnProperty('listIngredients') ? 'ingredient' : 'recipe';
+          _this2.getElementFromDb(elementId, _this2.MainObject, _this2.editModal, table);
+          _this2.editModal.querySelector('[data-type="cancel"]').addEventListener('click', function (_) {
+            _this2.editModal.style.display = 'none';
+          });
+          _this2.editModal.querySelector('[data-type="close"]').addEventListener('click', function (_) {
+            _this2.editModal.style.display = 'none';
+          });
         }
       });
     }
@@ -288,12 +270,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ShowData_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ShowData.js */ "./src/ShowData.js");
 /* harmony import */ var _Edit_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Edit.js */ "./src/Edit.js");
 /* harmony import */ var _Delete_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Delete.js */ "./src/Delete.js");
+/* harmony import */ var _Select_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Select.js */ "./src/Select.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
 function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+
 
 
 
@@ -305,6 +289,7 @@ var Recipe = /*#__PURE__*/_createClass(function Recipe() {
   this.ShowData = new _ShowData_js__WEBPACK_IMPORTED_MODULE_1__["default"](this);
   this.Edit = new _Edit_js__WEBPACK_IMPORTED_MODULE_2__["default"](this);
   this.Delete = new _Delete_js__WEBPACK_IMPORTED_MODULE_3__["default"](this);
+  this.Select = new _Select_js__WEBPACK_IMPORTED_MODULE_4__["default"](this);
 });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Recipe);
 
@@ -358,15 +343,23 @@ var Request = /*#__PURE__*/function () {
       });
     }
   }, {
+    key: "getSelectFromDb",
+    value: function getSelectFromDb(type, MainObject, editModal, key, value) {
+      axios__WEBPACK_IMPORTED_MODULE_0__["default"].get(this.url + '/' + 'select' + '/' + type).then(function (res) {
+        MainObject.Select.renderSelect(res, editModal, key, value);
+      })["catch"](function (err) {
+        console.log(err);
+      });
+    }
+  }, {
     key: "getElementFromDb",
-    value: function getElementFromDb(id, MainObject, editModal, database) {
+    value: function getElementFromDb(id, MainObject, editModal, table) {
       axios__WEBPACK_IMPORTED_MODULE_0__["default"].get(this.url + '/' + id, {
         params: {
-          database: database
+          table: table
         }
       }).then(function (res) {
-        console.log(res);
-        // MainObject.Edit.renderModalData(res, editModal)
+        MainObject.Edit.renderModalData(res, editModal, table);
       })["catch"](function (err) {
         console.log(err);
       });
@@ -404,6 +397,69 @@ var Request = /*#__PURE__*/function () {
   }]);
 }();
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Request);
+
+/***/ }),
+
+/***/ "./src/Select.js":
+/*!***********************!*\
+  !*** ./src/Select.js ***!
+  \***********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _Request_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Request.js */ "./src/Request.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
+function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
+function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
+function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
+function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
+function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
+function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
+
+var Select = /*#__PURE__*/function (_Request) {
+  function Select(MainObject) {
+    var _this;
+    _classCallCheck(this, Select);
+    _this = _callSuper(this, Select, [MainObject.page]);
+    _this.MainObject = MainObject;
+    return _this;
+  }
+  _inherits(Select, _Request);
+  return _createClass(Select, [{
+    key: "renderSelect",
+    value: function renderSelect(res, editModal, key, value) {
+      var select = document.createElement('select');
+      select.name = key;
+      var options = res.data.result;
+      var modalBody = editModal.querySelector('[data-form-body]');
+      options.forEach(function (typeElement) {
+        var option = document.createElement('option');
+        option.value = typeElement.id;
+        option.textContent = typeElement.type_name;
+        if (Number(option.value) === Number(value)) {
+          option.selected = true;
+        }
+        select.appendChild(option);
+      });
+      var inputLabel = document.createElement('label');
+      inputLabel.classList.add('form-label');
+      inputLabel.textContent = 'Type';
+      modalBody.appendChild(inputLabel);
+      modalBody.appendChild(select);
+    }
+  }]);
+}(_Request_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Select);
 
 /***/ }),
 

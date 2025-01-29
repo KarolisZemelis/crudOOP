@@ -11,6 +11,11 @@ const URL_API = 'http://localhost:3000/api/';
 app.use(express.static('public'));
 app.use(bodyParser.json());
 
+app.use((req, res, next) => {
+    console.log(`Incoming request: ${req.method} ${req.url}`);
+    next();
+});
+
 const con = mysql.createConnection({
     host: 'localhost',
     user: 'root',
@@ -61,10 +66,9 @@ app.get('/api/recipe/', (req, res) => {
     })
 })
 
-//čia padaryti du SQL
-app.get('/api/recipe/:id', async (req, res) => {
+app.get('/api/recipe/:id', (req, res) => {
 
-    if (req.query.database === 'recipe') {
+    if (req.query.table === 'recipe') {
         const sql = `
     SELECT recipe.id, recipe.recipe_name, type.type_name, recipe.type_id, recipe.calories
     FROM recipe
@@ -100,6 +104,25 @@ app.get('/api/recipe/:id', async (req, res) => {
 
 
 })
+
+app.get('/api/recipe/select/:type', (req, res) => {
+    const type = req.params.type === 'ingredient' ? 'ingredient_qty_type' : 'type'
+
+    const sql = `
+    SELECT *
+    FROM ${type}
+    `
+    con.query(sql, (err, result) => {
+        if (err) {
+            res.status(500).send(err);
+            return;
+        }
+        res.status(200).send({
+            result
+        });
+    });
+})
+
 
 app.post('/api/recipe', (req, res) => {
     if (req.body.hasOwnProperty('recipe_name')) {

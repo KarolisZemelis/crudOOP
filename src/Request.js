@@ -29,13 +29,22 @@ class Request {
             })
     }
 
-    getElementFromDb(id, MainObject, editModal, database) {
+    getSelectFromDb(type, MainObject, editModal, key, value) {
+        axios.get(this.url + '/' + 'select' + '/' + type)
+            .then(res => {
+                MainObject.Select.renderSelect(res, editModal, key, value)
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }
+
+    getElementFromDb(id, MainObject, editModal, table) {
         axios.get(this.url + '/' + id, {
-            params: { database }
+            params: { table }
         })
             .then(res => {
-                console.log(res)
-                // MainObject.Edit.renderModalData(res, editModal)
+                MainObject.Edit.renderModalData(res, editModal, table)
 
             })
             .catch(err => {
