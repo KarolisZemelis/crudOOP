@@ -4,7 +4,7 @@ class Delete extends Request {
     constructor(MainObject) {
         super(MainObject.page)
         this.MainObject = MainObject
-        // this.list = document.querySelector('[data-list-bin]')
+
         this.recipeList.addEventListener('click', (event) => {
 
             if (event.target.matches('[data-type="delete"]')) {
@@ -26,8 +26,7 @@ class Delete extends Request {
                 this.deleteModal.querySelector('[data-type="delete"]').onclick = () => {
                     this.deleteModal.style.display = 'none';
                     const elementId = parent.id; // Get the current id
-                    console.log('Deleting elementId:', elementId);
-                    this.deleteFromDb(elementId);
+                    this.deleteFromDb(elementId, 'recipe');
                 };
             }
         });
@@ -51,9 +50,8 @@ class Delete extends Request {
 
                 this.deleteModal.querySelector('[data-type="delete"]').onclick = () => {
                     this.deleteModal.style.display = 'none';
-                    const elementId = parent.id; // Get the current id
-                    console.log('Deleting elementId:', elementId);
-                    this.deleteFromDb(elementId);
+                    const elementId = parent.id;
+                    this.deleteFromDb(elementId, 'ingredient');
                 };
             }
         });

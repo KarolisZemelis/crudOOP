@@ -45,7 +45,6 @@ var Create = /*#__PURE__*/function (_Request) {
   return _createClass(Create, [{
     key: "submitCreate",
     value: function submitCreate() {
-      console.log(this.collectData());
       this.saveToDb(this.collectData());
       this.form.querySelectorAll('[name]').forEach(function (input) {
         input.value = '';
@@ -102,7 +101,6 @@ var Delete = /*#__PURE__*/function (_Request) {
     _classCallCheck(this, Delete);
     _this = _callSuper(this, Delete, [MainObject.page]);
     _this.MainObject = MainObject;
-    // this.list = document.querySelector('[data-list-bin]')
     _this.recipeList.addEventListener('click', function (event) {
       if (event.target.matches('[data-type="delete"]')) {
         _this.deleteModal = document.querySelector('[data-modal="delete"]');
@@ -117,8 +115,7 @@ var Delete = /*#__PURE__*/function (_Request) {
         _this.deleteModal.querySelector('[data-type="delete"]').onclick = function () {
           _this.deleteModal.style.display = 'none';
           var elementId = parent.id; // Get the current id
-          console.log('Deleting elementId:', elementId);
-          _this.deleteFromDb(elementId);
+          _this.deleteFromDb(elementId, 'recipe');
         };
       }
     });
@@ -135,9 +132,8 @@ var Delete = /*#__PURE__*/function (_Request) {
         });
         _this.deleteModal.querySelector('[data-type="delete"]').onclick = function () {
           _this.deleteModal.style.display = 'none';
-          var elementId = parent.id; // Get the current id
-          console.log('Deleting elementId:', elementId);
-          _this.deleteFromDb(elementId);
+          var elementId = parent.id;
+          _this.deleteFromDb(elementId, 'ingredient');
         };
       }
     });
@@ -381,15 +377,18 @@ var Request = /*#__PURE__*/function () {
     }
   }, {
     key: "deleteFromDb",
-    value: function deleteFromDb(id) {
+    value: function deleteFromDb(id, table) {
       var _this4 = this;
-      axios__WEBPACK_IMPORTED_MODULE_0__["default"]["delete"](this.url + '/' + 'delete' + '/' + id).then(function (res) {
+      axios__WEBPACK_IMPORTED_MODULE_0__["default"]["delete"](this.url + '/' + 'delete' + '/' + id, {
+        data: {
+          table: table
+        }
+      }).then(function (res) {
         _this4.renderData(res);
       })["catch"](function (err) {
         console.log(err);
       });
     }
-
     //this -> create object because this is being called from create
     //MainObject -> recipe because we pass <this which is recipe when creating a class object >
     //ShowData -> ShowData object

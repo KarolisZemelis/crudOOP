@@ -62,15 +62,16 @@ class Request {
             })
     }
 
-    deleteFromDb(id) {
-        axios.delete(this.url + '/' + 'delete' + '/' + id)
+    deleteFromDb(id, table) {
+        axios.delete(this.url + '/' + 'delete' + '/' + id, {
+            data: { table }
+        })
             .then((res) => {
                 this.renderData(res)
             }).catch(err => {
                 console.log(err)
             })
     }
-
     //this -> create object because this is being called from create
     //MainObject -> recipe because we pass <this which is recipe when creating a class object >
     //ShowData -> ShowData object

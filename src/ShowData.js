@@ -54,7 +54,6 @@ class ShowData extends Request {
         }
 
     }
-
     renderEditButton(listItem) {
         const editButton = document.createElement('button');
         editButton.textContent = 'Edit'

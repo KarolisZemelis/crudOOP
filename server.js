@@ -67,7 +67,6 @@ app.get('/api/recipe/', (req, res) => {
 })
 
 app.get('/api/recipe/:id', (req, res) => {
-
     if (req.query.table === 'recipe') {
         const sql = `
     SELECT recipe.id, recipe.recipe_name, type.type_name, recipe.type_id, recipe.calories
@@ -122,7 +121,6 @@ app.get('/api/recipe/select/:type', (req, res) => {
         });
     });
 })
-
 
 app.post('/api/recipe', (req, res) => {
     if (req.body.hasOwnProperty('recipe_name')) {
@@ -225,8 +223,9 @@ app.put('/api/recipe/edit/:id', (req, res) => {
 });
 
 app.delete('/api/recipe/delete/:id', (req, res) => {
+    const table = req.body.table === 'recipe' ? 'recipe' : 'ingredient'
     const sql = `
-        DELETE FROM recipe
+        DELETE FROM ${table}
         WHERE id = ?
     `;
 
