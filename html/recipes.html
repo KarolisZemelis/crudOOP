@@ -14,84 +14,87 @@
   <body>
     <div id="main" class="container" data-page="recipes">
       <div class="row">
-        <div class="col-4">
-          <div class="card mt-5" data-form="create">
-            <div class="card-header">
-              <h2>New recipe</h2>
-            </div>
-            <div class="card-body">
-              <div class="mb-3">
-                <label class="form-label">Title</label>
-                <input type="text" class="form-control" name="recipe_name" />
-                <label class="form-label">Calories</label>
-                <input type="number" class="form-control" name="calories" />
-                <label class="form-label">Recipe type:</label>
-                <select name="type_id">
-                  <option value="">--Please choose an option--</option>
-                  <option value="1">Breakfast</option>
-                  <option value="2">Lunch</option>
-                  <option value="3">Snack</option>
-                  <option value="4">Supper</option>
-                </select>
+        <div class="create">
+          <div class="">
+            <div class="card mt-5" data-form="create">
+              <div class="card-header">
+                <h2>New recipe</h2>
+              </div>
+              <div class="card-body">
+                <div class="mb-3">
+                  <label class="form-label">Title</label>
+                  <input type="text" class="form-control" name="recipe_name" />
+                  <label class="form-label">Calories</label>
+                  <input type="number" class="form-control" name="calories" />
+                  <label class="form-label">Recipe type:</label>
+                  <select name="type_id">
+                    <option value="">--Please choose an option--</option>
+                    <option value="1">Breakfast</option>
+                    <option value="2">Lunch</option>
+                    <option value="3">Snack</option>
+                    <option value="4">Supper</option>
+                  </select>
+                </div>
+              </div>
+              <div class="card-footer text-body-secondary">
+                <button class="btn btn-primary" data-type="submit">Add</button>
               </div>
             </div>
-            <div class="card-footer text-body-secondary">
-              <button class="btn btn-primary" data-type="submit">Add</button>
-            </div>
           </div>
-        </div>
 
-        <div class="col-4">
-          <div class="card mt-5" data-form="create">
-            <div class="card-header">
-              <h2>New ingredient</h2>
-            </div>
-            <div class="card-body">
-              <div class="mb-3">
-                <label class="form-label">Name</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  name="ingredient_name"
-                />
-                <label class="form-label">Ingredient type:</label>
-                <select name="type_id">
-                  <option value="">--Please choose an option--</option>
-                  <option value="1">Pcs.</option>
-                  <option value="2">Ml.</option>
-                  <option value="3" selected>G</option>
-                </select>
+          <div class="">
+            <div class="card mt-5" data-form="create">
+              <div class="card-header">
+                <h2>New ingredient</h2>
+              </div>
+              <div class="card-body">
+                <div class="mb-3">
+                  <label class="form-label">Name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="ingredient_name"
+                  />
+                  <label class="form-label">Ingredient type:</label>
+                  <select name="type_id">
+                    <option value="">--Please choose an option--</option>
+                    <option value="1">Pcs.</option>
+                    <option value="2">Ml.</option>
+                    <option value="3" selected>G</option>
+                  </select>
+                </div>
+              </div>
+              <div class="card-footer text-body-secondary">
+                <button class="btn btn-primary" data-type="submit">Add</button>
               </div>
             </div>
-            <div class="card-footer text-body-secondary">
-              <button class="btn btn-primary" data-type="submit">Add</button>
-            </div>
           </div>
         </div>
-
-        <div class="col-8" data-list>
-          <div class="card mt-5">
-            <div class="card-header">
-              <h2>Recipe list</h2>
+        <div class="list">
+          <div class="col-3" data-list>
+            <div class="card mt-5">
+              <div class="card-header">
+                <h2>Recipe list</h2>
+              </div>
+              <div class="card-body">
+                <ul class="list-group list-group-flush" data-list-recipes></ul>
+              </div>
+              <div class="card-footer text-body-secondary"></div>
             </div>
-            <div class="card-body">
-              <ul class="list-group list-group-flush" data-list-recipes></ul>
-            </div>
-            <div class="card-footer text-body-secondary"></div>
           </div>
-        </div>
-        <div class="col-8" ingredient-list>
-          <div class="card mt-5">
-            <div class="card-header">
-              <h2>Ingredient list</h2>
+          <div class="col-3" ingredient-list>
+            <div class="card mt-5">
+              <div class="card-header">
+                <h2>Ingredient list</h2>
+              </div>
+              <div class="card-body">
+                <ul
+                  class="list-group list-group-flush"
+                  data-list-ingredients
+                ></ul>
+              </div>
+              <div class="card-footer text-body-secondary"></div>
             </div>
-            <div class="card-body">
-              <ul
-                class="list-group list-group-flush"
-                data-list-ingredients
-              ></ul>
-            </div>
-            <div class="card-footer text-body-secondary"></div>
           </div>
         </div>
       </div>

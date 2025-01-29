@@ -14,3 +14,34 @@
 .modal {
   background-color: #00000080;
 }
+
+body {
+  background-color: aquamarine;
+}
+
+#main {
+  margin: 0;
+  width: 100%;
+  max-width: 100%;
+  h2 {
+    font-size: 1rem;
+  }
+  .row {
+    width: 100%;
+    flex-wrap: nowrap;
+    display: flex;
+    flex-direction: row;
+    .create {
+      width: 30%;
+    }
+
+    .list {
+      display: flex;
+      ul.list-group.list-group-flush {
+        list-style-type: none; /* Removes the bullets */
+        padding: 0; /* Removes default padding */
+        margin: 0; /* Removes default margin */
+      }
+    }
+  }
+}

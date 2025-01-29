@@ -11978,3 +11978,33 @@ textarea.form-control-lg {
 .modal {
   background-color: rgba(0, 0, 0, 0.5019607843);
 }
+
+body {
+  background-color: aquamarine;
+}
+
+#main {
+  margin: 0;
+  width: 100%;
+  max-width: 100%;
+}
+#main h2, #main .h2 {
+  font-size: 1rem;
+}
+#main .row {
+  width: 100%;
+  flex-wrap: nowrap;
+  display: flex;
+  flex-direction: row;
+}
+#main .row .create {
+  width: 30%;
+}
+#main .row .list {
+  display: flex;
+}
+#main .row .list ul.list-group.list-group-flush {
+  list-style-type: none; /* Removes the bullets */
+  padding: 0; /* Removes default padding */
+  margin: 0; /* Removes default margin */
+}
