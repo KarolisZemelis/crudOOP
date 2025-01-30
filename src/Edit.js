@@ -4,56 +4,32 @@ class Edit extends Request {
   constructor(MainObject) {
     super(MainObject.page)
     this.MainObject = MainObject
-    this.modalBody = document.querySelector('[data-form-body]')
+    this.editModal = document.querySelector('[data-modal="edit"]')
     this.listenToEdit(this.recipeList)
     this.listenToEdit(this.ingredientList)
 
   }
-
-  renderModalData(response, editModal, table) {
-
-    this.modalBody.innerHTML = ''
-
-    const responseData = response.data.result[0]
-    const container = document.createElement('div');
-
-    for (const [key, value] of Object.entries(responseData)) {
-
-      if (!key.includes('id') && !key.includes('type_name')) {
-        const inputLabel = document.createElement('label');
-        inputLabel.classList.add('form-label')
-        inputLabel.textContent = key
-        const input = document.createElement('input');
-        input.classList.add('form-label')
-        input.name = key
-        input.value = value
-        container.appendChild(inputLabel)
-        container.appendChild(input)
-      } else if (key === 'type_id') {
-        this.getSelectFromDb(table, this.MainObject, editModal, key, value)
-      }
-    }
-
-    this.modalBody.append(container);
-
-    editModal.querySelector('[data-type="submit"]').onclick = (event) => {
+  listenToSubmitEdit(table, elementId) {
+    this.editModal.querySelector('[data-type="submit"]').onclick = (event) => {
       let editObject = {};
       editObject.table = table;
-      editObject.id = responseData.id;
-      const inputs = editModal.querySelectorAll("[name]");
+      editObject.id = elementId;
+      const inputs = this.editModal.querySelectorAll("[name]");
 
       inputs.forEach(input => {
+
         editObject[input.name] = input.value;
       });
 
-      this.editToDb(editObject);
-      editModal.style.display = 'none';
+      this.editToDb(editObject, table, this.MainObject);
+      this.editModal.style.display = 'none';
     };
   }
 
+
   listenToEdit(list) {
     list.addEventListener('click', (event) => {
-      if (list.dataset.hasOwnProperty('listIngredients')) { }
+
       if (event.target.matches('[data-type="edit"]')) {
         this.editModal = document.querySelector('[data-modal="edit"]')
         this.editModal.style.display = 'block'
@@ -61,7 +37,7 @@ class Edit extends Request {
         const parent = event.target.parentElement;
         const elementId = parent.id;
         let table = list.dataset.hasOwnProperty('listIngredients') ? 'ingredient' : 'recipe'
-        this.getElementFromDb(elementId, this.MainObject, this.editModal, table)
+        this.getElementFromDb(elementId, this.MainObject, table)
 
         this.editModal.querySelector('[data-type="cancel"]')
           .addEventListener('click', _ => {
@@ -71,6 +47,7 @@ class Edit extends Request {
           .addEventListener('click', _ => {
             this.editModal.style.display = 'none'
           })
+        this.listenToSubmitEdit(table, elementId)
       }
 
     });

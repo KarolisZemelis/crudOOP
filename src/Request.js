@@ -5,6 +5,7 @@ class Request {
         this.url = URL_API + page //URL_API is a global variable because its outside any box
         this.recipeList = document.querySelector('[data-list-recipes]');
         this.ingredientList = document.querySelector('[data-list-ingredients]');
+
     }
 
     saveToDb(dataFromCreateObject) {
@@ -32,19 +33,19 @@ class Request {
     getSelectFromDb(type, MainObject, editModal, key, value) {
         axios.get(this.url + '/' + 'select' + '/' + type)
             .then(res => {
-                MainObject.Select.renderSelect(res, editModal, key, value)
+                MainObject.ShowData.renderSelectData(res, editModal, key, value)
             })
             .catch(err => {
                 console.log(err)
             })
     }
 
-    getElementFromDb(id, MainObject, editModal, table) {
+    getElementFromDb(id, MainObject, table) {
         axios.get(this.url + '/' + id, {
             params: { table }
         })
             .then(res => {
-                MainObject.Edit.renderModalData(res, editModal, table)
+                MainObject.ShowData.renderModalData(res, table)
 
             })
             .catch(err => {
@@ -55,6 +56,7 @@ class Request {
     editToDb(data, table) {
         axios.put(this.url + '/' + 'edit' + '/' + data.id, data, table)
             .then((res) => {
+
                 this.renderData(res)
             })
             .catch(err => {

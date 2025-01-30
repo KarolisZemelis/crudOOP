@@ -5,8 +5,11 @@ class ShowData extends Request {
         super(MainObject.page)
 
         this.MainObject = MainObject
+        this.editModal = document.querySelector('[data-modal="edit"]')
+        this.modalBody = this.editModal.querySelector('[data-form-body]')
 
         this.getFromDb()
+
     }
 
     renderData(response) {
@@ -20,7 +23,7 @@ class ShowData extends Request {
                     const listItem = document.createElement('li');
                     listItem.setAttribute('id', `${element.id}`)
                     for (let key in element) {
-                        if (key !== 'id') {
+                        if (!key.includes('id')) {
                             const container = document.createElement('div');
                             container.dataset.list = key
                             container.textContent = `${key}: ${element[key]}`
@@ -31,15 +34,13 @@ class ShowData extends Request {
                     this.renderDeleteButton(listItem)
                     this.recipeList.appendChild(listItem);
                 });
-
-
             } else {
                 this.ingredientList.innerHTML = ''
                 value.forEach(element => {
                     const listItem = document.createElement('li');
                     listItem.setAttribute('id', `${element.id}`)
                     for (let key in element) {
-                        if (key !== 'id') {
+                        if (!key.includes('id')) {
                             const container = document.createElement('div');
                             container.dataset.list = key
                             container.textContent = `${key}: ${element[key]}`
@@ -53,6 +54,55 @@ class ShowData extends Request {
             }
         }
 
+    }
+    renderModalData(response, table) {
+
+        this.modalBody.innerHTML = ''
+
+        const responseData = response.data.result[0]
+        const container = document.createElement('div');
+
+        for (const [key, value] of Object.entries(responseData)) {
+
+            if (!key.includes('id') && !key.includes('type_name')) {
+                const inputLabel = document.createElement('label');
+                inputLabel.classList.add('form-label')
+                inputLabel.textContent = key
+                const input = document.createElement('input');
+                input.classList.add('form-label')
+                input.name = key
+                input.value = value
+                container.appendChild(inputLabel)
+                container.appendChild(input)
+            } else if (key === 'type_id') {
+
+                this.getSelectFromDb(table, this.MainObject, key, value)
+            }
+        }
+
+        this.modalBody.append(container);
+
+
+    }
+    renderSelectData(res, key, value) {
+        const select = document.createElement('select');
+        select.name = key;
+        const options = res.data.result;
+
+        options.forEach(typeElement => {
+            const option = document.createElement('option');
+            option.value = typeElement.id;
+            option.textContent = typeElement.type_name;
+            if (Number(option.value) === Number(value)) {
+                option.selected = true;
+            }
+            select.appendChild(option);
+        });
+        const inputLabel = document.createElement('label');
+        inputLabel.classList.add('form-label');
+        inputLabel.textContent = 'Type';
+        this.modalBody.appendChild(inputLabel);
+        this.modalBody.appendChild(select);
     }
     renderEditButton(listItem) {
         const editButton = document.createElement('button');
