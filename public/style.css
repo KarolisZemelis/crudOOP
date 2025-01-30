@@ -12000,11 +12000,36 @@ body {
 #main .row .create {
   width: 30%;
 }
+#main .row .create {
+  min-width: 16rem;
+}
 #main .row .list {
   display: flex;
+  -moz-column-gap: 1rem;
+       column-gap: 1rem;
 }
 #main .row .list ul.list-group.list-group-flush {
   list-style-type: none; /* Removes the bullets */
   padding: 0; /* Removes default padding */
   margin: 0; /* Removes default margin */
+}
+#main .row .list ul.list-group.list-group-flush button {
+  margin-top: 0.75rem;
+  margin-left: 0.75rem;
+}
+#main .row .list ul.list-group.list-group-flush h5, #main .row .list ul.list-group.list-group-flush .h5 {
+  text-align: center;
+  text-transform: uppercase;
+}
+#main .row .list ul.list-group.list-group-flush .ingredientListItem {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+#main .row .list ul.list-group.list-group-flush .ingredientListItem div {
+  width: 100%;
+}
+#main .row .list ul.list-group.list-group-flush .ingredientListItem button {
+  margin: 0;
+  margin-left: 1rem;
 }

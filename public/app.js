@@ -432,11 +432,16 @@ var ShowData = /*#__PURE__*/function (_Request) {
             var listItem = document.createElement('li');
             listItem.setAttribute('id', "".concat(element.id));
             for (var _key in element) {
-              if (!_key.includes('id')) {
+              if (!_key.includes('id') && _key.includes('recipe_name')) {
                 var container = document.createElement('div');
                 container.dataset.list = _key;
-                container.textContent = "".concat(_key, ": ").concat(element[_key]);
+                container.innerHTML = "<h5>".concat(element[_key], "</h5>");
                 listItem.appendChild(container);
+              } else if (!_key.includes('id') && !_key.includes('recipe_name')) {
+                var _container = document.createElement('div');
+                _container.dataset.list = _key;
+                _container.textContent = "".concat(_key, ": ").concat(element[_key]);
+                listItem.appendChild(_container);
               }
             }
             _this2.renderEditButton(listItem);
@@ -447,12 +452,13 @@ var ShowData = /*#__PURE__*/function (_Request) {
           this.ingredientList.innerHTML = '';
           value.forEach(function (element) {
             var listItem = document.createElement('li');
+            listItem.classList.add('ingredientListItem');
             listItem.setAttribute('id', "".concat(element.id));
             for (var _key2 in element) {
               if (!_key2.includes('id')) {
                 var container = document.createElement('div');
                 container.dataset.list = _key2;
-                container.textContent = "".concat(_key2, ": ").concat(element[_key2]);
+                container.innerHTML = "<h6>".concat(element[_key2], "</h6>");
                 listItem.appendChild(container);
               }
             }

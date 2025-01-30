@@ -23,11 +23,18 @@ class ShowData extends Request {
                     const listItem = document.createElement('li');
                     listItem.setAttribute('id', `${element.id}`)
                     for (let key in element) {
-                        if (!key.includes('id')) {
+                        if (!key.includes('id') && key.includes('recipe_name')) {
+                            const container = document.createElement('div');
+                            container.dataset.list = key
+                            container.innerHTML = `<h5>${element[key]}</h5>`
+                            listItem.appendChild(container)
+
+                        } else if (!key.includes('id') && !key.includes('recipe_name')) {
                             const container = document.createElement('div');
                             container.dataset.list = key
                             container.textContent = `${key}: ${element[key]}`
                             listItem.appendChild(container)
+
                         }
                     }
                     this.renderEditButton(listItem)
@@ -38,12 +45,13 @@ class ShowData extends Request {
                 this.ingredientList.innerHTML = ''
                 value.forEach(element => {
                     const listItem = document.createElement('li');
+                    listItem.classList.add('ingredientListItem')
                     listItem.setAttribute('id', `${element.id}`)
                     for (let key in element) {
                         if (!key.includes('id')) {
                             const container = document.createElement('div');
                             container.dataset.list = key
-                            container.textContent = `${key}: ${element[key]}`
+                            container.innerHTML = `<h6>${element[key]}</h6>`
                             listItem.appendChild(container)
                         }
                     }

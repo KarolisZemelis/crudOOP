@@ -34,13 +34,41 @@ body {
     .create {
       width: 30%;
     }
+    .create {
+      min-width: 16rem;
+    }
 
     .list {
       display: flex;
+      column-gap: 1rem;
       ul.list-group.list-group-flush {
         list-style-type: none; /* Removes the bullets */
         padding: 0; /* Removes default padding */
         margin: 0; /* Removes default margin */
+
+        button {
+          margin-top: 0.75rem;
+          margin-left: 0.75rem;
+        }
+        h5 {
+          text-align: center;
+          text-transform: uppercase;
+        }
+
+        .ingredientListItem {
+          display: flex;
+          align-items: center;
+          width: 100%;
+
+          div {
+            width: 100%;
+          }
+
+          button {
+            margin: 0;
+            margin-left: 1rem;
+          }
+        }
       }
     }
   }
