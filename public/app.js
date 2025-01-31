@@ -260,45 +260,78 @@ var FormRecipe = /*#__PURE__*/function () {
 
         // Extract data from the dynamically generated list item
         var data = {
+          type: 'recipe',
           id: item.id,
           recipe_name: ((_item$querySelector = item.querySelector('[data-list="recipe_name"] h5')) === null || _item$querySelector === void 0 ? void 0 : _item$querySelector.textContent.trim()) || "",
           type_name: ((_item$querySelector2 = item.querySelector('[data-list="type_name"]')) === null || _item$querySelector2 === void 0 ? void 0 : _item$querySelector2.textContent.replace('type_name: ', '').trim()) || "",
           calories: ((_item$querySelector3 = item.querySelector('[data-list="calories"]')) === null || _item$querySelector3 === void 0 ? void 0 : _item$querySelector3.textContent.replace('calories: ', '').trim()) || ""
         };
-
         // Store the data in the drag event
         var jsonData = JSON.stringify(data);
         e.dataTransfer.setData('text/plain', jsonData);
         console.log("Dragging:", jsonData);
+        selectContainer('drop-container');
       });
-
+      document.querySelector('[data-list-ingredients]').addEventListener('dragstart', function (e) {
+        var _item$querySelector4, _item$querySelector5;
+        var item = e.target.closest('li[draggable="true"]');
+        if (!item) return; // Ignore if not a valid draggable item
+        // Extract data from the dynamically generated list item
+        var data = {
+          type: 'ingredient',
+          id: item.id,
+          ingredient_name: ((_item$querySelector4 = item.querySelector('[data-list="ingredient_name"] h6')) === null || _item$querySelector4 === void 0 ? void 0 : _item$querySelector4.textContent.trim()) || "",
+          type_id: ((_item$querySelector5 = item.querySelector('.ingredientListItem')) === null || _item$querySelector5 === void 0 || (_item$querySelector5 = _item$querySelector5.dataset) === null || _item$querySelector5 === void 0 ? void 0 : _item$querySelector5.typeId) || ""
+        };
+        // Store the data in the drag event
+        var jsonData = JSON.stringify(data);
+        e.dataTransfer.setData('text/plain', jsonData);
+        // console.log("Dragging:", jsonData);
+        selectContainer('drop-container-ingredients');
+      });
       // Enable drop functionality
-      var dropContainer = document.querySelector('.drop-container');
-      dropContainer.addEventListener('dragover', function (e) {
-        e.preventDefault(); // Required to allow dropping
-      });
-      dropContainer.addEventListener('drop', function (e) {
-        e.preventDefault();
-
-        // Retrieve dragged item data
-        var dataString = e.dataTransfer.getData('text/plain');
-        if (!dataString) {
-          console.error("No data received during drop.");
-          return;
-        }
-        try {
-          var data = JSON.parse(dataString);
-
-          // Create a new list item in the drop container
-          var newItem = document.createElement('li');
-          newItem.innerHTML = "\n                    <div data-list=\"recipe_name\"><h5>".concat(data.recipe_name, "</h5></div>\n                    <div data-list=\"type_name\">type_name: ").concat(data.type_name, "</div>\n                    <div data-list=\"calories\">calories: ").concat(data.calories, "</div>\n                ");
-
-          // Append the new item
-          dropContainer.appendChild(newItem);
-        } catch (error) {
-          console.error("Error parsing JSON data:", error);
-        }
-      });
+      function selectContainer(cont) {
+        var container = document.querySelector(".".concat(cont));
+        container.addEventListener('dragover', function (e) {
+          e.preventDefault(); // Required to allow dropping
+        });
+        container.ondrop = function (e) {
+          e.preventDefault();
+          console.log('drop');
+          // Retrieve dragged item data
+          var dataString = e.dataTransfer.getData('text/plain');
+          if (!dataString) {
+            console.error("No data received during drop.");
+            return;
+          }
+          try {
+            var data = JSON.parse(dataString);
+            // Create a new list item in the drop container
+            var newItem = document.createElement('li');
+            if (cont === 'drop-container') {
+              if (data.type !== 'recipe') {
+                return;
+              }
+              container.innerHTML = '';
+              newItem.innerHTML = "\n                        <div data-list=\"recipe_name\"><h5>".concat(data.recipe_name, "</h5></div>\n                        <div data-list=\"type_name\">type_name: ").concat(data.type_name, "</div>\n                        <div data-list=\"calories\">calories: ").concat(data.calories, "</div>\n                    ");
+            } else if (cont === 'drop-container-ingredients') {
+              if (data.type !== 'ingredient') {
+                return;
+              }
+              newItem.innerHTML = "\n                        <div data-list=\"ingredient_name\"><h5>".concat(data.ingredient_name, "</h5></div>\n                        <div>\n                            <button class=\"btn btn-primary remove-button\">Remove</button>\n                        </div>\n                        ");
+              // Add an event listener to the "Remove" button
+              var removeButton = newItem.querySelector('.remove-button');
+              removeButton.addEventListener('click', function () {
+                newItem.remove(); // Remove the parent <li> element when the button is clicked
+              });
+            }
+            // Append the new item
+            container.appendChild(newItem);
+          } catch (error) {
+            console.error("Error parsing JSON data:", error);
+          }
+        };
+      }
     }
   }]);
 }();
@@ -538,8 +571,10 @@ var ShowData = /*#__PURE__*/function (_Request) {
           this.ingredientList.innerHTML = '';
           value.forEach(function (element) {
             var listItem = document.createElement('li');
+            listItem.draggable = true;
             listItem.classList.add('ingredientListItem');
             listItem.setAttribute('id', "".concat(element.id));
+            listItem.dataset.typeId = element.type_id;
             for (var _key2 in element) {
               if (!_key2.includes('id')) {
                 var container = document.createElement('div');
@@ -652,6 +687,7 @@ var ShowData = /*#__PURE__*/function (_Request) {
           if (key === 'recipes') {
             value.forEach(function (element) {
               var listItem = document.createElement('li');
+              listItem.draggable = true;
               listItem.setAttribute('id', "".concat(element.id));
               for (var _key3 in element) {
                 if (!_key3.includes('id') && _key3.includes('recipe_name')) {

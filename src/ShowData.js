@@ -46,9 +46,12 @@ class ShowData extends Request {
                 this.ingredientList.innerHTML = ''
 
                 value.forEach(element => {
+
                     const listItem = document.createElement('li');
+                    listItem.draggable = true;
                     listItem.classList.add('ingredientListItem')
                     listItem.setAttribute('id', `${element.id}`)
+                    listItem.dataset.typeId = element.type_id
                     for (let key in element) {
                         if (!key.includes('id')) {
                             const container = document.createElement('div');
@@ -156,10 +159,9 @@ class ShowData extends Request {
             filteredData = filterByText(responseData, searchInput.value);
             for (const [key, value] of Object.entries(filteredData)) {
                 if (key === 'recipes') {
-
-
                     value.forEach(element => {
                         const listItem = document.createElement('li');
+                        listItem.draggable = true;
                         listItem.setAttribute('id', `${element.id}`)
                         for (let key in element) {
                             if (!key.includes('id') && key.includes('recipe_name')) {
@@ -185,6 +187,7 @@ class ShowData extends Request {
                     this.ingredientList.innerHTML = ''
 
                     value.forEach(element => {
+
                         const listItem = document.createElement('li');
                         listItem.classList.add('ingredientListItem')
                         listItem.setAttribute('id', `${element.id}`)

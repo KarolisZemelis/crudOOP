@@ -12074,6 +12074,8 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  display: flex;
+  flex-direction: column;
 }
 .drop-container h5, .drop-container .h5,
 .drop-container-ingredients h5,
