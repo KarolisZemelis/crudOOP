@@ -70,30 +70,49 @@
             </div>
           </div>
         </div>
-        <div class="list">
-          <div class="col-4" data-list>
-            <div class="card mt-5">
-              <div class="card-header">
-                <h2>Recipe list</h2>
+        <div class="right_screen">
+          <div class="form-recipe">
+            <div class="col-8">
+              <div class="card mt-5">
+                <div class="card-header">
+                  <h2>Form recipe</h2>
+                </div>
+                <div class="card-body">
+                  <label for="search">Search by name</label>
+                  <input type="text" name="search" data-search />
+                </div>
+                <div class="card-footer text-body-secondary"></div>
               </div>
-              <div class="card-body">
-                <ul class="list-group list-group-flush" data-list-recipes></ul>
-              </div>
-              <div class="card-footer text-body-secondary"></div>
             </div>
           </div>
-          <div class="col-4" ingredient-list>
-            <div class="card mt-5">
-              <div class="card-header">
-                <h2>Ingredient list</h2>
+          <div class="list">
+            <div class="col-4" data-list>
+              <div class="card mt-5">
+                <div class="card-header">
+                  <h2>Recipe list</h2>
+                </div>
+                <div class="card-body">
+                  <ul
+                    class="list-group list-group-flush"
+                    data-list-recipes
+                  ></ul>
+                </div>
+                <div class="card-footer text-body-secondary"></div>
               </div>
-              <div class="card-body">
-                <ul
-                  class="list-group list-group-flush"
-                  data-list-ingredients
-                ></ul>
+            </div>
+            <div class="col-4" ingredient-list>
+              <div class="card mt-5">
+                <div class="card-header">
+                  <h2>Ingredient list</h2>
+                </div>
+                <div class="card-body">
+                  <ul
+                    class="list-group list-group-flush"
+                    data-list-ingredients
+                  ></ul>
+                </div>
+                <div class="card-footer text-body-secondary"></div>
               </div>
-              <div class="card-footer text-body-secondary"></div>
             </div>
           </div>
         </div>
@@ -151,7 +170,7 @@
       </div>
     </div>
 
-    <template data-list-template>
+    <!-- <template data-list-template>
       <li class="list-group-item" data-item-bin>
         <h4 data-key="title"></h4>
         <div class="buttons">
@@ -161,6 +180,6 @@
           </button>
         </div>
       </li>
-    </template>
+    </template> -->
   </body>
 </html>

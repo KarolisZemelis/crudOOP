@@ -386,6 +386,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _Request_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Request.js */ "./src/Request.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
 function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
@@ -468,6 +471,7 @@ var ShowData = /*#__PURE__*/function (_Request) {
           });
         }
       }
+      this.renderSearchData(responseData);
     }
   }, {
     key: "renderModalData",
@@ -533,6 +537,74 @@ var ShowData = /*#__PURE__*/function (_Request) {
       deleteButton.classList.add('btn', 'btn-primary');
       deleteButton.dataset.type = 'delete';
       listItem.appendChild(deleteButton);
+    }
+  }, {
+    key: "renderSearchData",
+    value: function renderSearchData(responseData) {
+      var _this3 = this;
+      var searchInput = document.querySelector('[data-search]');
+      var filterByText = function filterByText(data, text) {
+        var lowerText = text.toLowerCase();
+        return _objectSpread(_objectSpread({}, data), {}, {
+          // Keep the original object structure
+          recipes: data.recipes.filter(function (recipe) {
+            return recipe.recipe_name.toLowerCase().includes(lowerText);
+          }),
+          ingredients: data.ingredients.filter(function (ingredient) {
+            return ingredient.ingredient_name.toLowerCase().includes(lowerText);
+          })
+        });
+      };
+      var filteredData = responseData;
+      searchInput.addEventListener('input', function (_) {
+        _this3.recipeList.innerHTML = '';
+        filteredData = filterByText(responseData, searchInput.value);
+        for (var _i3 = 0, _Object$entries3 = Object.entries(filteredData); _i3 < _Object$entries3.length; _i3++) {
+          var _Object$entries3$_i = _slicedToArray(_Object$entries3[_i3], 2),
+            key = _Object$entries3$_i[0],
+            value = _Object$entries3$_i[1];
+          if (key === 'recipes') {
+            value.forEach(function (element) {
+              var listItem = document.createElement('li');
+              listItem.setAttribute('id', "".concat(element.id));
+              for (var _key3 in element) {
+                if (!_key3.includes('id') && _key3.includes('recipe_name')) {
+                  var container = document.createElement('div');
+                  container.dataset.list = _key3;
+                  container.innerHTML = "<h5>".concat(element[_key3], "</h5>");
+                  listItem.appendChild(container);
+                } else if (!_key3.includes('id') && !_key3.includes('recipe_name')) {
+                  var _container2 = document.createElement('div');
+                  _container2.dataset.list = _key3;
+                  _container2.textContent = "".concat(_key3, ": ").concat(element[_key3]);
+                  listItem.appendChild(_container2);
+                }
+              }
+              _this3.renderEditButton(listItem);
+              _this3.renderDeleteButton(listItem);
+              _this3.recipeList.appendChild(listItem);
+            });
+          } else {
+            _this3.ingredientList.innerHTML = '';
+            value.forEach(function (element) {
+              var listItem = document.createElement('li');
+              listItem.classList.add('ingredientListItem');
+              listItem.setAttribute('id', "".concat(element.id));
+              for (var _key4 in element) {
+                if (!_key4.includes('id')) {
+                  var container = document.createElement('div');
+                  container.dataset.list = _key4;
+                  container.innerHTML = "<h6>".concat(element[_key4], "</h6>");
+                  listItem.appendChild(container);
+                }
+              }
+              _this3.renderEditButton(listItem);
+              _this3.renderDeleteButton(listItem);
+              _this3.ingredientList.appendChild(listItem);
+            });
+          }
+        }
+      });
     }
   }]);
 }(_Request_js__WEBPACK_IMPORTED_MODULE_0__["default"]);

@@ -11980,28 +11980,20 @@ textarea.form-control-lg {
 }
 
 body {
-  background-color: aquamarine;
+  background-color: rgb(182, 98, 43);
 }
 
-#main {
-  margin: 0;
-  width: 100%;
-  max-width: 100%;
-}
 #main h2, #main .h2 {
   font-size: 1rem;
 }
 #main .row {
-  width: 100%;
   flex-wrap: nowrap;
   display: flex;
   flex-direction: row;
 }
 #main .row .create {
-  width: 30%;
-}
-#main .row .create {
   min-width: 16rem;
+  width: 30%;
 }
 #main .row .list {
   display: flex;
@@ -12021,6 +12013,11 @@ body {
   text-align: center;
   text-transform: uppercase;
 }
+#main .row .list ul.list-group.list-group-flush li {
+  margin-bottom: 1rem;
+  border: 1px solid gray;
+  padding: 1rem;
+}
 #main .row .list ul.list-group.list-group-flush .ingredientListItem {
   display: flex;
   align-items: center;
@@ -12032,4 +12029,7 @@ body {
 #main .row .list ul.list-group.list-group-flush .ingredientListItem button {
   margin: 0;
   margin-left: 1rem;
+}
+#main .row .form-recipe {
+  width: 100%;
 }

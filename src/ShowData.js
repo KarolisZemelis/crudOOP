@@ -34,7 +34,6 @@ class ShowData extends Request {
                             container.dataset.list = key
                             container.textContent = `${key}: ${element[key]}`
                             listItem.appendChild(container)
-
                         }
                     }
                     this.renderEditButton(listItem)
@@ -43,6 +42,7 @@ class ShowData extends Request {
                 });
             } else {
                 this.ingredientList.innerHTML = ''
+
                 value.forEach(element => {
                     const listItem = document.createElement('li');
                     listItem.classList.add('ingredientListItem')
@@ -62,6 +62,7 @@ class ShowData extends Request {
             }
         }
 
+        this.renderSearchData(responseData)
     }
     renderModalData(response, table) {
 
@@ -125,6 +126,73 @@ class ShowData extends Request {
         deleteButton.classList.add('btn', 'btn-primary')
         deleteButton.dataset.type = 'delete'
         listItem.appendChild(deleteButton)
+
+    }
+    renderSearchData(responseData) {
+
+        const searchInput = document.querySelector('[data-search]')
+        const filterByText = (data, text) => {
+            const lowerText = text.toLowerCase();
+
+            return {
+                ...data, // Keep the original object structure
+                recipes: data.recipes.filter(recipe => recipe.recipe_name.toLowerCase().includes(lowerText)),
+                ingredients: data.ingredients.filter(ingredient => ingredient.ingredient_name.toLowerCase().includes(lowerText))
+            };
+        };
+
+        let filteredData = responseData
+
+        searchInput.addEventListener('input', _ => {
+            this.recipeList.innerHTML = ''
+            filteredData = filterByText(responseData, searchInput.value);
+            for (const [key, value] of Object.entries(filteredData)) {
+                if (key === 'recipes') {
+
+
+                    value.forEach(element => {
+                        const listItem = document.createElement('li');
+                        listItem.setAttribute('id', `${element.id}`)
+                        for (let key in element) {
+                            if (!key.includes('id') && key.includes('recipe_name')) {
+                                const container = document.createElement('div');
+                                container.dataset.list = key
+                                container.innerHTML = `<h5>${element[key]}</h5>`
+                                listItem.appendChild(container)
+
+                            } else if (!key.includes('id') && !key.includes('recipe_name')) {
+                                const container = document.createElement('div');
+                                container.dataset.list = key
+                                container.textContent = `${key}: ${element[key]}`
+                                listItem.appendChild(container)
+                            }
+                        }
+                        this.renderEditButton(listItem)
+                        this.renderDeleteButton(listItem)
+                        this.recipeList.appendChild(listItem);
+                    });
+                } else {
+                    this.ingredientList.innerHTML = ''
+
+                    value.forEach(element => {
+                        const listItem = document.createElement('li');
+                        listItem.classList.add('ingredientListItem')
+                        listItem.setAttribute('id', `${element.id}`)
+                        for (let key in element) {
+                            if (!key.includes('id')) {
+                                const container = document.createElement('div');
+                                container.dataset.list = key
+                                container.innerHTML = `<h6>${element[key]}</h6>`
+                                listItem.appendChild(container)
+                            }
+                        }
+                        this.renderEditButton(listItem)
+                        this.renderDeleteButton(listItem)
+                        this.ingredientList.appendChild(listItem);
+                    });
+                }
+            }
+        })
 
     }
 }
