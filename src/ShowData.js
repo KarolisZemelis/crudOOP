@@ -37,8 +37,9 @@ class ShowData extends Request {
                             listItem.appendChild(container)
                         }
                     }
-                    this.renderEditButton(listItem)
-                    this.renderDeleteButton(listItem)
+                    const btnContainer = document.createElement('div');
+                    this.renderEditButton(listItem, btnContainer)
+                    this.renderDeleteButton(listItem, btnContainer)
                     this.recipeList.appendChild(listItem);
                 });
             } else {
@@ -56,8 +57,9 @@ class ShowData extends Request {
                             listItem.appendChild(container)
                         }
                     }
-                    this.renderEditButton(listItem)
-                    this.renderDeleteButton(listItem)
+                    const btnContainer = document.createElement('div');
+                    this.renderEditButton(listItem, btnContainer)
+                    this.renderDeleteButton(listItem, btnContainer)
                     this.ingredientList.appendChild(listItem);
                 });
             }
@@ -114,19 +116,24 @@ class ShowData extends Request {
         this.modalBody.appendChild(inputLabel);
         this.modalBody.appendChild(select);
     }
-    renderEditButton(listItem) {
+    renderEditButton(listItem, btnContainer) {
+
         const editButton = document.createElement('button');
         editButton.textContent = 'Edit'
         editButton.classList.add('btn', 'btn-primary')
         editButton.dataset.type = 'edit'
-        listItem.appendChild(editButton)
+        btnContainer.appendChild(editButton)
+        listItem.appendChild(btnContainer)
+
     }
-    renderDeleteButton(listItem) {
+    renderDeleteButton(listItem, btnContainer) {
+
         const deleteButton = document.createElement('button');
         deleteButton.textContent = 'Delete'
         deleteButton.classList.add('btn', 'btn-primary')
         deleteButton.dataset.type = 'delete'
-        listItem.appendChild(deleteButton)
+        btnContainer.appendChild(deleteButton)
+        listItem.appendChild(btnContainer)
 
     }
     renderSearchData(responseData) {
@@ -168,8 +175,10 @@ class ShowData extends Request {
                                 listItem.appendChild(container)
                             }
                         }
-                        this.renderEditButton(listItem)
-                        this.renderDeleteButton(listItem)
+                        const btnContainer = document.createElement('div');
+
+                        this.renderEditButton(listItem, btnContainer)
+                        this.renderDeleteButton(listItem, btnContainer)
                         this.recipeList.appendChild(listItem);
                     });
                 } else {
@@ -187,8 +196,9 @@ class ShowData extends Request {
                                 listItem.appendChild(container)
                             }
                         }
-                        this.renderEditButton(listItem)
-                        this.renderDeleteButton(listItem)
+                        const btnContainer = document.createElement('div');
+                        this.renderEditButton(listItem, btnContainer)
+                        this.renderDeleteButton(listItem, btnContainer)
                         this.ingredientList.appendChild(listItem);
                     });
                 }

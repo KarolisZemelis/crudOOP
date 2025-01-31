@@ -14,7 +14,7 @@
   <body>
     <div id="main" class="container" data-page="recipes">
       <div class="row">
-        <div class="create">
+        <div class="create col-3">
           <div class="">
             <div class="card mt-5" data-form="create">
               <div class="card-header">
@@ -70,27 +70,18 @@
             </div>
           </div>
         </div>
-        <div class="right_screen">
-          <div class="form-recipe">
-            <div class="col-8">
-              <div class="card mt-5">
-                <div class="card-header">
-                  <h2>Form recipe</h2>
-
-                  <h2>Drop Here</h2>
-                  <div class="drop-container"></div>
-                </div>
-                <div class="card-body">
-                  <label for="search">Search by name</label>
-                  <input type="text" name="search" data-search />
-                </div>
-                <div class="card-footer text-body-secondary"></div>
-              </div>
-            </div>
+        <div class="right_screen col-9">
+          <div class="searchBox">
+            <input
+              type="text"
+              name="search"
+              data-search
+              placeholder="Search by name"
+            />
           </div>
           <div class="list">
-            <div class="col-4" data-list>
-              <div class="card mt-5">
+            <div class="col-3" data-list>
+              <div class="card mt-2">
                 <div class="card-header">
                   <h2>Recipe list</h2>
                 </div>
@@ -103,8 +94,8 @@
                 <div class="card-footer text-body-secondary"></div>
               </div>
             </div>
-            <div class="col-4" ingredient-list>
-              <div class="card mt-5">
+            <div class="col-3" ingredient-list>
+              <div class="card mt-2">
                 <div class="card-header">
                   <h2>Ingredient list</h2>
                 </div>
@@ -113,6 +104,20 @@
                     class="list-group list-group-flush"
                     data-list-ingredients
                   ></ul>
+                </div>
+                <div class="card-footer text-body-secondary"></div>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="card mt-2">
+                <div class="card-header">
+                  <h2>Form recipe</h2>
+                </div>
+                <div class="card-body">
+                  <h2>Drop Recipe Here</h2>
+                  <div class="drop-container"></div>
+                  <h2>Drop Ingredients Here</h2>
+                  <div class="drop-container-ingredients"></div>
                 </div>
                 <div class="card-footer text-body-secondary"></div>
               </div>
@@ -172,17 +177,5 @@
         </div>
       </div>
     </div>
-
-    <!-- <template data-list-template>
-      <li class="list-group-item" data-item-bin>
-        <h4 data-key="title"></h4>
-        <div class="buttons">
-          <button class="btn btn-warning" data-button-type="edit">Edit</button>
-          <button class="btn btn-danger" data-button-type="delete">
-            Delete
-          </button>
-        </div>
-      </li>
-    </template> -->
   </body>
 </html>

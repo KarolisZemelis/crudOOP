@@ -529,8 +529,9 @@ var ShowData = /*#__PURE__*/function (_Request) {
                 listItem.appendChild(_container);
               }
             }
-            _this2.renderEditButton(listItem);
-            _this2.renderDeleteButton(listItem);
+            var btnContainer = document.createElement('div');
+            _this2.renderEditButton(listItem, btnContainer);
+            _this2.renderDeleteButton(listItem, btnContainer);
             _this2.recipeList.appendChild(listItem);
           });
         } else {
@@ -547,8 +548,9 @@ var ShowData = /*#__PURE__*/function (_Request) {
                 listItem.appendChild(container);
               }
             }
-            _this2.renderEditButton(listItem);
-            _this2.renderDeleteButton(listItem);
+            var btnContainer = document.createElement('div');
+            _this2.renderEditButton(listItem, btnContainer);
+            _this2.renderDeleteButton(listItem, btnContainer);
             _this2.ingredientList.appendChild(listItem);
           });
         }
@@ -604,21 +606,23 @@ var ShowData = /*#__PURE__*/function (_Request) {
     }
   }, {
     key: "renderEditButton",
-    value: function renderEditButton(listItem) {
+    value: function renderEditButton(listItem, btnContainer) {
       var editButton = document.createElement('button');
       editButton.textContent = 'Edit';
       editButton.classList.add('btn', 'btn-primary');
       editButton.dataset.type = 'edit';
-      listItem.appendChild(editButton);
+      btnContainer.appendChild(editButton);
+      listItem.appendChild(btnContainer);
     }
   }, {
     key: "renderDeleteButton",
-    value: function renderDeleteButton(listItem) {
+    value: function renderDeleteButton(listItem, btnContainer) {
       var deleteButton = document.createElement('button');
       deleteButton.textContent = 'Delete';
       deleteButton.classList.add('btn', 'btn-primary');
       deleteButton.dataset.type = 'delete';
-      listItem.appendChild(deleteButton);
+      btnContainer.appendChild(deleteButton);
+      listItem.appendChild(btnContainer);
     }
   }, {
     key: "renderSearchData",
@@ -662,8 +666,9 @@ var ShowData = /*#__PURE__*/function (_Request) {
                   listItem.appendChild(_container2);
                 }
               }
-              _this3.renderEditButton(listItem);
-              _this3.renderDeleteButton(listItem);
+              var btnContainer = document.createElement('div');
+              _this3.renderEditButton(listItem, btnContainer);
+              _this3.renderDeleteButton(listItem, btnContainer);
               _this3.recipeList.appendChild(listItem);
             });
           } else {
@@ -680,8 +685,9 @@ var ShowData = /*#__PURE__*/function (_Request) {
                   listItem.appendChild(container);
                 }
               }
-              _this3.renderEditButton(listItem);
-              _this3.renderDeleteButton(listItem);
+              var btnContainer = document.createElement('div');
+              _this3.renderEditButton(listItem, btnContainer);
+              _this3.renderDeleteButton(listItem, btnContainer);
               _this3.ingredientList.appendChild(listItem);
             });
           }
