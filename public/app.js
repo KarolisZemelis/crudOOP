@@ -228,6 +228,84 @@ var Edit = /*#__PURE__*/function (_Request) {
 
 /***/ }),
 
+/***/ "./src/FormRecipe.js":
+/*!***************************!*\
+  !*** ./src/FormRecipe.js ***!
+  \***************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+var FormRecipe = /*#__PURE__*/function () {
+  function FormRecipe() {
+    _classCallCheck(this, FormRecipe);
+    this.formRecipe();
+  }
+  return _createClass(FormRecipe, [{
+    key: "formRecipe",
+    value: function formRecipe() {
+      document.querySelector('[data-list-recipes]').addEventListener('dragstart', function (e) {
+        var _item$querySelector, _item$querySelector2, _item$querySelector3;
+        var item = e.target.closest('li[draggable="true"]');
+        if (!item) return; // Ignore if not a valid draggable item
+
+        // Extract data from the dynamically generated list item
+        var data = {
+          id: item.id,
+          recipe_name: ((_item$querySelector = item.querySelector('[data-list="recipe_name"] h5')) === null || _item$querySelector === void 0 ? void 0 : _item$querySelector.textContent.trim()) || "",
+          type_name: ((_item$querySelector2 = item.querySelector('[data-list="type_name"]')) === null || _item$querySelector2 === void 0 ? void 0 : _item$querySelector2.textContent.replace('type_name: ', '').trim()) || "",
+          calories: ((_item$querySelector3 = item.querySelector('[data-list="calories"]')) === null || _item$querySelector3 === void 0 ? void 0 : _item$querySelector3.textContent.replace('calories: ', '').trim()) || ""
+        };
+
+        // Store the data in the drag event
+        var jsonData = JSON.stringify(data);
+        e.dataTransfer.setData('text/plain', jsonData);
+        console.log("Dragging:", jsonData);
+      });
+
+      // Enable drop functionality
+      var dropContainer = document.querySelector('.drop-container');
+      dropContainer.addEventListener('dragover', function (e) {
+        e.preventDefault(); // Required to allow dropping
+      });
+      dropContainer.addEventListener('drop', function (e) {
+        e.preventDefault();
+
+        // Retrieve dragged item data
+        var dataString = e.dataTransfer.getData('text/plain');
+        if (!dataString) {
+          console.error("No data received during drop.");
+          return;
+        }
+        try {
+          var data = JSON.parse(dataString);
+
+          // Create a new list item in the drop container
+          var newItem = document.createElement('li');
+          newItem.innerHTML = "\n                    <div data-list=\"recipe_name\"><h5>".concat(data.recipe_name, "</h5></div>\n                    <div data-list=\"type_name\">type_name: ").concat(data.type_name, "</div>\n                    <div data-list=\"calories\">calories: ").concat(data.calories, "</div>\n                ");
+
+          // Append the new item
+          dropContainer.appendChild(newItem);
+        } catch (error) {
+          console.error("Error parsing JSON data:", error);
+        }
+      });
+    }
+  }]);
+}();
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (FormRecipe);
+
+/***/ }),
+
 /***/ "./src/Recipe.js":
 /*!***********************!*\
   !*** ./src/Recipe.js ***!
@@ -243,12 +321,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ShowData_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ShowData.js */ "./src/ShowData.js");
 /* harmony import */ var _Edit_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Edit.js */ "./src/Edit.js");
 /* harmony import */ var _Delete_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Delete.js */ "./src/Delete.js");
+/* harmony import */ var _FormRecipe_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./FormRecipe.js */ "./src/FormRecipe.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
 function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+
 
 
 
@@ -260,6 +340,7 @@ var Recipe = /*#__PURE__*/_createClass(function Recipe() {
   this.ShowData = new _ShowData_js__WEBPACK_IMPORTED_MODULE_1__["default"](this);
   this.Edit = new _Edit_js__WEBPACK_IMPORTED_MODULE_2__["default"](this);
   this.Delete = new _Delete_js__WEBPACK_IMPORTED_MODULE_3__["default"](this);
+  this.FormRecipe = new _FormRecipe_js__WEBPACK_IMPORTED_MODULE_4__["default"](this);
 });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Recipe);
 
@@ -433,6 +514,7 @@ var ShowData = /*#__PURE__*/function (_Request) {
           this.recipeList.innerHTML = '';
           value.forEach(function (element) {
             var listItem = document.createElement('li');
+            listItem.draggable = true;
             listItem.setAttribute('id', "".concat(element.id));
             for (var _key in element) {
               if (!_key.includes('id') && _key.includes('recipe_name')) {

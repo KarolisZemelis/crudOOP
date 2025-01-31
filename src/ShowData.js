@@ -21,6 +21,7 @@ class ShowData extends Request {
                 this.recipeList.innerHTML = ''
                 value.forEach(element => {
                     const listItem = document.createElement('li');
+                    listItem.draggable = true;
                     listItem.setAttribute('id', `${element.id}`)
                     for (let key in element) {
                         if (!key.includes('id') && key.includes('recipe_name')) {

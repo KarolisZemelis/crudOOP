@@ -54,8 +54,12 @@ body {
           margin-bottom: 1rem;
           border: 1px solid gray;
           padding: 1rem;
+          &:hover {
+            background-color: #e49191;
+            cursor: grab;
+          }
         }
-        .ingredientListItem {
+        li .ingredientListItem {
           display: flex;
           align-items: center;
           width: 100%;
@@ -73,4 +77,22 @@ body {
       width: 100%;
     }
   }
+}
+
+.recipe-container,
+.drop-container {
+  width: 300px;
+  min-height: 200px;
+  border: 2px dashed #333;
+  padding: 10px;
+  margin: 10px;
+  li {
+    list-style-type: none;
+  }
+}
+.li {
+  background: lightblue;
+  padding: 10px;
+  margin: 5px;
+  cursor: grab;
 }

@@ -12018,18 +12018,42 @@ body {
   border: 1px solid gray;
   padding: 1rem;
 }
-#main .row .list ul.list-group.list-group-flush .ingredientListItem {
+#main .row .list ul.list-group.list-group-flush li:hover {
+  background-color: #e49191;
+  cursor: grab;
+}
+#main .row .list ul.list-group.list-group-flush li .ingredientListItem {
   display: flex;
   align-items: center;
   width: 100%;
 }
-#main .row .list ul.list-group.list-group-flush .ingredientListItem div {
+#main .row .list ul.list-group.list-group-flush li .ingredientListItem div {
   width: 100%;
 }
-#main .row .list ul.list-group.list-group-flush .ingredientListItem button {
+#main .row .list ul.list-group.list-group-flush li .ingredientListItem button {
   margin: 0;
   margin-left: 1rem;
 }
 #main .row .form-recipe {
   width: 100%;
+}
+
+.recipe-container,
+.drop-container {
+  width: 300px;
+  min-height: 200px;
+  border: 2px dashed #333;
+  padding: 10px;
+  margin: 10px;
+}
+.recipe-container li,
+.drop-container li {
+  list-style-type: none;
+}
+
+.li {
+  background: lightblue;
+  padding: 10px;
+  margin: 5px;
+  cursor: grab;
 }
