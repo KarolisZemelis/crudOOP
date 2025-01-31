@@ -189,6 +189,7 @@ class ShowData extends Request {
                     value.forEach(element => {
 
                         const listItem = document.createElement('li');
+                        listItem.draggable = true;
                         listItem.classList.add('ingredientListItem')
                         listItem.setAttribute('id', `${element.id}`)
                         for (let key in element) {

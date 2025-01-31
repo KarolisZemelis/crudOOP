@@ -3,7 +3,6 @@ class FormRecipe {
 
         this.formRecipe()
 
-
     }
 
     formRecipe() {

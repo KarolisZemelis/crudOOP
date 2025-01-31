@@ -711,6 +711,7 @@ var ShowData = /*#__PURE__*/function (_Request) {
             _this3.ingredientList.innerHTML = '';
             value.forEach(function (element) {
               var listItem = document.createElement('li');
+              listItem.draggable = true;
               listItem.classList.add('ingredientListItem');
               listItem.setAttribute('id', "".concat(element.id));
               for (var _key4 in element) {
