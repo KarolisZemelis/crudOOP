@@ -35,6 +35,10 @@ body {
     margin: 0;
     width: 100%;
 
+    .newItem {
+      min-width: 260px;
+    }
+
     .right_screen {
       display: flex;
       flex-direction: column;
@@ -53,6 +57,10 @@ body {
         justify-content: space-evenly;
         column-gap: 1rem;
         margin: 0;
+        .card.mt-2 {
+          min-width: 200px;
+        }
+
         ul.list-group.list-group-flush {
           list-style-type: none; /* Removes the bullets */
           padding: 0; /* Removes default padding */

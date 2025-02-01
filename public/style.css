@@ -12000,6 +12000,9 @@ body {
   margin: 0;
   width: 100%;
 }
+#main .row .newItem {
+  min-width: 260px;
+}
 #main .row .right_screen {
   display: flex;
   flex-direction: column;
@@ -12019,6 +12022,9 @@ body {
   -moz-column-gap: 1rem;
        column-gap: 1rem;
   margin: 0;
+}
+#main .row .right_screen .list .card.mt-2 {
+  min-width: 200px;
 }
 #main .row .right_screen .list ul.list-group.list-group-flush {
   list-style-type: none; /* Removes the bullets */
