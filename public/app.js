@@ -105,8 +105,9 @@ var Delete = /*#__PURE__*/function (_Request) {
       if (event.target.matches('[data-type="delete"]')) {
         _this.deleteModal = document.querySelector('[data-modal="delete"]');
         _this.deleteModal.style.display = 'block';
-        var parent = event.target.parentElement;
-        var elementName = parent.querySelector(':first-child').textContent;
+        var grandParent = event.target.parentElement.parentElement;
+        console.log(grandParent);
+        var elementName = grandParent.querySelector(':first-child').textContent;
         var elementNameDom = _this.deleteModal.querySelector('[data-recipe-name]');
         elementNameDom.innerHTML = "<i><b>".concat(elementName, "</b></i>");
         _this.deleteModal.querySelector('[data-type="cancel"]').addEventListener('click', function (_) {
@@ -114,7 +115,7 @@ var Delete = /*#__PURE__*/function (_Request) {
         });
         _this.deleteModal.querySelector('[data-type="delete"]').onclick = function () {
           _this.deleteModal.style.display = 'none';
-          var elementId = parent.id; // Get the current id
+          var elementId = grandParent.id; // Get the current id
           _this.deleteFromDb(elementId, 'recipe');
         };
       }
@@ -123,8 +124,8 @@ var Delete = /*#__PURE__*/function (_Request) {
       if (event.target.matches('[data-type="delete"]')) {
         _this.deleteModal = document.querySelector('[data-modal="delete"]');
         _this.deleteModal.style.display = 'block';
-        var parent = event.target.parentElement;
-        var elementName = parent.querySelector(':first-child').textContent;
+        var grandParent = event.target.parentElement.parentElement;
+        var elementName = grandParent.querySelector(':first-child').textContent;
         var elementNameDom = _this.deleteModal.querySelector('[data-recipe-name]');
         elementNameDom.innerHTML = "<i><b>".concat(elementName, "</b></i>");
         _this.deleteModal.querySelector('[data-type="cancel"]').addEventListener('click', function (_) {
@@ -132,7 +133,7 @@ var Delete = /*#__PURE__*/function (_Request) {
         });
         _this.deleteModal.querySelector('[data-type="delete"]').onclick = function () {
           _this.deleteModal.style.display = 'none';
-          var elementId = parent.id;
+          var elementId = grandParent.id;
           _this.deleteFromDb(elementId, 'ingredient');
         };
       }

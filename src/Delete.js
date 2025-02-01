@@ -12,9 +12,9 @@ class Delete extends Request {
                 this.deleteModal.style.display = 'block'
 
 
-                const parent = event.target.parentElement;
-
-                const elementName = parent.querySelector(':first-child').textContent;
+                const grandParent = event.target.parentElement.parentElement;
+                console.log(grandParent)
+                const elementName = grandParent.querySelector(':first-child').textContent;
                 const elementNameDom = this.deleteModal.querySelector('[data-recipe-name]');
                 elementNameDom.innerHTML = `<i><b>${elementName}</b></i>`;
 
@@ -25,7 +25,7 @@ class Delete extends Request {
 
                 this.deleteModal.querySelector('[data-type="delete"]').onclick = () => {
                     this.deleteModal.style.display = 'none';
-                    const elementId = parent.id; // Get the current id
+                    const elementId = grandParent.id; // Get the current id
                     this.deleteFromDb(elementId, 'recipe');
                 };
             }
@@ -37,9 +37,9 @@ class Delete extends Request {
                 this.deleteModal.style.display = 'block'
 
 
-                const parent = event.target.parentElement;
+                const grandParent = event.target.parentElement.parentElement;
 
-                const elementName = parent.querySelector(':first-child').textContent;
+                const elementName = grandParent.querySelector(':first-child').textContent;
                 const elementNameDom = this.deleteModal.querySelector('[data-recipe-name]');
                 elementNameDom.innerHTML = `<i><b>${elementName}</b></i>`;
 
@@ -50,7 +50,7 @@ class Delete extends Request {
 
                 this.deleteModal.querySelector('[data-type="delete"]').onclick = () => {
                     this.deleteModal.style.display = 'none';
-                    const elementId = parent.id;
+                    const elementId = grandParent.id;
                     this.deleteFromDb(elementId, 'ingredient');
                 };
             }
