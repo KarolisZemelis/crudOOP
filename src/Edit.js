@@ -34,9 +34,13 @@ class Edit extends Request {
         this.editModal = document.querySelector('[data-modal="edit"]')
         this.editModal.style.display = 'block'
 
-        const parent = event.target.parentElement;
-        const elementId = parent.id;
+        const grandparent = event.target.parentElement.parentElement;
+
+        const elementId = grandparent.id;
+
+
         let table = list.dataset.hasOwnProperty('listIngredients') ? 'ingredient' : 'recipe'
+
         this.getElementFromDb(elementId, this.MainObject, table)
 
         this.editModal.querySelector('[data-type="cancel"]')

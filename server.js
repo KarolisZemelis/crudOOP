@@ -39,6 +39,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/api/recipe/', (req, res) => {
+
     const sql1 = `
     SELECT recipe.id, recipe.recipe_name, type.type_name,  recipe.type_id, recipe.calories
     FROM recipe
@@ -67,8 +68,9 @@ app.get('/api/recipe/', (req, res) => {
 })
 
 app.get('/api/recipe/:id', (req, res) => {
-    console.log('test')
+
     if (req.query.table === 'recipe') {
+
         const sql = `
     SELECT recipe.id, recipe.recipe_name, type.type_name, recipe.type_id, recipe.calories
     FROM recipe

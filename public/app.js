@@ -208,8 +208,8 @@ var Edit = /*#__PURE__*/function (_Request) {
         if (event.target.matches('[data-type="edit"]')) {
           _this3.editModal = document.querySelector('[data-modal="edit"]');
           _this3.editModal.style.display = 'block';
-          var parent = event.target.parentElement;
-          var elementId = parent.id;
+          var grandparent = event.target.parentElement.parentElement;
+          var elementId = grandparent.id;
           var table = list.dataset.hasOwnProperty('listIngredients') ? 'ingredient' : 'recipe';
           _this3.getElementFromDb(elementId, _this3.MainObject, table);
           _this3.editModal.querySelector('[data-type="cancel"]').addEventListener('click', function (_) {
