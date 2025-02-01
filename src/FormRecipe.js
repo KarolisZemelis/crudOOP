@@ -80,15 +80,28 @@ class FormRecipe {
                         <div data-list="recipe_name"><h5>${data.recipe_name}</h5></div>
                         <div data-list="type_name">type_name: ${data.type_name}</div>
                         <div data-list="calories">calories: ${data.calories}</div>
+                        <div>
+                            <button class="btn btn-primary remove-button">Remove</button>
+                        </div>
                     `;
+                        // Add an event listener to the "Remove" button
+                        const removeButton = newItem.querySelector('.remove-button');
+                        removeButton.addEventListener('click', () => {
+                            newItem.remove(); // Remove the parent <li> element when the button is clicked
+                        });
 
                     } else if (cont === 'drop-container-ingredients') {
                         if (data.type !== 'ingredient') {
 
                             return
                         }
+                        newItem.style.display = 'flex';
+                        newItem.style.alignItems = 'center';
+                        newItem.style.gap = '0.25rem';
+                        newItem.style.marginBottom = '0.25rem';
+                        newItem.style.marginTop = '0.25rem';
                         newItem.innerHTML = `
-                        <div data-list="ingredient_name"><h5>${data.ingredient_name}</h5></div>
+                        <div  data-list="ingredient_name"><h6 class='mb-0'>${data.ingredient_name}</h6></div>
                         <div>
                             <button class="btn btn-primary remove-button">Remove</button>
                         </div>

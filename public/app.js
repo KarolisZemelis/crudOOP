@@ -314,15 +314,25 @@ var FormRecipe = /*#__PURE__*/function () {
                 return;
               }
               container.innerHTML = '';
-              newItem.innerHTML = "\n                        <div data-list=\"recipe_name\"><h5>".concat(data.recipe_name, "</h5></div>\n                        <div data-list=\"type_name\">type_name: ").concat(data.type_name, "</div>\n                        <div data-list=\"calories\">calories: ").concat(data.calories, "</div>\n                    ");
+              newItem.innerHTML = "\n                        <div data-list=\"recipe_name\"><h5>".concat(data.recipe_name, "</h5></div>\n                        <div data-list=\"type_name\">type_name: ").concat(data.type_name, "</div>\n                        <div data-list=\"calories\">calories: ").concat(data.calories, "</div>\n                        <div>\n                            <button class=\"btn btn-primary remove-button\">Remove</button>\n                        </div>\n                    ");
+              // Add an event listener to the "Remove" button
+              var removeButton = newItem.querySelector('.remove-button');
+              removeButton.addEventListener('click', function () {
+                newItem.remove(); // Remove the parent <li> element when the button is clicked
+              });
             } else if (cont === 'drop-container-ingredients') {
               if (data.type !== 'ingredient') {
                 return;
               }
-              newItem.innerHTML = "\n                        <div data-list=\"ingredient_name\"><h5>".concat(data.ingredient_name, "</h5></div>\n                        <div>\n                            <button class=\"btn btn-primary remove-button\">Remove</button>\n                        </div>\n                        ");
+              newItem.style.display = 'flex';
+              newItem.style.alignItems = 'center';
+              newItem.style.gap = '0.25rem';
+              newItem.style.marginBottom = '0.25rem';
+              newItem.style.marginTop = '0.25rem';
+              newItem.innerHTML = "\n                        <div  data-list=\"ingredient_name\"><h6 class='mb-0'>".concat(data.ingredient_name, "</h6></div>\n                        <div>\n                            <button class=\"btn btn-primary remove-button\">Remove</button>\n                        </div>\n                        ");
               // Add an event listener to the "Remove" button
-              var removeButton = newItem.querySelector('.remove-button');
-              removeButton.addEventListener('click', function () {
+              var _removeButton = newItem.querySelector('.remove-button');
+              _removeButton.addEventListener('click', function () {
                 newItem.remove(); // Remove the parent <li> element when the button is clicked
               });
             }
