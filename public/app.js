@@ -61,6 +61,7 @@ var Create = /*#__PURE__*/function (_Request) {
           data[input.name] = input.value;
         }
       });
+      console.log(data);
       return data;
     }
   }]);
@@ -207,10 +208,9 @@ var Edit = /*#__PURE__*/function (_Request) {
       var _this3 = this;
       list.addEventListener('click', function (event) {
         if (event.target.matches('[data-type="edit"]')) {
-          _this3.editModal = document.querySelector('[data-modal="edit"]');
           _this3.editModal.style.display = 'block';
           var grandparent = event.target.parentElement.parentElement;
-          var elementId = grandparent.id;
+          var elementId = grandparent.dataset.itemid;
           var table = list.dataset.hasOwnProperty('listIngredients') ? 'ingredient' : 'recipe';
           _this3.getElementFromDb(elementId, _this3.MainObject, table);
           _this3.editModal.querySelector('[data-type="cancel"]').addEventListener('click', function (_) {
@@ -250,23 +250,26 @@ var FormRecipe = /*#__PURE__*/function () {
   function FormRecipe() {
     _classCallCheck(this, FormRecipe);
     this.formRecipe();
+    this.submitFormedRecipe();
   }
   return _createClass(FormRecipe, [{
     key: "formRecipe",
     value: function formRecipe() {
       document.querySelector('[data-list-recipes]').addEventListener('dragstart', function (e) {
-        var _item$querySelector, _item$querySelector2, _item$querySelector3;
+        var _item$querySelector, _item$querySelector2, _item$querySelector3, _item$querySelector4;
         var item = e.target.closest('li[draggable="true"]');
         if (!item) return; // Ignore if not a valid draggable item
 
         // Extract data from the dynamically generated list item
         var data = {
           type: 'recipe',
-          id: item.id,
+          id: Number(item.id),
           recipe_name: ((_item$querySelector = item.querySelector('[data-list="recipe_name"] h5')) === null || _item$querySelector === void 0 ? void 0 : _item$querySelector.textContent.trim()) || "",
           type_name: ((_item$querySelector2 = item.querySelector('[data-list="type_name"]')) === null || _item$querySelector2 === void 0 ? void 0 : _item$querySelector2.textContent.replace('type_name: ', '').trim()) || "",
-          calories: ((_item$querySelector3 = item.querySelector('[data-list="calories"]')) === null || _item$querySelector3 === void 0 ? void 0 : _item$querySelector3.textContent.replace('calories: ', '').trim()) || ""
+          typeId: Number(((_item$querySelector3 = item.querySelector('[data-type-id]')) === null || _item$querySelector3 === void 0 ? void 0 : _item$querySelector3.getAttribute('data-type-id')) || ""),
+          calories: Number(((_item$querySelector4 = item.querySelector('[data-list="calories"]')) === null || _item$querySelector4 === void 0 ? void 0 : _item$querySelector4.textContent.replace('calories: ', '').trim()) || "")
         };
+
         // Store the data in the drag event
         var jsonData = JSON.stringify(data);
         e.dataTransfer.setData('text/plain', jsonData);
@@ -274,15 +277,15 @@ var FormRecipe = /*#__PURE__*/function () {
         selectContainer('drop-container');
       });
       document.querySelector('[data-list-ingredients]').addEventListener('dragstart', function (e) {
-        var _item$querySelector4, _item$querySelector5;
+        var _item$querySelector5, _item$querySelector6;
         var item = e.target.closest('li[draggable="true"]');
         if (!item) return; // Ignore if not a valid draggable item
         // Extract data from the dynamically generated list item
         var data = {
           type: 'ingredient',
           id: item.id,
-          ingredient_name: ((_item$querySelector4 = item.querySelector('[data-list="ingredient_name"] h6')) === null || _item$querySelector4 === void 0 ? void 0 : _item$querySelector4.textContent.trim()) || "",
-          type_id: ((_item$querySelector5 = item.querySelector('.ingredientListItem')) === null || _item$querySelector5 === void 0 || (_item$querySelector5 = _item$querySelector5.dataset) === null || _item$querySelector5 === void 0 ? void 0 : _item$querySelector5.typeId) || ""
+          ingredient_name: ((_item$querySelector5 = item.querySelector('[data-list="ingredient_name"] h6')) === null || _item$querySelector5 === void 0 ? void 0 : _item$querySelector5.textContent.trim()) || "",
+          type_id: ((_item$querySelector6 = item.querySelector('.ingredientListItem')) === null || _item$querySelector6 === void 0 || (_item$querySelector6 = _item$querySelector6.dataset) === null || _item$querySelector6 === void 0 ? void 0 : _item$querySelector6.typeId) || ""
         };
         // Store the data in the drag event
         var jsonData = JSON.stringify(data);
@@ -298,7 +301,7 @@ var FormRecipe = /*#__PURE__*/function () {
         });
         container.ondrop = function (e) {
           e.preventDefault();
-          console.log('drop');
+
           // Retrieve dragged item data
           var dataString = e.dataTransfer.getData('text/plain');
           if (!dataString) {
@@ -314,7 +317,8 @@ var FormRecipe = /*#__PURE__*/function () {
                 return;
               }
               container.innerHTML = '';
-              newItem.innerHTML = "\n                        <div data-list=\"recipe_name\"><h5>".concat(data.recipe_name, "</h5></div>\n                        <div data-list=\"type_name\">type_name: ").concat(data.type_name, "</div>\n                        <div data-list=\"calories\">calories: ").concat(data.calories, "</div>\n                        <div>\n                            <button class=\"btn btn-primary remove-button\">Remove</button>\n                        </div>\n                    ");
+              console.log(data);
+              newItem.innerHTML = "\n                        <div data-list=\"recipe_name\"><h5>".concat(data.recipe_name, "</h5></div>\n                        <div data-type=\"").concat(data.type_name, "\">type_name: ").concat(data.type_name, "</div>\n                        <div data-list=\"calories\">calories: ").concat(data.calories, "</div>\n                        <div>\n                            <button class=\"btn btn-primary remove-button\">Remove</button>\n                        </div>\n                    ");
               // Add an event listener to the "Remove" button
               var removeButton = newItem.querySelector('.remove-button');
               removeButton.addEventListener('click', function () {
@@ -343,6 +347,22 @@ var FormRecipe = /*#__PURE__*/function () {
           }
         };
       }
+    }
+  }, {
+    key: "submitFormedRecipe",
+    value: function submitFormedRecipe() {
+      var submitBtn = document.querySelector('[data-type="submitRecipe"]');
+      submitBtn.onclick = function () {
+        var recipeContainer = document.querySelector('.drop-container');
+        var ingredientContainer = document.querySelector('.drop-container-ingredients');
+        var recipeToSave = {};
+        console.log('recipeContainer', recipeContainer);
+        var recipeId = recipeContainer.querySelector('[data-list="recipe_name"]').textContent;
+        var typeId = recipeContainer.querySelector('[data-type-id]');
+        // querySelector('[data-type-id]')?.getAttribute('data-type-id')
+
+        //turim persiduoti i html type ir recipe id
+      };
     }
   }]);
 }();
@@ -439,9 +459,9 @@ var Request = /*#__PURE__*/function () {
     }
   }, {
     key: "getSelectFromDb",
-    value: function getSelectFromDb(type, MainObject, editModal, key, value) {
+    value: function getSelectFromDb(type, MainObject, value) {
       axios__WEBPACK_IMPORTED_MODULE_0__["default"].get(this.url + '/' + 'select' + '/' + type).then(function (res) {
-        MainObject.ShowData.renderSelectData(res, editModal, key, value);
+        MainObject.ShowData.renderSelectData(res, value);
       })["catch"](function (err) {
         console.log(err);
       });
@@ -539,8 +559,14 @@ var ShowData = /*#__PURE__*/function (_Request) {
     _classCallCheck(this, ShowData);
     _this = _callSuper(this, ShowData, [MainObject.page]);
     _this.MainObject = MainObject;
+    _this.recipeList = document.querySelector('[data-list-recipes]');
+    _this.ingredientList = document.querySelector('[data-list-ingredients]');
     _this.editModal = document.querySelector('[data-modal="edit"]');
     _this.modalBody = _this.editModal.querySelector('[data-form-body]');
+    _this.recipeTemplate = document.querySelector('[data-recipeTemplate]');
+    _this.ingredientTemplate = document.querySelector('[data-ingredientTemplate]');
+    _this.recipeEditTemplate = document.querySelector('[data-recipeEditTemplate]');
+    _this.ingredientEditTemplate = document.querySelector('[data-ingredientEditTemplate]');
     _this.getFromDb();
     return _this;
   }
@@ -549,91 +575,67 @@ var ShowData = /*#__PURE__*/function (_Request) {
     key: "renderData",
     value: function renderData(response) {
       var _this2 = this;
-      var responseData = response.data;
-      for (var _i = 0, _Object$entries = Object.entries(responseData); _i < _Object$entries.length; _i++) {
+      var responseArray = response.data;
+      this.recipeList.innerHTML = '';
+      this.ingredientList.innerHTML = '';
+      for (var _i = 0, _Object$entries = Object.entries(responseArray); _i < _Object$entries.length; _i++) {
         var _Object$entries$_i = _slicedToArray(_Object$entries[_i], 2),
           key = _Object$entries$_i[0],
           value = _Object$entries$_i[1];
         if (key === 'recipes') {
-          this.recipeList.innerHTML = '';
-          value.forEach(function (element) {
-            var listItem = document.createElement('li');
-            listItem.draggable = true;
-            listItem.setAttribute('id', "".concat(element.id));
-            for (var _key in element) {
-              if (!_key.includes('id') && _key.includes('recipe_name')) {
-                var container = document.createElement('div');
-                container.dataset.list = _key;
-                container.innerHTML = "<h5>".concat(element[_key], "</h5>");
-                listItem.appendChild(container);
-              } else if (!_key.includes('id') && !_key.includes('recipe_name')) {
-                var _container = document.createElement('div');
-                _container.dataset.list = _key;
-                _container.textContent = "".concat(_key, ": ").concat(element[_key]);
-                listItem.appendChild(_container);
-              }
-            }
-            var btnContainer = document.createElement('div');
-            _this2.renderEditButton(listItem, btnContainer);
-            _this2.renderDeleteButton(listItem, btnContainer);
-            _this2.recipeList.appendChild(listItem);
+          var recipesArray = Array.from(value);
+          recipesArray.forEach(function (recipe) {
+            var itemClone = _this2.recipeTemplate.content.cloneNode(true);
+            var li = itemClone.querySelector('li');
+            li.setAttribute('data-itemid', "".concat(recipe.id));
+            li.setAttribute('draggable', true);
+            itemClone.querySelector('[data-recipe-name]').textContent = recipe.recipe_name.toUpperCase();
+            itemClone.querySelector('[data-recipe-type]').textContent = recipe.type_name;
+            itemClone.querySelector('[data-recipe-calories]').textContent = recipe.calories;
+            _this2.recipeList.appendChild(itemClone);
           });
         } else {
-          this.ingredientList.innerHTML = '';
-          value.forEach(function (element) {
-            var listItem = document.createElement('li');
-            listItem.draggable = true;
-            listItem.classList.add('ingredientListItem');
-            listItem.setAttribute('id', "".concat(element.id));
-            listItem.dataset.typeId = element.type_id;
-            for (var _key2 in element) {
-              if (!_key2.includes('id')) {
-                var container = document.createElement('div');
-                container.dataset.list = _key2;
-                container.innerHTML = "<h6>".concat(element[_key2], "</h6>");
-                listItem.appendChild(container);
-              }
-            }
-            var btnContainer = document.createElement('div');
-            _this2.renderEditButton(listItem, btnContainer);
-            _this2.renderDeleteButton(listItem, btnContainer);
-            _this2.ingredientList.appendChild(listItem);
+          var ingredientsArray = Array.from(value);
+          ingredientsArray.forEach(function (ingredient) {
+            var itemClone = _this2.ingredientTemplate.content.cloneNode(true);
+            var li = itemClone.querySelector('li');
+            li.setAttribute('data-itemid', "".concat(ingredient.id));
+            li.setAttribute('draggable', true);
+            itemClone.querySelector('[data-ingredient-name]').textContent = ingredient.ingredient_name.toUpperCase();
+            itemClone.querySelector('[data-ingredient-type]').textContent = ingredient.type_name;
+            _this2.ingredientList.appendChild(itemClone);
           });
         }
       }
-      this.renderSearchData(responseData);
     }
   }, {
     key: "renderModalData",
     value: function renderModalData(response, table) {
       this.modalBody.innerHTML = '';
       var responseData = response.data.result[0];
-      var container = document.createElement('div');
-      for (var _i2 = 0, _Object$entries2 = Object.entries(responseData); _i2 < _Object$entries2.length; _i2++) {
-        var _Object$entries2$_i = _slicedToArray(_Object$entries2[_i2], 2),
-          key = _Object$entries2$_i[0],
-          value = _Object$entries2$_i[1];
-        if (!key.includes('id') && !key.includes('type_name')) {
-          var inputLabel = document.createElement('label');
-          inputLabel.classList.add('form-label');
-          inputLabel.textContent = key;
-          var input = document.createElement('input');
-          input.classList.add('form-label');
-          input.name = key;
-          input.value = value;
-          container.appendChild(inputLabel);
-          container.appendChild(input);
-        } else if (key === 'type_id') {
-          this.getSelectFromDb(table, this.MainObject, key, value);
-        }
+      if (table === 'recipe') {
+        var itemClone = this.recipeEditTemplate.content.cloneNode(true);
+        var recipeName = itemClone.querySelector('[data-name]');
+        recipeName.value = responseData.recipe_name;
+        var recipeId = responseData.id;
+        this.getSelectFromDb(table, this.MainObject, recipeId);
+        var recipeCalories = itemClone.querySelector('[data-recipe-calories]');
+        recipeCalories.value = responseData.calories;
+        this.modalBody.append(itemClone);
+      } else {
+        var _itemClone = this.ingredientEditTemplate.content.cloneNode(true);
+        var ingredientName = _itemClone.querySelector('[data-name]');
+        ingredientName.value = responseData.ingredient_name;
+        var ingredientId = responseData.id;
+        this.getSelectFromDb(table, this.MainObject, ingredientId);
+        this.modalBody.append(_itemClone);
       }
-      this.modalBody.append(container);
     }
   }, {
     key: "renderSelectData",
-    value: function renderSelectData(res, key, value) {
+    value: function renderSelectData(res, value) {
       var select = document.createElement('select');
-      select.name = key;
+      select.name = 'type_id';
       var options = res.data.result;
       options.forEach(function (typeElement) {
         var option = document.createElement('option');
@@ -646,9 +648,10 @@ var ShowData = /*#__PURE__*/function (_Request) {
       });
       var inputLabel = document.createElement('label');
       inputLabel.classList.add('form-label');
-      inputLabel.textContent = 'Type';
-      this.modalBody.appendChild(inputLabel);
-      this.modalBody.appendChild(select);
+      inputLabel.textContent = 'Tipas';
+      var nameInput = this.modalBody.querySelector('[data-name]');
+      nameInput.insertAdjacentElement('afterend', inputLabel);
+      inputLabel.insertAdjacentElement('afterend', select);
     }
   }, {
     key: "renderEditButton",
@@ -691,26 +694,26 @@ var ShowData = /*#__PURE__*/function (_Request) {
       searchInput.addEventListener('input', function (_) {
         _this3.recipeList.innerHTML = '';
         filteredData = filterByText(responseData, searchInput.value);
-        for (var _i3 = 0, _Object$entries3 = Object.entries(filteredData); _i3 < _Object$entries3.length; _i3++) {
-          var _Object$entries3$_i = _slicedToArray(_Object$entries3[_i3], 2),
-            key = _Object$entries3$_i[0],
-            value = _Object$entries3$_i[1];
+        for (var _i2 = 0, _Object$entries2 = Object.entries(filteredData); _i2 < _Object$entries2.length; _i2++) {
+          var _Object$entries2$_i = _slicedToArray(_Object$entries2[_i2], 2),
+            key = _Object$entries2$_i[0],
+            value = _Object$entries2$_i[1];
           if (key === 'recipes') {
             value.forEach(function (element) {
               var listItem = document.createElement('li');
               listItem.draggable = true;
               listItem.setAttribute('id', "".concat(element.id));
-              for (var _key3 in element) {
-                if (!_key3.includes('id') && _key3.includes('recipe_name')) {
+              for (var _key in element) {
+                if (!_key.includes('id') && _key.includes('recipe_name')) {
                   var container = document.createElement('div');
-                  container.dataset.list = _key3;
-                  container.innerHTML = "<h5>".concat(element[_key3], "</h5>");
+                  container.dataset.list = _key;
+                  container.innerHTML = "<h5>".concat(element[_key], "</h5>");
                   listItem.appendChild(container);
-                } else if (!_key3.includes('id') && !_key3.includes('recipe_name')) {
-                  var _container2 = document.createElement('div');
-                  _container2.dataset.list = _key3;
-                  _container2.textContent = "".concat(_key3, ": ").concat(element[_key3]);
-                  listItem.appendChild(_container2);
+                } else if (!_key.includes('id') && !_key.includes('recipe_name')) {
+                  var _container = document.createElement('div');
+                  _container.dataset.list = _key;
+                  _container.textContent = "".concat(_key, ": ").concat(element[_key]);
+                  listItem.appendChild(_container);
                 }
               }
               var btnContainer = document.createElement('div');
@@ -725,11 +728,11 @@ var ShowData = /*#__PURE__*/function (_Request) {
               listItem.draggable = true;
               listItem.classList.add('ingredientListItem');
               listItem.setAttribute('id', "".concat(element.id));
-              for (var _key4 in element) {
-                if (!_key4.includes('id')) {
+              for (var _key2 in element) {
+                if (!_key2.includes('id')) {
                   var container = document.createElement('div');
-                  container.dataset.list = _key4;
-                  container.innerHTML = "<h6>".concat(element[_key4], "</h6>");
+                  container.dataset.list = _key2;
+                  container.innerHTML = "<h6>".concat(element[_key2], "</h6>");
                   listItem.appendChild(container);
                 }
               }

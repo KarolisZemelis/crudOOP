@@ -28,6 +28,7 @@ class Create extends Request {
         const data = {};
         this.form.querySelectorAll('[name]')
             .forEach(input => {
+
                 if (input.value !== "" && (input.name.includes('id') || input.name.includes('calories'))) {
                     data[input.name] = Number(input.value)
 
@@ -36,6 +37,7 @@ class Create extends Request {
 
                 }
             });
+        console.log(data)
         return data;
     }
 }

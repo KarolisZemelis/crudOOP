@@ -28,11 +28,11 @@
                   <input type="number" class="form-control" name="calories" />
                   <label class="form-label">Recipe type:</label>
                   <select name="type_id">
-                    <option value="">--Please choose an option--</option>
-                    <option value="1">Breakfast</option>
-                    <option value="2">Lunch</option>
-                    <option value="3">Snack</option>
-                    <option value="4">Supper</option>
+                    <option value="">--Pasirinkti--</option>
+                    <option value="1">Pusryčiai</option>
+                    <option value="2">Pietūs</option>
+                    <option value="3">Užkandis</option>
+                    <option value="4">Vakarienė</option>
                   </select>
                 </div>
               </div>
@@ -57,7 +57,7 @@
                   />
                   <label class="form-label">Ingredient type:</label>
                   <select name="type_id">
-                    <option value="">--Please choose an option--</option>
+                    <option value="">--Pasirinkti--</option>
                     <option value="1">Pcs.</option>
                     <option value="2">Ml.</option>
                     <option value="3" selected>G</option>
@@ -94,7 +94,7 @@
                 <div class="card-footer text-body-secondary"></div>
               </div>
             </div>
-            <div class="col-3" ingredient-list>
+            <div class="col-3" data-list>
               <div class="card mt-2">
                 <div class="card-header">
                   <h2>Ingredient list</h2>
@@ -184,5 +184,43 @@
         </div>
       </div>
     </div>
+    <template data-recipeTemplate>
+      <li>
+        <h5 data-recipe-name></h5>
+        <p>Tipas: <span data-recipe-type></span></p>
+        <p>Kalorijos: <span data-recipe-calories></span></p>
+        <div data-btnContainer>
+          <button class="btn btn-primary" data-type="edit">Edit</button>
+          <button class="btn btn-primary" data-type="delete">Delete</button>
+        </div>
+      </li>
+    </template>
+    <template data-ingredientTemplate>
+      <li>
+        <h5 data-ingredient-name></h5>
+        <p>Tipas: <b><i><span data-ingredient-type></span></i></b></p>
+        <div data-btnContainer>
+          <button class="btn btn-primary" data-type="edit">Edit</button>
+          <button class="btn btn-primary" data-type="delete">Delete</button>
+        </div>
+      </li>
+    </template>
+    <template data-recipeEditTemplate>
+      <div>
+       
+          <label class="form-label" data-recipe-nameLabel for="recipe_name">Recepto pavadinimas:</label>
+          <input data-name name="recipe_name"></input>
+
+          <label  class="form-label" data-recipe-caloriesLabel for="calories">Recepto kalorijos:</label>
+          <input data-recipe-calories name="calories"></input>
+
+      </div>
+    </template>
+    <template data-ingredientEditTemplate>
+      <div>
+          <label class="form-label" data-ingredient-nameLabel for="ingredient_name">Ingrediento pavadinimas:</label>
+          <input data-name name="ingredient_name"></input>
+      </div>
+    </template>
   </body>
 </html>

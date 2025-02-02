@@ -2,7 +2,7 @@ class FormRecipe {
     constructor() {
 
         this.formRecipe()
-
+        this.submitFormedRecipe()
     }
 
     formRecipe() {
@@ -13,11 +13,13 @@ class FormRecipe {
             // Extract data from the dynamically generated list item
             const data = {
                 type: 'recipe',
-                id: item.id,
+                id: Number(item.id),
                 recipe_name: item.querySelector('[data-list="recipe_name"] h5')?.textContent.trim() || "",
                 type_name: item.querySelector('[data-list="type_name"]')?.textContent.replace('type_name: ', '').trim() || "",
-                calories: item.querySelector('[data-list="calories"]')?.textContent.replace('calories: ', '').trim() || ""
+                typeId: Number(item.querySelector('[data-type-id]')?.getAttribute('data-type-id') || ""),
+                calories: Number(item.querySelector('[data-list="calories"]')?.textContent.replace('calories: ', '').trim() || "")
             };
+
             // Store the data in the drag event
             const jsonData = JSON.stringify(data);
             e.dataTransfer.setData('text/plain', jsonData);
@@ -55,7 +57,7 @@ class FormRecipe {
 
             container.ondrop = (e) => {
                 e.preventDefault();
-                console.log('drop')
+
                 // Retrieve dragged item data
                 const dataString = e.dataTransfer.getData('text/plain');
 
@@ -75,10 +77,10 @@ class FormRecipe {
                             return;
                         }
                         container.innerHTML = ''
-
+                        console.log(data)
                         newItem.innerHTML = `
                         <div data-list="recipe_name"><h5>${data.recipe_name}</h5></div>
-                        <div data-list="type_name">type_name: ${data.type_name}</div>
+                        <div data-type="${data.type_name}">type_name: ${data.type_name}</div>
                         <div data-list="calories">calories: ${data.calories}</div>
                         <div>
                             <button class="btn btn-primary remove-button">Remove</button>
@@ -125,6 +127,23 @@ class FormRecipe {
 
 
 
+    }
+
+    submitFormedRecipe() {
+        const submitBtn = document.querySelector('[data-type="submitRecipe"]')
+
+        submitBtn.onclick = () => {
+            const recipeContainer = document.querySelector('.drop-container')
+            const ingredientContainer = document.querySelector('.drop-container-ingredients')
+            let recipeToSave = {}
+            console.log('recipeContainer', recipeContainer)
+
+            const recipeId = recipeContainer.querySelector('[data-list="recipe_name"]').textContent
+            const typeId = recipeContainer.querySelector('[data-type-id]')
+            // querySelector('[data-type-id]')?.getAttribute('data-type-id')
+
+            //turim persiduoti i html type ir recipe id
+        }
     }
 
 }

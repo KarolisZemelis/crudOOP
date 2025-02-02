@@ -46,7 +46,9 @@ app.get('/api/recipe/', (req, res) => {
     INNER JOIN type ON recipe.type_id=type.id
     `
     const sql2 = `
-    SELECT * FROM ingredient
+    SELECT ingredient.id, ingredient.ingredient_name, ingredient_qty_type.type_name, ingredient.type_id
+    FROM ingredient
+    INNER JOIN ingredient_qty_type ON ingredient.type_id=ingredient_qty_type.id
     `;
 
     con.query(sql1, (err, result1) => {
@@ -70,12 +72,11 @@ app.get('/api/recipe/', (req, res) => {
 app.get('/api/recipe/:id', (req, res) => {
 
     if (req.query.table === 'recipe') {
-
         const sql = `
-    SELECT recipe.id, recipe.recipe_name, type.type_name, recipe.type_id, recipe.calories
-    FROM recipe
-    INNER JOIN type ON recipe.type_id=type.id
-    WHERE recipe.id = ?
+                SELECT recipe.id, recipe.recipe_name, type.type_name, recipe.type_id, recipe.calories
+                FROM recipe
+                INNER JOIN type ON recipe.type_id=type.id
+                WHERE recipe.id = ?
     `
         con.query(sql, [req.params.id], (err, result) => {
             if (err) {
@@ -88,9 +89,10 @@ app.get('/api/recipe/:id', (req, res) => {
         });
     } else {
         const sql = `
-        SELECT *
-        FROM ingredient
-        WHERE id = ?
+                SELECT ingredient.id, ingredient.ingredient_name, ingredient_qty_type.type_name, ingredient.type_id
+                FROM ingredient
+                INNER JOIN ingredient_qty_type ON ingredient.type_id=ingredient_qty_type.id
+                WHERE ingredient.id = ?
         `
         con.query(sql, [req.params.id], (err, result) => {
             if (err) {
@@ -149,7 +151,6 @@ app.post('/api/recipe', (req, res) => {
     (ingredient_name, type_id)
     VALUES(?, ?)
     `
-        console.log(sql)
         con.query(sql, [req.body.ingredient_name, req.body.type_id], (err, result) => {
             if (err) {
                 res.status(500).send(err);

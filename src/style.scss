@@ -83,7 +83,7 @@ body {
               background-color: #e49191;
               cursor: grab;
             }
-            div:nth-child(4) {
+            div {
               display: flex;
               gap: 0.25rem;
               button {
@@ -98,7 +98,7 @@ body {
             justify-content: space-between;
             padding: 1rem;
 
-            div:nth-child(2) {
+            div {
               display: flex;
               gap: 0.25rem;
               button {
@@ -110,6 +110,13 @@ body {
         }
       }
     }
+  }
+}
+
+.modal-body {
+  div {
+    display: flex;
+    flex-direction: column;
   }
 }
 

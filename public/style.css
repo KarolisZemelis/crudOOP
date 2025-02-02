@@ -12049,11 +12049,11 @@ body {
   background-color: #e49191;
   cursor: grab;
 }
-#main .row .right_screen .list ul.list-group.list-group-flush li div:nth-child(4) {
+#main .row .right_screen .list ul.list-group.list-group-flush li div {
   display: flex;
   gap: 0.25rem;
 }
-#main .row .right_screen .list ul.list-group.list-group-flush li div:nth-child(4) button {
+#main .row .right_screen .list ul.list-group.list-group-flush li div button {
   margin: 0;
   margin-top: 0.25rem;
 }
@@ -12063,13 +12063,18 @@ body {
   justify-content: space-between;
   padding: 1rem;
 }
-#main .row .right_screen .list ul.list-group.list-group-flush li.ingredientListItem div:nth-child(2) {
+#main .row .right_screen .list ul.list-group.list-group-flush li.ingredientListItem div {
   display: flex;
   gap: 0.25rem;
 }
-#main .row .right_screen .list ul.list-group.list-group-flush li.ingredientListItem div:nth-child(2) button {
+#main .row .right_screen .list ul.list-group.list-group-flush li.ingredientListItem div button {
   margin: 0;
   margin-top: 0.25rem;
+}
+
+.modal-body div {
+  display: flex;
+  flex-direction: column;
 }
 
 .drop-container,

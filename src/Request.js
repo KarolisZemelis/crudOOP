@@ -30,10 +30,10 @@ class Request {
             })
     }
 
-    getSelectFromDb(type, MainObject, editModal, key, value) {
+    getSelectFromDb(type, MainObject, value) {
         axios.get(this.url + '/' + 'select' + '/' + type)
             .then(res => {
-                MainObject.ShowData.renderSelectData(res, editModal, key, value)
+                MainObject.ShowData.renderSelectData(res, value)
             })
             .catch(err => {
                 console.log(err)
@@ -46,7 +46,6 @@ class Request {
         })
             .then(res => {
                 MainObject.ShowData.renderModalData(res, table)
-
             })
             .catch(err => {
                 console.log(err)
