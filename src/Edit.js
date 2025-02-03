@@ -33,7 +33,7 @@ class Edit extends Request {
 
         let table = list.dataset.hasOwnProperty('listIngredients') ? 'ingredient' : 'recipe'
 
-        this.getElementFromDb(elementId, this.MainObject, table)
+        this.getElementFromDbEdit(elementId, this.MainObject, table)
 
         this.editModal.querySelector('[data-type="cancel"]')
           .addEventListener('click', _ => {

@@ -1,7 +1,11 @@
-class FormRecipe {
-    constructor() {
+import Request from './Request.js'
 
-        this.formRecipe()
+class FormRecipe extends Request {
+    constructor(MainObject) {
+        super(MainObject.page)
+        this.MainObject = MainObject
+
+        this.formRecipeSecond()
         this.submitFormedRecipe()
     }
 
@@ -118,6 +122,92 @@ class FormRecipe {
                     }
                     // Append the new item
                     container.appendChild(newItem);
+                } catch (error) {
+                    console.error("Error parsing JSON data:", error);
+                }
+            };
+
+        }
+
+
+
+    }
+    formRecipeSecond() {
+        //recipes
+        document.querySelector('[data-list]').addEventListener('dragstart', (e) => {
+            const item = e.target.closest('li[draggable="true"]');
+
+            if (!item) return; // Ignore if not a valid draggable item
+
+            // Extract data from the dynamically generated list item
+            const data = {
+                type: 'recipe',
+                id: Number(item.dataset.itemid),
+            };
+
+            // Store the data in the drag event
+            const jsonData = JSON.stringify(data);
+            e.dataTransfer.setData('text/plain', jsonData);
+
+            selectContainer('drop-container')
+        });
+        //ingredients
+        document.querySelector('[data-list-ingredients]').addEventListener('dragstart', (e) => {
+            const item = e.target.closest('li[draggable="true"]');
+            if (!item) return; // Ignore if not a valid draggable item
+            // Extract data from the dynamically generated list item
+            const data = {
+                type: 'ingredient',
+                id: Number(item.dataset.itemid),
+            };
+            // Store the data in the drag event
+            const jsonData = JSON.stringify(data);
+            e.dataTransfer.setData('text/plain', jsonData);
+            selectContainer('drop-container-ingredients')
+        });
+        // Enable drop functionality
+        const selectContainer = (cont) => {
+
+            const container = document.querySelector(`.${cont}`);
+
+            container.addEventListener('dragover', (e) => {
+                e.preventDefault(); // Required to allow dropping
+            });
+
+            container.ondrop = (e) => {
+                e.preventDefault();
+
+                // Retrieve dragged item data
+                const dataString = e.dataTransfer.getData('text/plain');
+
+                if (!dataString) {
+                    console.error("No data received during drop.");
+                    return;
+                }
+
+                try {
+                    const data = JSON.parse(dataString);
+
+                    if (cont === 'drop-container') {
+                        if (data.type !== 'recipe') {
+                            return;
+                        }
+                        const recipeId = data.id;
+                        const table = data.type;
+                        this.getElementFromDbForm(recipeId, this.MainObject, table)
+
+
+                    } else if (cont === 'drop-container-ingredients') {
+                        if (data.type !== 'ingredient') {
+                            return
+                        }
+                        const ingredientId = data.id;
+                        const table = data.type;
+                        this.getElementFromDbForm(ingredientId, this.MainObject, table)
+
+
+                    }
+
                 } catch (error) {
                     console.error("Error parsing JSON data:", error);
                 }

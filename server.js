@@ -109,6 +109,46 @@ app.get('/api/recipe/:id', (req, res) => {
 
 })
 
+app.get('/api/recipe/formRecipe/:id', (req, res) => {
+    console.log(req.params.id)
+    if (req.query.table === 'recipe') {
+        const sql = `
+                SELECT recipe.id, recipe.recipe_name, type.type_name, recipe.type_id, recipe.calories
+                FROM recipe
+                INNER JOIN type ON recipe.type_id=type.id
+                WHERE recipe.id = ?
+    `
+        con.query(sql, [req.params.id], (err, result) => {
+            if (err) {
+                res.status(500).send(err);
+                return;
+            }
+            res.status(200).send({
+                result
+            });
+        });
+    } else {
+        const sql = `
+                SELECT ingredient.id, ingredient.ingredient_name, ingredient_qty_type.type_name, ingredient.type_id
+                FROM ingredient
+                INNER JOIN ingredient_qty_type ON ingredient.type_id=ingredient_qty_type.id
+                WHERE ingredient.id = ?
+        `
+        con.query(sql, [req.params.id], (err, result) => {
+            if (err) {
+                res.status(500).send(err);
+                return;
+            }
+            res.status(200).send({
+                result
+            });
+        });
+    }
+
+
+
+})
+
 app.get('/api/recipe/select/:type', (req, res) => {
     const type = req.params.type === 'ingredient' ? 'ingredient_qty_type' : 'type'
 

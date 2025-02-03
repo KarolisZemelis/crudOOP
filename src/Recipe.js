@@ -8,6 +8,7 @@ import FormRecipe from './FormRecipe.js'
 class Recipe {
     constructor() {
         this.page = 'recipe';
+        this.Request = new Request(this);
         this.Create = new Create(this);
         this.ShowData = new ShowData(this);
         this.Edit = new Edit(this);

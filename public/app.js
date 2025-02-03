@@ -212,7 +212,7 @@ var Edit = /*#__PURE__*/function (_Request) {
           var grandparent = event.target.parentElement.parentElement;
           var elementId = grandparent.dataset.itemid;
           var table = list.dataset.hasOwnProperty('listIngredients') ? 'ingredient' : 'recipe';
-          _this3.getElementFromDb(elementId, _this3.MainObject, table);
+          _this3.getElementFromDbEdit(elementId, _this3.MainObject, table);
           _this3.editModal.querySelector('[data-type="cancel"]').addEventListener('click', function (_) {
             _this3.editModal.style.display = 'none';
           });
@@ -240,18 +240,32 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var _Request_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Request.js */ "./src/Request.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
 function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
 function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-var FormRecipe = /*#__PURE__*/function () {
-  function FormRecipe() {
+function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
+function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
+function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
+function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
+function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
+function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
+function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
+
+var FormRecipe = /*#__PURE__*/function (_Request) {
+  function FormRecipe(MainObject) {
+    var _this;
     _classCallCheck(this, FormRecipe);
-    this.formRecipe();
-    this.submitFormedRecipe();
+    _this = _callSuper(this, FormRecipe, [MainObject.page]);
+    _this.MainObject = MainObject;
+    _this.formRecipeSecond();
+    _this.submitFormedRecipe();
+    return _this;
   }
+  _inherits(FormRecipe, _Request);
   return _createClass(FormRecipe, [{
     key: "formRecipe",
     value: function formRecipe() {
@@ -349,6 +363,78 @@ var FormRecipe = /*#__PURE__*/function () {
       }
     }
   }, {
+    key: "formRecipeSecond",
+    value: function formRecipeSecond() {
+      var _this2 = this;
+      //recipes
+      document.querySelector('[data-list]').addEventListener('dragstart', function (e) {
+        var item = e.target.closest('li[draggable="true"]');
+        if (!item) return; // Ignore if not a valid draggable item
+
+        // Extract data from the dynamically generated list item
+        var data = {
+          type: 'recipe',
+          id: Number(item.dataset.itemid)
+        };
+
+        // Store the data in the drag event
+        var jsonData = JSON.stringify(data);
+        e.dataTransfer.setData('text/plain', jsonData);
+        selectContainer('drop-container');
+      });
+      //ingredients
+      document.querySelector('[data-list-ingredients]').addEventListener('dragstart', function (e) {
+        var item = e.target.closest('li[draggable="true"]');
+        if (!item) return; // Ignore if not a valid draggable item
+        // Extract data from the dynamically generated list item
+        var data = {
+          type: 'ingredient',
+          id: Number(item.dataset.itemid)
+        };
+        // Store the data in the drag event
+        var jsonData = JSON.stringify(data);
+        e.dataTransfer.setData('text/plain', jsonData);
+        selectContainer('drop-container-ingredients');
+      });
+      // Enable drop functionality
+      var selectContainer = function selectContainer(cont) {
+        var container = document.querySelector(".".concat(cont));
+        container.addEventListener('dragover', function (e) {
+          e.preventDefault(); // Required to allow dropping
+        });
+        container.ondrop = function (e) {
+          e.preventDefault();
+
+          // Retrieve dragged item data
+          var dataString = e.dataTransfer.getData('text/plain');
+          if (!dataString) {
+            console.error("No data received during drop.");
+            return;
+          }
+          try {
+            var data = JSON.parse(dataString);
+            if (cont === 'drop-container') {
+              if (data.type !== 'recipe') {
+                return;
+              }
+              var recipeId = data.id;
+              var table = data.type;
+              _this2.getElementFromDbForm(recipeId, _this2.MainObject, table);
+            } else if (cont === 'drop-container-ingredients') {
+              if (data.type !== 'ingredient') {
+                return;
+              }
+              var ingredientId = data.id;
+              var _table = data.type;
+              _this2.getElementFromDbForm(ingredientId, _this2.MainObject, _table);
+            }
+          } catch (error) {
+            console.error("Error parsing JSON data:", error);
+          }
+        };
+      };
+    }
+  }, {
     key: "submitFormedRecipe",
     value: function submitFormedRecipe() {
       var submitBtn = document.querySelector('[data-type="submitRecipe"]');
@@ -365,7 +451,7 @@ var FormRecipe = /*#__PURE__*/function () {
       };
     }
   }]);
-}();
+}(_Request_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (FormRecipe);
 
 /***/ }),
@@ -400,6 +486,7 @@ function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Can
 var Recipe = /*#__PURE__*/_createClass(function Recipe() {
   _classCallCheck(this, Recipe);
   this.page = 'recipe';
+  this.Request = new Request(this);
   this.Create = new _Create_js__WEBPACK_IMPORTED_MODULE_0__["default"](this);
   this.ShowData = new _ShowData_js__WEBPACK_IMPORTED_MODULE_1__["default"](this);
   this.Edit = new _Edit_js__WEBPACK_IMPORTED_MODULE_2__["default"](this);
@@ -467,8 +554,21 @@ var Request = /*#__PURE__*/function () {
       });
     }
   }, {
-    key: "getElementFromDb",
-    value: function getElementFromDb(id, MainObject, table) {
+    key: "getElementFromDbForm",
+    value: function getElementFromDbForm(id, MainObject, table) {
+      axios__WEBPACK_IMPORTED_MODULE_0__["default"].get(this.url + '/' + 'formRecipe' + '/' + id, {
+        params: {
+          table: table
+        }
+      }).then(function (res) {
+        MainObject.ShowData.renderFormData(res, table);
+      })["catch"](function (err) {
+        console.log(err);
+      });
+    }
+  }, {
+    key: "getElementFromDbEdit",
+    value: function getElementFromDbEdit(id, MainObject, table) {
       axios__WEBPACK_IMPORTED_MODULE_0__["default"].get(this.url + '/' + id, {
         params: {
           table: table
@@ -507,11 +607,9 @@ var Request = /*#__PURE__*/function () {
     //MainObject -> recipe because we pass <this which is recipe when creating a class object >
     //ShowData -> ShowData object
     //getFromDb -> method getFromDb which ShowData has taken from Request
-  }, {
-    key: "renderData",
-    value: function renderData(res) {
-      this.MainObject.ShowData.getFromDb();
-    }
+    // renderData(res) {
+    //     this.MainObject.ShowData.getFromDb()
+    // }
   }]);
 }();
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Request);
@@ -563,6 +661,8 @@ var ShowData = /*#__PURE__*/function (_Request) {
     _this.ingredientList = document.querySelector('[data-list-ingredients]');
     _this.editModal = document.querySelector('[data-modal="edit"]');
     _this.modalBody = _this.editModal.querySelector('[data-form-body]');
+    _this.recipeContainer = document.querySelector('.drop-container');
+    _this.ingredientContainer = document.querySelector('.drop-container-ingredients');
     _this.recipeTemplate = document.querySelector('[data-recipeTemplate]');
     _this.ingredientTemplate = document.querySelector('[data-ingredientTemplate]');
     _this.recipeEditTemplate = document.querySelector('[data-recipeEditTemplate]');
@@ -629,6 +729,50 @@ var ShowData = /*#__PURE__*/function (_Request) {
         var ingredientId = responseData.id;
         this.getSelectFromDb(table, this.MainObject, ingredientId);
         this.modalBody.append(_itemClone);
+      }
+    }
+  }, {
+    key: "renderFormData",
+    value: function renderFormData(response, table) {
+      var responseData = response.data.result[0];
+      if (table === 'recipe') {
+        var itemClone = this.recipeTemplate.content.cloneNode(true);
+        var container = itemClone.querySelector('li');
+        container.setAttribute('data-itemid', "".concat(responseData.id));
+        var recipeName = itemClone.querySelector('[data-recipe-name]');
+        recipeName.innerHTML = responseData.recipe_name;
+        var recipeType = itemClone.querySelector('[data-recipe-type]');
+        recipeType.innerHTML = responseData.type_name;
+        var recipeCalories = itemClone.querySelector('[data-recipe-calories]');
+        recipeCalories.innerHTML = responseData.calories;
+        var btnContainerToRemove = itemClone.querySelector('[data-btncontainer]');
+        btnContainerToRemove.remove();
+        var removeButton = document.createElement('button');
+        removeButton.textContent = 'Remove';
+        removeButton.classList.add('btn', 'btn-primary', 'remove-button');
+        container.appendChild(removeButton);
+        this.recipeContainer.append(itemClone);
+        removeButton.addEventListener('click', function () {
+          container.remove(); // Remove the parent <li> element when the button is clicked
+        });
+      } else {
+        var _itemClone2 = this.ingredientTemplate.content.cloneNode(true);
+        var _container = _itemClone2.querySelector('li');
+        _container.setAttribute('data-itemid', "".concat(responseData.id));
+        var ingredientName = _itemClone2.querySelector('[data-ingredient-name]');
+        ingredientName.innerHTML = responseData.ingredient_name;
+        var ingredientType = _itemClone2.querySelector('[data-ingredient-type]');
+        ingredientType.innerHTML = responseData.type_name;
+        var _btnContainerToRemove = _itemClone2.querySelector('[data-btncontainer]');
+        _btnContainerToRemove.remove();
+        var _removeButton = document.createElement('button');
+        _removeButton.textContent = 'Remove';
+        _removeButton.classList.add('btn', 'btn-primary', 'remove-button');
+        _container.appendChild(_removeButton);
+        this.ingredientContainer.append(_itemClone2);
+        _removeButton.addEventListener('click', function () {
+          _container.remove(); // Remove the parent <li> element when the button is clicked
+        });
       }
     }
   }, {
@@ -710,10 +854,10 @@ var ShowData = /*#__PURE__*/function (_Request) {
                   container.innerHTML = "<h5>".concat(element[_key], "</h5>");
                   listItem.appendChild(container);
                 } else if (!_key.includes('id') && !_key.includes('recipe_name')) {
-                  var _container = document.createElement('div');
-                  _container.dataset.list = _key;
-                  _container.textContent = "".concat(_key, ": ").concat(element[_key]);
-                  listItem.appendChild(_container);
+                  var _container2 = document.createElement('div');
+                  _container2.dataset.list = _key;
+                  _container2.textContent = "".concat(_key, ": ").concat(element[_key]);
+                  listItem.appendChild(_container2);
                 }
               }
               var btnContainer = document.createElement('div');

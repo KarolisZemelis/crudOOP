@@ -40,7 +40,20 @@ class Request {
             })
     }
 
-    getElementFromDb(id, MainObject, table) {
+    getElementFromDbForm(id, MainObject, table) {
+        axios.get(this.url + '/' + 'formRecipe' + '/' + id, {
+            params: { table }
+        })
+            .then(res => {
+                MainObject.ShowData.renderFormData(res, table)
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }
+
+
+    getElementFromDbEdit(id, MainObject, table) {
         axios.get(this.url + '/' + id, {
             params: { table }
         })
@@ -77,9 +90,9 @@ class Request {
     //MainObject -> recipe because we pass <this which is recipe when creating a class object >
     //ShowData -> ShowData object
     //getFromDb -> method getFromDb which ShowData has taken from Request
-    renderData(res) {
-        this.MainObject.ShowData.getFromDb()
-    }
+    // renderData(res) {
+    //     this.MainObject.ShowData.getFromDb()
+    // }
 
 }
 

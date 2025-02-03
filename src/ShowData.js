@@ -11,6 +11,9 @@ class ShowData extends Request {
         this.editModal = document.querySelector('[data-modal="edit"]')
         this.modalBody = this.editModal.querySelector('[data-form-body]')
 
+        this.recipeContainer = document.querySelector('.drop-container')
+        this.ingredientContainer = document.querySelector('.drop-container-ingredients')
+
         this.recipeTemplate = document.querySelector('[data-recipeTemplate]')
         this.ingredientTemplate = document.querySelector('[data-ingredientTemplate]')
         this.recipeEditTemplate = document.querySelector('[data-recipeEditTemplate]')
@@ -71,6 +74,61 @@ class ShowData extends Request {
             const ingredientId = responseData.id
             this.getSelectFromDb(table, this.MainObject, ingredientId)
             this.modalBody.append(itemClone);
+        }
+
+
+
+    }
+    renderFormData(response, table) {
+
+        const responseData = response.data.result[0]
+
+        if (table === 'recipe') {
+            const itemClone = this.recipeTemplate.content.cloneNode(true);
+            const container = itemClone.querySelector('li')
+            container.setAttribute('data-itemid', `${responseData.id}`)
+
+            const recipeName = itemClone.querySelector('[data-recipe-name]')
+            recipeName.innerHTML = responseData.recipe_name
+            const recipeType = itemClone.querySelector('[data-recipe-type]')
+            recipeType.innerHTML = responseData.type_name
+            const recipeCalories = itemClone.querySelector('[data-recipe-calories]')
+            recipeCalories.innerHTML = responseData.calories
+
+            const btnContainerToRemove = itemClone.querySelector('[data-btncontainer]')
+            btnContainerToRemove.remove()
+
+            const removeButton = document.createElement('button');
+            removeButton.textContent = 'Remove'
+            removeButton.classList.add('btn', 'btn-primary', 'remove-button')
+            container.appendChild(removeButton);
+            this.recipeContainer.append(itemClone);
+
+            removeButton.addEventListener('click', () => {
+                container.remove(); // Remove the parent <li> element when the button is clicked
+            });
+        } else {
+            const itemClone = this.ingredientTemplate.content.cloneNode(true);
+            const container = itemClone.querySelector('li')
+            container.setAttribute('data-itemid', `${responseData.id}`)
+
+            const ingredientName = itemClone.querySelector('[data-ingredient-name]')
+            ingredientName.innerHTML = responseData.ingredient_name
+            const ingredientType = itemClone.querySelector('[data-ingredient-type]')
+            ingredientType.innerHTML = responseData.type_name
+
+            const btnContainerToRemove = itemClone.querySelector('[data-btncontainer]')
+            btnContainerToRemove.remove()
+
+            const removeButton = document.createElement('button');
+            removeButton.textContent = 'Remove'
+            removeButton.classList.add('btn', 'btn-primary', 'remove-button')
+            container.appendChild(removeButton);
+            this.ingredientContainer.append(itemClone);
+
+            removeButton.addEventListener('click', () => {
+                container.remove(); // Remove the parent <li> element when the button is clicked
+            });
         }
 
 
