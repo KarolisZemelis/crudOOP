@@ -110,7 +110,7 @@ app.get('/api/recipe/:id', (req, res) => {
 })
 
 app.get('/api/recipe/formRecipe/:id', (req, res) => {
-    console.log(req.params.id)
+
     if (req.query.table === 'recipe') {
         const sql = `
                 SELECT recipe.id, recipe.recipe_name, type.type_name, recipe.type_id, recipe.calories

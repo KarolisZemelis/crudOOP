@@ -123,6 +123,8 @@ class ShowData extends Request {
             const removeButton = document.createElement('button');
             removeButton.textContent = 'Remove'
             removeButton.classList.add('btn', 'btn-primary', 'remove-button')
+            const btnContainer = itemClone.querySelector('.btn-container')
+            console.log(btnContainer)
             container.appendChild(removeButton);
             this.ingredientContainer.append(itemClone);
 

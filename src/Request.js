@@ -40,18 +40,23 @@ class Request {
             })
     }
 
-    getElementFromDbForm(id, MainObject, table) {
-        axios.get(this.url + '/' + 'formRecipe' + '/' + id, {
+    getElementFromDbForm(id, MainObject, table, action) {
+        return axios.get(this.url + '/' + 'formRecipe' + '/' + id, {
             params: { table }
         })
             .then(res => {
-                MainObject.ShowData.renderFormData(res, table)
+                if (action === 'render') {
+                    MainObject.ShowData.renderFormData(res, table)
+                    return null;
+                }
+                return res.data.result || res.data;
+
+
             })
             .catch(err => {
                 console.log(err)
             })
     }
-
 
     getElementFromDbEdit(id, MainObject, table) {
         axios.get(this.url + '/' + id, {
