@@ -226,8 +226,12 @@ class FormRecipe extends Request {
             const recipeContainer = document.querySelector('.drop-container');
             const recipeId = Number(recipeContainer.querySelector('[data-itemid]').dataset.itemid);
             try {
-                const response = await this.getElementFromDbForm(recipeId, this.MainObject, 'recipe', 'form');
-                console.log(response)
+                const dataFromDb = await this.getElementFromDbForm(recipeId, this.MainObject, 'recipe', 'form');
+                const recipeData = dataFromDb[0]
+                for (let key in recipeData) {
+                    recipeToSave[key] = recipeData[key]
+                }
+                console.log(recipeToSave)
             } catch (error) {
                 console.error("❌ Error fetching recipe in FormRecipe.js:", error);
             }

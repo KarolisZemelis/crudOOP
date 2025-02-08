@@ -473,7 +473,7 @@ var FormRecipe = /*#__PURE__*/function (_Request) {
             case 0:
               submitBtn = document.querySelector('[data-type="submitRecipe"]');
               submitBtn.onclick = /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-                var recipeToSave, recipeContainer, recipeId, response;
+                var recipeToSave, recipeContainer, recipeId, dataFromDb, recipeData, key;
                 return _regeneratorRuntime().wrap(function _callee$(_context) {
                   while (1) switch (_context.prev = _context.next) {
                     case 0:
@@ -484,19 +484,23 @@ var FormRecipe = /*#__PURE__*/function (_Request) {
                       _context.next = 6;
                       return _this3.getElementFromDbForm(recipeId, _this3.MainObject, 'recipe', 'form');
                     case 6:
-                      response = _context.sent;
-                      console.log(response);
-                      _context.next = 13;
+                      dataFromDb = _context.sent;
+                      recipeData = dataFromDb[0];
+                      for (key in recipeData) {
+                        recipeToSave[key] = recipeData[key];
+                      }
+                      console.log(recipeToSave);
+                      _context.next = 15;
                       break;
-                    case 10:
-                      _context.prev = 10;
+                    case 12:
+                      _context.prev = 12;
                       _context.t0 = _context["catch"](3);
                       console.error("❌ Error fetching recipe in FormRecipe.js:", _context.t0);
-                    case 13:
+                    case 15:
                     case "end":
                       return _context.stop();
                   }
-                }, _callee, null, [[3, 10]]);
+                }, _callee, null, [[3, 12]]);
               }));
             case 2:
             case "end":
