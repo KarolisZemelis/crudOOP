@@ -198,7 +198,6 @@ class FormRecipe extends Request {
                         const table = data.type;
                         this.getElementFromDbForm(recipeId, this.MainObject, table, 'render')
 
-
                     } else if (cont === 'drop-container-ingredients') {
                         if (data.type !== 'ingredient') {
                             return
@@ -206,6 +205,7 @@ class FormRecipe extends Request {
                         const ingredientId = data.id;
                         const table = data.type;
                         this.getElementFromDbForm(ingredientId, this.MainObject, table, 'render')
+                        document.createElement
 
 
                     }
@@ -224,14 +224,15 @@ class FormRecipe extends Request {
         submitBtn.onclick = async () => {
             let recipeToSave = {};
             const recipeContainer = document.querySelector('.drop-container');
-            const recipeId = Number(recipeContainer.querySelector('[data-itemid]').dataset.itemid);
+            const recipeId = [Number(recipeContainer.querySelector('[data-itemid]').dataset.itemid)];
             try {
                 const dataFromDb = await this.getElementFromDbForm(recipeId, this.MainObject, 'recipe', 'form');
                 const recipeData = dataFromDb[0]
+                console.log(recipeData)
                 for (let key in recipeData) {
                     recipeToSave[key] = recipeData[key]
                 }
-                console.log(recipeToSave)
+                // gal reikia iškelti recipeToSave i constructorių ir kas kart pridėjus įsirašo o jei removini reikia removint ir iš objekto
             } catch (error) {
                 console.error("❌ Error fetching recipe in FormRecipe.js:", error);
             }

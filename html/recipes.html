@@ -198,7 +198,15 @@
     <template data-ingredientTemplate>
       <li>
         <h5 data-ingredient-name></h5>
-        <p>Tipas: <b><i><span data-ingredient-type></span></i></b></p>
+        <div>
+        <div class="leftContainer">
+          <p>Tipas: <b><i><span data-ingredient-type></span></i></b></p>
+          <input type="number" name="quantity" placeholder="Kiekis" style="display: none">
+        </div>
+<div class="rightContainer">
+
+</div>
+      </div>
         <div data-btnContainer>
           <button class="btn btn-primary" data-type="edit">Edit</button>
           <button class="btn btn-primary" data-type="delete">Delete</button>

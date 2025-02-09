@@ -116,16 +116,16 @@ class ShowData extends Request {
             ingredientName.innerHTML = responseData.ingredient_name
             const ingredientType = itemClone.querySelector('[data-ingredient-type]')
             ingredientType.innerHTML = responseData.type_name
-
+            const ingredientQuantity = itemClone.querySelector('input[name="quantity"]');
+            ingredientQuantity.style.display = 'block';
             const btnContainerToRemove = itemClone.querySelector('[data-btncontainer]')
             btnContainerToRemove.remove()
 
             const removeButton = document.createElement('button');
             removeButton.textContent = 'Remove'
             removeButton.classList.add('btn', 'btn-primary', 'remove-button')
-            const btnContainer = itemClone.querySelector('.btn-container')
-            console.log(btnContainer)
-            container.appendChild(removeButton);
+            const rightContainer = itemClone.querySelector('.rightContainer')
+            rightContainer.appendChild(removeButton);
             this.ingredientContainer.append(itemClone);
 
             removeButton.addEventListener('click', () => {

@@ -125,13 +125,33 @@ body {
   list-style-type: none;
   min-height: 150px;
   border: 2px dashed #333;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-  h5 {
-    text-align: center;
-    text-transform: uppercase;
+  li {
+    margin-top: 3px;
+    padding-bottom: 3px;
+    border-bottom: 2px dashed #333;
+    h5 {
+      text-align: center;
+      text-transform: uppercase;
+    }
+    div {
+      display: flex;
+      .leftContainer {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-around;
+
+        p {
+          margin: 3px;
+        }
+        input {
+          width: 50%;
+          box-sizing: border-box;
+        }
+      }
+      .rightContainer {
+        margin-right: 1rem;
+      }
+    }
   }
 }

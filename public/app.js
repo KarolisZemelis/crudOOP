@@ -455,6 +455,7 @@ var FormRecipe = /*#__PURE__*/function (_Request) {
               var ingredientId = data.id;
               var _table = data.type;
               _this2.getElementFromDbForm(ingredientId, _this2.MainObject, _table, 'render');
+              document.createElement;
             }
           } catch (error) {
             console.error("Error parsing JSON data:", error);
@@ -479,17 +480,18 @@ var FormRecipe = /*#__PURE__*/function (_Request) {
                     case 0:
                       recipeToSave = {};
                       recipeContainer = document.querySelector('.drop-container');
-                      recipeId = Number(recipeContainer.querySelector('[data-itemid]').dataset.itemid);
+                      recipeId = [Number(recipeContainer.querySelector('[data-itemid]').dataset.itemid)];
                       _context.prev = 3;
                       _context.next = 6;
                       return _this3.getElementFromDbForm(recipeId, _this3.MainObject, 'recipe', 'form');
                     case 6:
                       dataFromDb = _context.sent;
                       recipeData = dataFromDb[0];
+                      console.log(recipeData);
                       for (key in recipeData) {
                         recipeToSave[key] = recipeData[key];
                       }
-                      console.log(recipeToSave);
+                      // gal reikia iškelti recipeToSave i constructorių ir kas kart pridėjus įsirašo o jei removini reikia removint ir iš objekto
                       _context.next = 15;
                       break;
                     case 12:
@@ -830,14 +832,15 @@ var ShowData = /*#__PURE__*/function (_Request) {
         ingredientName.innerHTML = responseData.ingredient_name;
         var ingredientType = _itemClone2.querySelector('[data-ingredient-type]');
         ingredientType.innerHTML = responseData.type_name;
+        var ingredientQuantity = _itemClone2.querySelector('input[name="quantity"]');
+        ingredientQuantity.style.display = 'block';
         var _btnContainerToRemove = _itemClone2.querySelector('[data-btncontainer]');
         _btnContainerToRemove.remove();
         var _removeButton = document.createElement('button');
         _removeButton.textContent = 'Remove';
         _removeButton.classList.add('btn', 'btn-primary', 'remove-button');
-        var btnContainer = _itemClone2.querySelector('.btn-container');
-        console.log(btnContainer);
-        _container.appendChild(_removeButton);
+        var rightContainer = _itemClone2.querySelector('.rightContainer');
+        rightContainer.appendChild(_removeButton);
         this.ingredientContainer.append(_itemClone2);
         _removeButton.addEventListener('click', function () {
           _container.remove(); // Remove the parent <li> element when the button is clicked

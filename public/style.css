@@ -12082,15 +12082,40 @@ body {
   list-style-type: none;
   min-height: 150px;
   border: 2px dashed #333;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  display: flex;
-  flex-direction: column;
 }
-.drop-container h5, .drop-container .h5,
-.drop-container-ingredients h5,
-.drop-container-ingredients .h5 {
+.drop-container li,
+.drop-container-ingredients li {
+  margin-top: 3px;
+  padding-bottom: 3px;
+  border-bottom: 2px dashed #333;
+}
+.drop-container li h5, .drop-container li .h5,
+.drop-container-ingredients li h5,
+.drop-container-ingredients li .h5 {
   text-align: center;
   text-transform: uppercase;
+}
+.drop-container li div,
+.drop-container-ingredients li div {
+  display: flex;
+}
+.drop-container li div .leftContainer,
+.drop-container-ingredients li div .leftContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+}
+.drop-container li div .leftContainer p,
+.drop-container-ingredients li div .leftContainer p {
+  margin: 3px;
+}
+.drop-container li div .leftContainer input,
+.drop-container-ingredients li div .leftContainer input {
+  width: 50%;
+  box-sizing: border-box;
+}
+.drop-container li div .rightContainer,
+.drop-container-ingredients li div .rightContainer {
+  margin-right: 1rem;
 }
