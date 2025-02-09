@@ -266,6 +266,7 @@ var FormRecipe = /*#__PURE__*/function (_Request) {
     _this.MainObject = MainObject;
     _this.formRecipe();
     _this.submitFormedRecipe();
+    _this.recipeToSave = {};
     return _this;
   }
 
@@ -448,6 +449,7 @@ var FormRecipe = /*#__PURE__*/function (_Request) {
               var recipeId = data.id;
               var table = data.type;
               _this2.getElementFromDbForm(recipeId, _this2.MainObject, table, 'render');
+              _this2.recipeToSave.recipeId = data.id;
             } else if (cont === 'drop-container-ingredients') {
               if (data.type !== 'ingredient') {
                 return;
@@ -455,7 +457,6 @@ var FormRecipe = /*#__PURE__*/function (_Request) {
               var ingredientId = data.id;
               var _table = data.type;
               _this2.getElementFromDbForm(ingredientId, _this2.MainObject, _table, 'render');
-              document.createElement;
             }
           } catch (error) {
             console.error("Error parsing JSON data:", error);
@@ -474,35 +475,29 @@ var FormRecipe = /*#__PURE__*/function (_Request) {
             case 0:
               submitBtn = document.querySelector('[data-type="submitRecipe"]');
               submitBtn.onclick = /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-                var recipeToSave, recipeContainer, recipeId, dataFromDb, recipeData, key;
+                var recipeContainer, recipeId;
                 return _regeneratorRuntime().wrap(function _callee$(_context) {
                   while (1) switch (_context.prev = _context.next) {
                     case 0:
-                      recipeToSave = {};
+                      console.log(_this3.recipeToSave);
                       recipeContainer = document.querySelector('.drop-container');
                       recipeId = [Number(recipeContainer.querySelector('[data-itemid]').dataset.itemid)];
-                      _context.prev = 3;
-                      _context.next = 6;
-                      return _this3.getElementFromDbForm(recipeId, _this3.MainObject, 'recipe', 'form');
-                    case 6:
-                      dataFromDb = _context.sent;
-                      recipeData = dataFromDb[0];
-                      console.log(recipeData);
-                      for (key in recipeData) {
-                        recipeToSave[key] = recipeData[key];
+                      try {
+
+                        // const dataFromDb = await this.getElementFromDbForm(recipeId, this.MainObject, 'recipe', 'form');
+                        // const recipeData = dataFromDb[0]
+                        // for (let key in recipeData) {
+                        //     recipeToSave[key] = recipeData[key]
+                        // }
+                        // gal reikia iškelti recipeToSave i constructorių ir kas kart pridėjus įsirašo o jei removini reikia removint ir iš objekto
+                      } catch (error) {
+                        console.error("❌ Error fetching recipe in FormRecipe.js:", error);
                       }
-                      // gal reikia iškelti recipeToSave i constructorių ir kas kart pridėjus įsirašo o jei removini reikia removint ir iš objekto
-                      _context.next = 15;
-                      break;
-                    case 12:
-                      _context.prev = 12;
-                      _context.t0 = _context["catch"](3);
-                      console.error("❌ Error fetching recipe in FormRecipe.js:", _context.t0);
-                    case 15:
+                    case 4:
                     case "end":
                       return _context.stop();
                   }
-                }, _callee, null, [[3, 12]]);
+                }, _callee);
               }));
             case 2:
             case "end":
@@ -605,6 +600,7 @@ var Request = /*#__PURE__*/function () {
       var _this2 = this;
       axios__WEBPACK_IMPORTED_MODULE_0__["default"].get(this.url).then(function (res) {
         _this2.renderData(res);
+        _this2.renderSearchData(res);
       })["catch"](function (err) {
         console.log(err);
       });
@@ -907,53 +903,34 @@ var ShowData = /*#__PURE__*/function (_Request) {
       var filteredData = responseData;
       searchInput.addEventListener('input', function (_) {
         _this3.recipeList.innerHTML = '';
-        filteredData = filterByText(responseData, searchInput.value);
+        _this3.ingredientList.innerHTML = '';
+        filteredData = filterByText(responseData.data, searchInput.value);
         for (var _i2 = 0, _Object$entries2 = Object.entries(filteredData); _i2 < _Object$entries2.length; _i2++) {
           var _Object$entries2$_i = _slicedToArray(_Object$entries2[_i2], 2),
             key = _Object$entries2$_i[0],
             value = _Object$entries2$_i[1];
           if (key === 'recipes') {
-            value.forEach(function (element) {
-              var listItem = document.createElement('li');
-              listItem.draggable = true;
-              listItem.setAttribute('id', "".concat(element.id));
-              for (var _key in element) {
-                if (!_key.includes('id') && _key.includes('recipe_name')) {
-                  var container = document.createElement('div');
-                  container.dataset.list = _key;
-                  container.innerHTML = "<h5>".concat(element[_key], "</h5>");
-                  listItem.appendChild(container);
-                } else if (!_key.includes('id') && !_key.includes('recipe_name')) {
-                  var _container2 = document.createElement('div');
-                  _container2.dataset.list = _key;
-                  _container2.textContent = "".concat(_key, ": ").concat(element[_key]);
-                  listItem.appendChild(_container2);
-                }
-              }
-              var btnContainer = document.createElement('div');
-              _this3.renderEditButton(listItem, btnContainer);
-              _this3.renderDeleteButton(listItem, btnContainer);
-              _this3.recipeList.appendChild(listItem);
+            var recipesArray = Array.from(value);
+            recipesArray.forEach(function (recipe) {
+              var itemClone = _this3.recipeTemplate.content.cloneNode(true);
+              var li = itemClone.querySelector('li');
+              li.setAttribute('data-itemid', "".concat(recipe.id));
+              li.setAttribute('draggable', true);
+              itemClone.querySelector('[data-recipe-name]').textContent = recipe.recipe_name.toUpperCase();
+              itemClone.querySelector('[data-recipe-type]').textContent = recipe.type_name;
+              itemClone.querySelector('[data-recipe-calories]').textContent = recipe.calories;
+              _this3.recipeList.appendChild(itemClone);
             });
           } else {
-            _this3.ingredientList.innerHTML = '';
-            value.forEach(function (element) {
-              var listItem = document.createElement('li');
-              listItem.draggable = true;
-              listItem.classList.add('ingredientListItem');
-              listItem.setAttribute('id', "".concat(element.id));
-              for (var _key2 in element) {
-                if (!_key2.includes('id')) {
-                  var container = document.createElement('div');
-                  container.dataset.list = _key2;
-                  container.innerHTML = "<h6>".concat(element[_key2], "</h6>");
-                  listItem.appendChild(container);
-                }
-              }
-              var btnContainer = document.createElement('div');
-              _this3.renderEditButton(listItem, btnContainer);
-              _this3.renderDeleteButton(listItem, btnContainer);
-              _this3.ingredientList.appendChild(listItem);
+            var ingredientsArray = Array.from(value);
+            ingredientsArray.forEach(function (ingredient) {
+              var itemClone = _this3.ingredientTemplate.content.cloneNode(true);
+              var li = itemClone.querySelector('li');
+              li.setAttribute('data-itemid', "".concat(ingredient.id));
+              li.setAttribute('draggable', true);
+              itemClone.querySelector('[data-ingredient-name]').textContent = ingredient.ingredient_name.toUpperCase();
+              itemClone.querySelector('[data-ingredient-type]').textContent = ingredient.type_name;
+              _this3.ingredientList.appendChild(itemClone);
             });
           }
         }

@@ -24,6 +24,7 @@ class Request {
         axios.get(this.url)
             .then(res => {
                 this.renderData(res)
+                this.renderSearchData(res)
             })
             .catch(err => {
                 console.log(err)
