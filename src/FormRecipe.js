@@ -5,9 +5,10 @@ class FormRecipe extends Request {
         super(MainObject.page)
         this.MainObject = MainObject
 
+
         this.formRecipe()
         this.submitFormedRecipe()
-        this.recipeToSave = {}
+        this.recipeToSave = { recipeId: '', ingredients: [] }
 
 
     }
@@ -206,8 +207,8 @@ class FormRecipe extends Request {
                         const ingredientId = data.id;
                         const table = data.type;
                         this.getElementFromDbForm(ingredientId, this.MainObject, table, 'render')
-
-
+                        const ingredientObj = { ingredientId: ingredientId, quantity: '' }
+                        this.recipeToSave.ingredients.push(ingredientObj)
 
                     }
 
@@ -219,32 +220,42 @@ class FormRecipe extends Request {
         }
     }
 
-    async submitFormedRecipe() {
+    // async submitFormedRecipe() {
+    //     const submitBtn = document.querySelector('[data-type="submitRecipe"]');
+    //     // submitBtn.onclick = async () => {
+    //     //     console.log(this.recipeToSave)
+    //     //     // const recipeContainer = document.querySelector('.drop-container');
+    //     //     // const recipeId = [Number(recipeContainer.querySelector('[data-itemid]').dataset.itemid)];
+    //     //     try {
+
+    //     //         // const dataFromDb = await this.getElementFromDbForm(recipeId, this.MainObject, 'recipe', 'form');
+    //     //         // const recipeData = dataFromDb[0]
+    //     //         // for (let key in recipeData) {
+    //     //         //     recipeToSave[key] = recipeData[key]
+    //     //         // }
+    //     //         // gal reikia iškelti recipeToSave i constructorių ir kas kart pridėjus įsirašo o jei removini reikia removint ir iš objekto
+    //     //     } catch (error) {
+    //     //         console.error("❌ Error fetching recipe in FormRecipe.js:", error);
+    //     //     }
+
+
+
+
+
+
+
+    //     // };
+    // }
+
+    submitFormedRecipe() {
         const submitBtn = document.querySelector('[data-type="submitRecipe"]');
-
-        submitBtn.onclick = async () => {
-            console.log(this.recipeToSave)
-            const recipeContainer = document.querySelector('.drop-container');
-            const recipeId = [Number(recipeContainer.querySelector('[data-itemid]').dataset.itemid)];
-            try {
-
-                // const dataFromDb = await this.getElementFromDbForm(recipeId, this.MainObject, 'recipe', 'form');
-                // const recipeData = dataFromDb[0]
-                // for (let key in recipeData) {
-                //     recipeToSave[key] = recipeData[key]
-                // }
-                // gal reikia iškelti recipeToSave i constructorių ir kas kart pridėjus įsirašo o jei removini reikia removint ir iš objekto
-            } catch (error) {
-                console.error("❌ Error fetching recipe in FormRecipe.js:", error);
-            }
-
-
-
-
-
-
-
-        };
+        submitBtn.addEventListener('click', _ => {
+            this.recipeToSave.ingredients.forEach(ingredient => {
+                const ingredientDropContainer = document.querySelector('.drop-container-ingredients');
+                const ingredientContainer = ingredientDropContainer.querySelector(`li[data-itemid="${ingredient.ingredientId}"]`);
+                ingredient.quantity = ingredientContainer.querySelector('input').value
+            })
+        })
     }
 
 

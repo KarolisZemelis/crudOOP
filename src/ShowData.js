@@ -107,6 +107,12 @@ class ShowData extends Request {
 
             removeButton.addEventListener('click', () => {
                 container.remove(); // Remove the parent <li> element when the button is clicked
+                let obj = this.MainObject.FormRecipe.recipeToSave
+                for (let key in obj) {
+                    if (obj[key] === responseData.id) { // Remove keys where value is false
+                        delete obj[key];
+                    }
+                }
             });
         } else {
             const itemClone = this.ingredientTemplate.content.cloneNode(true);
@@ -131,6 +137,7 @@ class ShowData extends Request {
 
             removeButton.addEventListener('click', () => {
                 container.remove(); // Remove the parent <li> element when the button is clicked
+
             });
         }
 
