@@ -91,13 +91,10 @@ class Request {
                 console.log(err)
             })
     }
-    //this -> create object because this is being called from create
-    //MainObject -> recipe because we pass <this which is recipe when creating a class object >
-    //ShowData -> ShowData object
-    //getFromDb -> method getFromDb which ShowData has taken from Request
-    // renderData(res) {
-    //     this.MainObject.ShowData.getFromDb()
-    // }
+
+    renderData(res) {
+        this.MainObject.ShowData.getFromDb()
+    }
 
 }
 

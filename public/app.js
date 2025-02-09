@@ -116,7 +116,7 @@ var Delete = /*#__PURE__*/function (_Request) {
         });
         _this.deleteModal.querySelector('[data-type="delete"]').onclick = function () {
           _this.deleteModal.style.display = 'none';
-          var elementId = grandParent.id; // Get the current id
+          var elementId = grandParent.dataset.itemid;
           _this.deleteFromDb(elementId, 'recipe');
         };
       }
@@ -134,7 +134,7 @@ var Delete = /*#__PURE__*/function (_Request) {
         });
         _this.deleteModal.querySelector('[data-type="delete"]').onclick = function () {
           _this.deleteModal.style.display = 'none';
-          var elementId = grandParent.id;
+          var elementId = grandParent.dataset.itemid;
           _this.deleteFromDb(elementId, 'ingredient');
         };
       }
@@ -672,13 +672,11 @@ var Request = /*#__PURE__*/function () {
         console.log(err);
       });
     }
-    //this -> create object because this is being called from create
-    //MainObject -> recipe because we pass <this which is recipe when creating a class object >
-    //ShowData -> ShowData object
-    //getFromDb -> method getFromDb which ShowData has taken from Request
-    // renderData(res) {
-    //     this.MainObject.ShowData.getFromDb()
-    // }
+  }, {
+    key: "renderData",
+    value: function renderData(res) {
+      this.MainObject.ShowData.getFromDb();
+    }
   }]);
 }();
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Request);

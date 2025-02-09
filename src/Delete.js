@@ -11,7 +11,6 @@ class Delete extends Request {
                 this.deleteModal = document.querySelector('[data-modal="delete"]')
                 this.deleteModal.style.display = 'block'
 
-
                 const grandParent = event.target.parentElement.parentElement;
                 console.log(grandParent)
                 const elementName = grandParent.querySelector(':first-child').textContent;
@@ -25,7 +24,7 @@ class Delete extends Request {
 
                 this.deleteModal.querySelector('[data-type="delete"]').onclick = () => {
                     this.deleteModal.style.display = 'none';
-                    const elementId = grandParent.id; // Get the current id
+                    const elementId = grandParent.dataset.itemid;
                     this.deleteFromDb(elementId, 'recipe');
                 };
             }
@@ -50,7 +49,7 @@ class Delete extends Request {
 
                 this.deleteModal.querySelector('[data-type="delete"]').onclick = () => {
                     this.deleteModal.style.display = 'none';
-                    const elementId = grandParent.id;
+                    const elementId = grandParent.dataset.itemid;
                     this.deleteFromDb(elementId, 'ingredient');
                 };
             }

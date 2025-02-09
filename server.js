@@ -169,6 +169,7 @@ app.get('/api/recipe/select/:type', (req, res) => {
 
 app.post('/api/recipe', (req, res) => {
     if (req.body.hasOwnProperty('recipe_name')) {
+
         const sql = `
     INSERT INTO recipe
     (recipe_name, calories, type_id)
@@ -209,6 +210,8 @@ app.post('/api/recipe', (req, res) => {
 
 app.put('/api/recipe/edit/:id', (req, res) => {
     const itemToSave = req.body;
+    console.log(itemToSave)
+    console.log(req.body)
     if (req.body.table === 'recipe') {
         const sql = `
         UPDATE recipe
@@ -225,7 +228,7 @@ app.put('/api/recipe/edit/:id', (req, res) => {
             if (result.affectedRows === 0) {
                 res.status(404).send({
                     success: false,
-                    message: 'Game not found'
+                    message: 'Recipe not found'
                 });
                 return;
             }
@@ -251,7 +254,7 @@ app.put('/api/recipe/edit/:id', (req, res) => {
             if (result.affectedRows === 0) {
                 res.status(404).send({
                     success: false,
-                    message: 'Game not found'
+                    message: 'Ingredient not found'
                 });
                 return;
             }
