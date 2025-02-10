@@ -5,6 +5,8 @@ class FormRecipe extends Request {
         super(MainObject.page)
         this.MainObject = MainObject
 
+        this.recipeDropContainer = document.querySelector('.drop-container');
+        this.ingredientDropContainer = document.querySelector('.drop-container-ingredients');
 
         this.formRecipe()
         this.submitFormedRecipe()
@@ -180,10 +182,8 @@ class FormRecipe extends Request {
 
             container.ondrop = (e) => {
                 e.preventDefault();
-
                 // Retrieve dragged item data
                 const dataString = e.dataTransfer.getData('text/plain');
-
                 if (!dataString) {
                     console.error("No data received during drop.");
                     return;
@@ -191,19 +191,16 @@ class FormRecipe extends Request {
 
                 try {
                     const data = JSON.parse(dataString);
-
                     if (cont === 'drop-container') {
-                        if (data.type !== 'recipe') {
-                            return;
-                        }
+                        if (data.type !== 'recipe') return;
+
                         const recipeId = data.id;
                         const table = data.type;
                         this.getElementFromDbForm(recipeId, this.MainObject, table, 'render')
                         this.recipeToSave.recipeId = data.id;
                     } else if (cont === 'drop-container-ingredients') {
-                        if (data.type !== 'ingredient') {
-                            return
-                        }
+                        if (data.type !== 'ingredient') return
+
                         const ingredientId = data.id;
                         const table = data.type;
                         this.getElementFromDbForm(ingredientId, this.MainObject, table, 'render')
@@ -220,42 +217,18 @@ class FormRecipe extends Request {
         }
     }
 
-    // async submitFormedRecipe() {
-    //     const submitBtn = document.querySelector('[data-type="submitRecipe"]');
-    //     // submitBtn.onclick = async () => {
-    //     //     console.log(this.recipeToSave)
-    //     //     // const recipeContainer = document.querySelector('.drop-container');
-    //     //     // const recipeId = [Number(recipeContainer.querySelector('[data-itemid]').dataset.itemid)];
-    //     //     try {
-
-    //     //         // const dataFromDb = await this.getElementFromDbForm(recipeId, this.MainObject, 'recipe', 'form');
-    //     //         // const recipeData = dataFromDb[0]
-    //     //         // for (let key in recipeData) {
-    //     //         //     recipeToSave[key] = recipeData[key]
-    //     //         // }
-    //     //         // gal reikia iškelti recipeToSave i constructorių ir kas kart pridėjus įsirašo o jei removini reikia removint ir iš objekto
-    //     //     } catch (error) {
-    //     //         console.error("❌ Error fetching recipe in FormRecipe.js:", error);
-    //     //     }
-
-
-
-
-
-
-
-    //     // };
-    // }
-
     submitFormedRecipe() {
         const submitBtn = document.querySelector('[data-type="submitRecipe"]');
         submitBtn.addEventListener('click', _ => {
             this.recipeToSave.ingredients.forEach(ingredient => {
-                const ingredientDropContainer = document.querySelector('.drop-container-ingredients');
-                const ingredientContainer = ingredientDropContainer.querySelector(`li[data-itemid="${ingredient.ingredientId}"]`);
+                const ingredientContainer = this.ingredientDropContainer.querySelector(`li[data-itemid="${ingredient.ingredientId}"]`);
                 ingredient.quantity = ingredientContainer.querySelector('input').value
             })
+            this.saveToRecipeTable(this.recipeToSave)
         })
+        this.recipeDropContainer.innerHTML = ''
+        this.ingredientDropContainer.innerHTML = ''
+
     }
 
 

@@ -104,9 +104,6 @@ app.get('/api/recipe/:id', (req, res) => {
             });
         });
     }
-
-
-
 })
 
 app.get('/api/recipe/formRecipe/:id', (req, res) => {
@@ -204,6 +201,65 @@ app.post('/api/recipe', (req, res) => {
         })
     }
 
+
+
+})
+
+app.post('/api/recipe/saveRecipe', (req, res) => {
+    const recipeObject = req.body;
+    let ingredientArray = []
+    recipeObject.ingredients.forEach(ingredient => {
+        ingredientArray.push(ingredient.ingredientId)
+    });
+    let recipeToDb = { ingredients: {} };
+    //query to get recipe data
+    const sql = `
+                SELECT recipe.recipe_name, type.type_name, recipe.type_id, recipe.calories
+                FROM recipe
+                INNER JOIN type ON recipe.type_id=type.id
+                WHERE recipe.id = ?
+    `
+    con.query(sql, [req.body.recipeId], (err, result) => {
+        if (err) {
+            res.status(500).send(err);
+            return;
+        }
+        if (result.length === 0) {
+            res.status(404).send({ message: "Recipe not found" });
+            return;
+        }
+        Object.assign(recipeToDb, result[0]);
+        recipeToDb.recipeId = req.body.recipeId
+    });
+    const sql1 = `
+                SELECT ingredient.id, ingredient.ingredient_name, ingredient_qty_type.type_name, ingredient.type_id
+                FROM ingredient
+                INNER JOIN ingredient_qty_type ON ingredient.type_id=ingredient_qty_type.id
+                WHERE ingredient.id IN (?)
+    `
+
+    con.query(sql1, [ingredientArray], (err, result) => {
+        if (err) {
+            res.status(500).send(err);
+            return;
+        }
+        if (result.length === 0) {
+            res.status(404).send({ message: "Ingredient not found" });
+            return;
+        }
+
+        result.forEach(ingredient => {
+            let ingredientObj = {}
+            ingredientObj.name = ingredient.ingredient_name
+            ingredientObj.type = ingredient.type_name
+            recipeObject.ingredients.forEach(ingredientFromApp => {
+                if (ingredientFromApp.ingredientId === ingredient.id) {
+                    ingredientObj.quantity = ingredientFromApp.quantity
+                }
+            });
+            recipeToDb.ingredients[ingredient.id] = ingredientObj
+        });
+    });
 
 
 })

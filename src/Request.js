@@ -9,13 +9,11 @@ class Request {
     }
 
     saveToDb(dataFromCreateObject) {
-
         axios.post(this.url, dataFromCreateObject)
             .then(res => {
                 this.renderData()
             })
             .catch(err => {
-                console.log('esu error')
                 console.log(err)
             })
     }
@@ -89,6 +87,17 @@ class Request {
             .then((res) => {
                 this.renderData(res)
             }).catch(err => {
+                console.log(err)
+            })
+    }
+
+    saveToRecipeTable(recipe) {
+        axios.post(this.url + '/' + 'saveRecipe/', recipe)
+            .then(res => {
+                this.renderData(res)
+                this.renderSearchData(res)
+            })
+            .catch(err => {
                 console.log(err)
             })
     }

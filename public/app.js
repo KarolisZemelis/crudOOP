@@ -261,6 +261,8 @@ var FormRecipe = /*#__PURE__*/function (_Request) {
     _classCallCheck(this, FormRecipe);
     _this = _callSuper(this, FormRecipe, [MainObject.page]);
     _this.MainObject = MainObject;
+    _this.recipeDropContainer = document.querySelector('.drop-container');
+    _this.ingredientDropContainer = document.querySelector('.drop-container-ingredients');
     _this.formRecipe();
     _this.submitFormedRecipe();
     _this.recipeToSave = {
@@ -433,7 +435,6 @@ var FormRecipe = /*#__PURE__*/function (_Request) {
         });
         container.ondrop = function (e) {
           e.preventDefault();
-
           // Retrieve dragged item data
           var dataString = e.dataTransfer.getData('text/plain');
           if (!dataString) {
@@ -443,17 +444,13 @@ var FormRecipe = /*#__PURE__*/function (_Request) {
           try {
             var data = JSON.parse(dataString);
             if (cont === 'drop-container') {
-              if (data.type !== 'recipe') {
-                return;
-              }
+              if (data.type !== 'recipe') return;
               var recipeId = data.id;
               var table = data.type;
               _this2.getElementFromDbForm(recipeId, _this2.MainObject, table, 'render');
               _this2.recipeToSave.recipeId = data.id;
             } else if (cont === 'drop-container-ingredients') {
-              if (data.type !== 'ingredient') {
-                return;
-              }
+              if (data.type !== 'ingredient') return;
               var ingredientId = data.id;
               var _table = data.type;
               _this2.getElementFromDbForm(ingredientId, _this2.MainObject, _table, 'render');
@@ -469,27 +466,6 @@ var FormRecipe = /*#__PURE__*/function (_Request) {
         };
       };
     }
-
-    // async submitFormedRecipe() {
-    //     const submitBtn = document.querySelector('[data-type="submitRecipe"]');
-    //     // submitBtn.onclick = async () => {
-    //     //     console.log(this.recipeToSave)
-    //     //     // const recipeContainer = document.querySelector('.drop-container');
-    //     //     // const recipeId = [Number(recipeContainer.querySelector('[data-itemid]').dataset.itemid)];
-    //     //     try {
-
-    //     //         // const dataFromDb = await this.getElementFromDbForm(recipeId, this.MainObject, 'recipe', 'form');
-    //     //         // const recipeData = dataFromDb[0]
-    //     //         // for (let key in recipeData) {
-    //     //         //     recipeToSave[key] = recipeData[key]
-    //     //         // }
-    //     //         // gal reikia iškelti recipeToSave i constructorių ir kas kart pridėjus įsirašo o jei removini reikia removint ir iš objekto
-    //     //     } catch (error) {
-    //     //         console.error("❌ Error fetching recipe in FormRecipe.js:", error);
-    //     //     }
-
-    //     // };
-    // }
   }, {
     key: "submitFormedRecipe",
     value: function submitFormedRecipe() {
@@ -497,11 +473,13 @@ var FormRecipe = /*#__PURE__*/function (_Request) {
       var submitBtn = document.querySelector('[data-type="submitRecipe"]');
       submitBtn.addEventListener('click', function (_) {
         _this3.recipeToSave.ingredients.forEach(function (ingredient) {
-          var ingredientDropContainer = document.querySelector('.drop-container-ingredients');
-          var ingredientContainer = ingredientDropContainer.querySelector("li[data-itemid=\"".concat(ingredient.ingredientId, "\"]"));
+          var ingredientContainer = _this3.ingredientDropContainer.querySelector("li[data-itemid=\"".concat(ingredient.ingredientId, "\"]"));
           ingredient.quantity = ingredientContainer.querySelector('input').value;
         });
+        _this3.saveToRecipeTable(_this3.recipeToSave);
       });
+      this.recipeDropContainer.innerHTML = '';
+      this.ingredientDropContainer.innerHTML = '';
     }
   }]);
 }(_Request_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
@@ -583,7 +561,6 @@ var Request = /*#__PURE__*/function () {
       axios__WEBPACK_IMPORTED_MODULE_0__["default"].post(this.url, dataFromCreateObject).then(function (res) {
         _this.renderData();
       })["catch"](function (err) {
-        console.log('esu error');
         console.log(err);
       });
     }
@@ -657,6 +634,17 @@ var Request = /*#__PURE__*/function () {
         }
       }).then(function (res) {
         _this4.renderData(res);
+      })["catch"](function (err) {
+        console.log(err);
+      });
+    }
+  }, {
+    key: "saveToRecipeTable",
+    value: function saveToRecipeTable(recipe) {
+      var _this5 = this;
+      axios__WEBPACK_IMPORTED_MODULE_0__["default"].post(this.url + '/' + 'saveRecipe/', recipe).then(function (res) {
+        _this5.renderData(res);
+        _this5.renderSearchData(res);
       })["catch"](function (err) {
         console.log(err);
       });
