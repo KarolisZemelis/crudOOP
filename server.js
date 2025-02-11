@@ -3,6 +3,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const mysql = require('mysql');
 const fs = require('fs');
+const { v4: uuidv4 } = require('uuid');
 
 
 const URL = 'http://localhost:3000/';
@@ -207,62 +208,98 @@ app.post('/api/recipe', (req, res) => {
 
 app.post('/api/recipe/saveRecipe', (req, res) => {
     const recipeObject = req.body;
-    let ingredientArray = []
-    recipeObject.ingredients.forEach(ingredient => {
-        ingredientArray.push(ingredient.ingredientId)
-    });
-    let recipeToDb = { ingredients: {} };
-    //query to get recipe data
-    const sql = `
-                SELECT recipe.recipe_name, type.type_name, recipe.type_id, recipe.calories
-                FROM recipe
-                INNER JOIN type ON recipe.type_id=type.id
-                WHERE recipe.id = ?
-    `
-    con.query(sql, [req.body.recipeId], (err, result) => {
+
+    let ingredientArray = recipeObject.ingredients.map(ingredient => ingredient.ingredientId);
+    let formatedRecipe = [];
+
+    // SQL query to get recipe details
+    const sql1 = `
+        SELECT recipe.recipe_name, type.type_name, recipe.type_id, recipe.calories
+        FROM recipe
+        INNER JOIN type ON recipe.type_id = type.id
+        WHERE recipe.id = ?
+    `;
+
+    con.query(sql1, [recipeObject.recipeId], (err, recipeResult) => {
         if (err) {
             res.status(500).send(err);
             return;
         }
-        if (result.length === 0) {
+        if (recipeResult.length === 0) {
             res.status(404).send({ message: "Recipe not found" });
             return;
         }
-        Object.assign(recipeToDb, result[0]);
-        recipeToDb.recipeId = req.body.recipeId
-    });
-    const sql1 = `
-                SELECT ingredient.id, ingredient.ingredient_name, ingredient_qty_type.type_name, ingredient.type_id
-                FROM ingredient
-                INNER JOIN ingredient_qty_type ON ingredient.type_id=ingredient_qty_type.id
-                WHERE ingredient.id IN (?)
-    `
 
-    con.query(sql1, [ingredientArray], (err, result) => {
-        if (err) {
-            res.status(500).send(err);
-            return;
-        }
-        if (result.length === 0) {
-            res.status(404).send({ message: "Ingredient not found" });
-            return;
-        }
+        // SQL query to get ingredient details
+        const sql2 = `
+            SELECT ingredient.id, ingredient.ingredient_name, ingredient_qty_type.type_name, ingredient.type_id
+            FROM ingredient
+            INNER JOIN ingredient_qty_type ON ingredient.type_id = ingredient_qty_type.id
+            WHERE ingredient.id IN (?)
+        `;
 
-        result.forEach(ingredient => {
-            let ingredientObj = {}
-            ingredientObj.name = ingredient.ingredient_name
-            ingredientObj.type = ingredient.type_name
-            recipeObject.ingredients.forEach(ingredientFromApp => {
-                if (ingredientFromApp.ingredientId === ingredient.id) {
-                    ingredientObj.quantity = ingredientFromApp.quantity
-                }
+        con.query(sql2, [ingredientArray], (err, ingredientResult) => {
+            if (err) {
+                res.status(500).send(err);
+                return;
+            }
+            if (ingredientResult.length === 0) {
+                res.status(404).send({ message: "Ingredient not found" });
+                return;
+            }
+
+            // Process ingredients and format them
+            ingredientResult.forEach(ingredient => {
+                recipeObject.ingredients.forEach(ingredientFromApp => {
+                    if (ingredientFromApp.ingredientId === ingredient.id) {
+                        let ingredientObj = {
+                            id: uuidv4(),
+                            recipe_id: Number(recipeObject.recipeId),
+                            ingredient_id: Number(ingredient.id),
+                            ingredient_name: ingredient.ingredient_name,
+                            ingredient_type: ingredient.type_name,
+                            quantity: ingredientFromApp.quantity
+                        };
+                        formatedRecipe.push(ingredientObj);
+                    }
+                });
             });
-            recipeToDb.ingredients[ingredient.id] = ingredientObj
+
+            console.log("Formatted Recipe:", formatedRecipe);
+
+            // If there is no formatted data, return
+            if (formatedRecipe.length === 0) {
+                res.status(400).send({ message: "No ingredients to insert" });
+                return;
+            }
+
+            // Insert into database
+            const sql3 = `
+                INSERT INTO recipe_with_ingredients
+                (id, recipe_id, ingredient_id, ingredient_name, ingredient_type, quantity)
+                VALUES ?
+            `;
+
+            const values = formatedRecipe.map(row => [
+                row.id,
+                row.recipe_id,
+                row.ingredient_id,
+                row.ingredient_name,
+                row.ingredient_type,
+                row.quantity
+            ]);
+
+            con.query(sql3, [values], (err, result) => {
+                if (err) {
+                    res.status(500).send(err);
+                    return;
+                }
+                res.status(201).send({ success: true, insertedRows: result.affectedRows });
+                console.log("Inserted ingredients successfully!");
+            });
         });
     });
-
-
-})
+});
 
 app.put('/api/recipe/edit/:id', (req, res) => {
     const itemToSave = req.body;
