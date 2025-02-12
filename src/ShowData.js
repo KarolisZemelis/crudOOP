@@ -133,7 +133,13 @@ class ShowData extends Request {
             removeButton.classList.add('btn', 'btn-primary', 'remove-button')
             const rightContainer = itemClone.querySelector('.rightContainer')
             rightContainer.appendChild(removeButton);
-            this.ingredientContainer.append(itemClone);
+            // this.ingredientContainer.append(itemClone);
+
+            if (this.ingredientContainer.children.length > 0) {
+                this.ingredientContainer.insertBefore(itemClone, this.ingredientContainer.children[0]);
+            } else {
+                this.ingredientContainer.appendChild(itemClone);
+            }
 
             removeButton.addEventListener('click', () => {
                 container.remove(); // Remove the parent <li> element when the button is clicked

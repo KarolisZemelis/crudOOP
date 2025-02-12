@@ -39,6 +39,10 @@ app.get('/', (req, res) => {
     res.send(loadHtml('recipes'));
 });
 
+app.get('/plan', (req, res) => {
+    res.send(loadHtml('plan'));
+});
+
 app.get('/api/recipe/', (req, res) => {
 
     const sql1 = `
